@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Krona One', sans-serif;
+  font-family: 'Poppins', sans-serif;
+}

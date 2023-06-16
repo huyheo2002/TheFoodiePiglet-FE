@@ -1,0 +1,20 @@
+{
+  "nav-item": {
+    "home": "Trang chủ",
+    "news": "Tin tức",
+    "menu": "Thực đơn",
+    "order-online": "Đặt hàng",
+    "media": "Truyền thông",
+    "notify": "Thông báo",
+    "languages": "Ngôn ngữ",
+    "login": "Đăng nhập"
+  },
+
+  "nav-subItem": {
+    "introduce": "Giới thiệu",
+    "store": "Cửa hàng",
+    "about-us": "Về chúng tôi",
+    "languages-vi": "Tiếng việt",
+    "languages-en": "Tiếng anh"
+  }
+}

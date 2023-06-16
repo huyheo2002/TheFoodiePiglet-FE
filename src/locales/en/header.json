@@ -1,0 +1,20 @@
+{
+  "nav-item": {
+    "home": "Home",
+    "news": "News",
+    "menu": "Menu",
+    "order-online": "Order Online",
+    "media": "Media",
+    "notify": "Notification",
+    "languages": "Languages",
+    "login": "Login"
+  },
+
+  "nav-subItem": {
+    "introduce": "Introduce",
+    "store": "Store",
+    "about-us": "About Us",
+    "languages-vi": "Vietnamese",
+    "languages-en": "English"
+  }
+}
