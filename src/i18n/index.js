@@ -6,7 +6,7 @@ import { useTranslation, initReactI18next } from "react-i18next";
 import HEADER_EN from "../locales/en/header.json";
 import HOME_EN from "../locales/en/home.json";
 import HEADER_VI from "../locales/vi/header.json";
-import HOME_VI from "../locales/vi/header.json";
+import HOME_VI from "../locales/vi/home.json";
 
 // export const locales = {
 //   en: "English",

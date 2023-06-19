@@ -2,7 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: 'Krona One', sans-serif;
-  font-family: 'Poppins', sans-serif;
+@layer base {
+  body {
+    font-family: 'Krona One', sans-serif;
+    font-family: 'Poppins', sans-serif;
+  }  
 }
+
+@layer components {  
+  /* item product compact */
+  .productCompact {
+    @apply 
+      bg-[#1e1e1e] text-gray-700
+      w-[calc(25%-1.5rem)] min-h-[10rem]
+      /* h-fit */
+      shadow-black-rb-0.75
+      border-primary
+      border-solid
+      border-[3px]
+      rounded-md
+      overflow-hidden
+      select-none
+      mx-3 my-4
+      cursor-pointer
+      transition-all
+      duration-300
+      block
+      hover:border-primary-hover            
+  }
+
+  .productCompact__badge {
+    @apply 
+      px-3 py-1 rounded-full text-xs bg-gray-100
+  }
+
+  .productCompact__title {
+    @apply
+      font-semibold text-2xl
+      overflow-ellipsis overflow-hidden whitespace-nowrap
+      text-white
+  }
+
+  .productCompact__discountPercent {
+    @apply 
+      bg-green-400
+      px-1.5 py-0.5 rounded-full
+      text-xs text-white
+  }
+}
+

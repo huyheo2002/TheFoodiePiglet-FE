@@ -18,11 +18,11 @@ function Heading({ children, to, href, onClick, iconLeft, iconRight }) {
     pointer = true;
   }
 
-  const classes = clsx("mx-3 my-2 inline-flex uppercase select-none group items-center", {
+  const classes = clsx("mx-3 my-2 inline-flex uppercase select-none group items-center text-white", {
     "cursor-pointer": pointer,
   });
 
-  const classesTitle = clsx("text-black text-[1.5rem] font-normal px-2", {});
+  const classesTitle = clsx("text-[1.5rem] font-medium px-2 text-white", {});
 
   return (
     <Comp className={classes} {...props}>

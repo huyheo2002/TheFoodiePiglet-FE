@@ -83,7 +83,7 @@ function SlideShow() {
   };
 
   return (
-    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className="mb-3">
       <Swiper
         ref={swiperRefLocal}
         modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
@@ -104,7 +104,7 @@ function SlideShow() {
         {FAKE_DATA.map((item, index) => {
           return (
             <SwiperSlide key={index}>
-              <div className="w-full h-[600px] relative mt-4 rounded-xl overflow-hidden select-none">
+              <div className="w-full h-[600px] relative rounded-xl overflow-hidden select-none">
                 <img
                   src={item.image}
                   alt={item.title}

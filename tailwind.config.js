@@ -16,6 +16,11 @@ module.exports = {
         "black-b-0.50": "0 3px 7px 0 rgba(0,0,0,0.50)",
         "black-b-0.75": "0 3px 7px 0 rgba(0,0,0,0.75)",
         "black-b-0.1": "0 3px 7px 0 rgba(0,0,0,0.1)",
+        "black-rb-0.1": "5px 7px 7px 0 rgba(0,0,0,0.1)",
+        "black-rb-0.35": "5px 7px 7px 0 rgba(0,0,0,0.35)",
+        "black-rb-0.50": "5px 7px 7px 0 rgba(0,0,0,0.50)",
+        "black-rb-0.75": "5px 7px 7px 0 rgba(0,0,0,0.75)",
+        "black-rb-0.1": "5px 7px 7px 0 rgba(0,0,0,0.1)",
       },
       backgroundColor: {
         "rgba-black-0": "rgba(17,17,17,0)",
@@ -37,7 +42,11 @@ module.exports = {
       },
       transitionDuration: {
         
-      }
+      },
+      borderColor: {
+        "primary": "rgba(255, 255, 255, 0.1)",
+        "primary-hover": "#a26336"
+      },      
     },
   },
   plugins: [],
