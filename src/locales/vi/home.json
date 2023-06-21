@@ -1,5 +1,25 @@
 {
     "heading": {
-        "special": "Đặc sản của chúng tôi"
+        "special": "Đặc sản của chúng tôi",
+        "news": "Tin tức",
+        "lastest": "Mới nhất",
+        "menu": "Thực đơn"
+    },
+    "button": {
+        "more": "Xem thêm",
+        "detail": "Chi tiết",
+        "addToCart": "Thêm vào giỏ hàng"
+    },
+
+    "product": {
+        "dineIn": "Ăn tại chỗ",
+        "takeOut": "Mua mang về",                
+        "appetizers": "Món khai vị",
+        "mainDishes": "Món chính",
+        "seaFood": "Món hải sản",
+        "comboMeals": "Bữa ăn kết hợp",
+        "beverages": "Đồ uống",
+        "desserts": "Món tráng miệng",
+        "comingSoon": "Vui lòng đợi"
     }
 }

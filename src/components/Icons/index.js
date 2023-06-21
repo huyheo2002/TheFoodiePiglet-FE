@@ -1,7 +1,7 @@
 import clsx from "clsx";
 // import { IconContext } from "react-icons";
-import { AiFillBell, AiOutlineDown, AiFillHeart } from "react-icons/ai";
-import { FaAngleRight, FaAngleLeft, FaUserAlt } from "react-icons/fa";
+import { AiFillBell, AiOutlineDown, AiFillHeart, AiOutlinePlusCircle, AiFillInstagram, AiFillYoutube, AiOutlineTwitter } from "react-icons/ai";
+import { FaAngleRight, FaAngleLeft, FaUserAlt, FaFacebook } from "react-icons/fa";
 import { ImEarth } from "react-icons/im";
 import { BsStar, BsStarFill, BsStarHalf, BsCurrencyDollar } from "react-icons/bs";
 import { GiHotMeal } from "react-icons/gi";
@@ -100,4 +100,44 @@ export const HotMealIcon = ({ className, onClick }) => {
   };
 
   return <GiHotMeal className={clsx(("w-6 h-6", className))} {...props} />;
+};
+
+export const PlusIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return <AiOutlinePlusCircle className={clsx(("w-6 h-6", className))} {...props} />;
+};
+
+export const FacebookIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return <FaFacebook className={clsx(("w-6 h-6", className))} {...props} />;
+};
+
+export const InstagramIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return <AiFillInstagram className={clsx(("w-6 h-6", className))} {...props} />;
+};
+
+export const YoutubeIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return <AiFillYoutube className={clsx(("w-6 h-6", className))} {...props} />;
+};
+
+export const TwitterIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return <AiOutlineTwitter className={clsx(("w-6 h-6", className))} {...props} />;
 };

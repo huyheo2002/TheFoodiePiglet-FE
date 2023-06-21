@@ -1,5 +1,26 @@
 {
     "heading": {
-        "special": "OUR SPECIALITIES"
+        "special": "Our specialities",
+        "news": "News",
+        "lastest": "Lastest",
+        "menu": "Menu"
+    },
+    "button": {
+        "more": "More",
+        "detail": "Detail",
+        "addToCart": "Add to cart"
+    },
+
+    "product": {
+        "dineIn": "Dine in",
+        "takeOut": "Take out",
+        "appetizers": "Appertizers",
+        "mainDishes": "Main Dishes",
+        "seaFood": "Seafood",
+        "comboMeals": "Combo Meals",
+        "beverages": "Beverages",
+        "desserts": "Desserts",
+        "comingSoon": "Coming soon"
     }
+
 }

@@ -1,0 +1,22 @@
+{
+    "title": {
+        "introduce": "Giới thiệu",
+        "rules": "Điều khoản",
+        "order": "Đặt hàng",
+        "contact": "Liên hệ"
+    },
+
+    "subContent": {
+        "aboutUs": "Về chúng tôi",
+        "products": "Sản phẩm",
+        "promotion": "Khuyến mại",
+        "store": "Cửa hàng",
+
+        "termOfUse": "Điều khoản sử dụng",
+        "infoPrivate": "Chính sách bảo mật thông tin",
+        "botchat": "Botchat tư vấn",
+        "orderHome": "Đặt hàng về nhà",
+        "hotline": "Đường dây khẩn cấp",
+        "email": "Email"
+    }
+}

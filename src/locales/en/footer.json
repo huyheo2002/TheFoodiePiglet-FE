@@ -1,0 +1,22 @@
+{
+    "title": {
+        "introduce": "Introduce",
+        "rules": "Rules",
+        "order": "Order",
+        "contact": "Contact"
+    },
+
+    "subContent": {
+        "aboutUs": "About us",
+        "products": "Products",
+        "promotion": "Promotion",
+        "store": "Store",
+
+        "termOfUse": "Term of use",
+        "infoPrivate": "Infomation privacy policy",
+        "botchat": "Consulting botchat",
+        "orderHome": "Order home",
+        "hotline": "Hotline",
+        "email": "Email"
+    }
+}
