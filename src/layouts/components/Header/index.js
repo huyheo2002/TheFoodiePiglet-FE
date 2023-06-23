@@ -79,7 +79,7 @@ const NAVBAR_RIGHT_ITEM = [
     icon: <UserIcon className="!w-6 !h-6" />,
     keyword: "login",
     onlyShowIcon: false,
-    to: "/",
+    to: "/login",
   },
 ];
 

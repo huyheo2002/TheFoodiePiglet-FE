@@ -6,6 +6,7 @@ function Image({
   alt,
   src = "",
   className,
+  onClick,
   fallback: customFallback = fallbackImage,
   effectScale,
   ...props
@@ -18,9 +19,11 @@ function Image({
 
   return (
     <div className={clsx("group overflow-hidden flex items-center", {
-        className,
+        [className]: className,
         "bg-white": fallback !== ""        
-    })}>
+    })}
+      onClick={onClick}
+    >
       <img
         className={clsx("w-full h-full object-cover", {
             "group-hover:scale-110 transition-all duration-300": effectScale

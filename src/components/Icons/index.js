@@ -1,10 +1,11 @@
 import clsx from "clsx";
 // import { IconContext } from "react-icons";
-import { AiFillBell, AiOutlineDown, AiFillHeart, AiOutlinePlusCircle, AiFillInstagram, AiFillYoutube, AiOutlineTwitter } from "react-icons/ai";
+import { AiFillBell, AiOutlineDown, AiFillHeart, AiOutlinePlusCircle, AiFillInstagram, AiFillYoutube, AiOutlineTwitter, AiFillCloseCircle } from "react-icons/ai";
 import { FaAngleRight, FaAngleLeft, FaUserAlt, FaFacebook } from "react-icons/fa";
 import { ImEarth } from "react-icons/im";
 import { BsStar, BsStarFill, BsStarHalf, BsCurrencyDollar } from "react-icons/bs";
 import { GiHotMeal } from "react-icons/gi";
+import { RxEyeClosed, RxEyeOpen } from "react-icons/rx"
 
 export const BellIcon = ({ className, onClick }) => {
   const props = {
@@ -140,4 +141,28 @@ export const TwitterIcon = ({ className, onClick }) => {
   };
 
   return <AiOutlineTwitter className={clsx(("w-6 h-6", className))} {...props} />;
+};
+
+export const EyeOpenIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return <RxEyeOpen className={clsx(("w-6 h-6", className))} {...props} />;
+};
+
+export const EyeClosedIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return <RxEyeClosed className={clsx(("w-6 h-6", className))} {...props} />;
+};
+
+export const CloseCircleIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return <AiFillCloseCircle className={clsx(("w-6 h-6", className))} {...props} />;
 };

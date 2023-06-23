@@ -12,7 +12,7 @@ function Footer() {
   const { t } = useTranslation(["footer"]);
 
   return (
-    <div className="w-full">
+    <div className="w-full select-none">
       {/* footer top social */}
       <div className="bg-[#151515] text-white w-full flex px-16 border-b-2 border-[#1a1a1a]">
         <a className="pr-6 py-3 block">

@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 
-function Heading({ children, to, href, onClick, iconLeft, iconRight }) {
+function Heading({ children, to, href, onClick, iconLeft, iconRight, className }) {
   let Comp = "a";
   let pointer = false;
   const props = {
@@ -22,7 +22,9 @@ function Heading({ children, to, href, onClick, iconLeft, iconRight }) {
     "cursor-pointer": pointer,
   });
 
-  const classesTitle = clsx("text-[1.5rem] font-medium px-2 text-white", {});
+  const classesTitle = clsx("text-[1.5rem] font-medium px-2 text-white", {
+    [className]: className,
+  });
 
   return (
     <Comp className={classes} {...props}>
