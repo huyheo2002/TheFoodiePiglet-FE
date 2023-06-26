@@ -18,7 +18,6 @@ function Home() {
   const { t } = useTranslation(["home", "header"]);
   const [typeOfFoods, setTypeOfFoods] = useState(homeTypeOfFoods);
 
-  console.log("heading.special", t("heading.special"));
   return (
     <div className="mt-8 relative">
       {/* slideshow */}
@@ -124,7 +123,6 @@ function Home() {
       <div className="-mx-16 mt-3">
         {typeOfFoods.length > 0 &&
           typeOfFoods.map((item, index) => {
-            console.log("item", item);
             return (
               <div
                 key={index}

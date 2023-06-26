@@ -1,10 +1,11 @@
 import * as userServices from "../../services/userServices";
 
-export const USER_LOGIN = "USER_LOGIN";
 export const FETCH_USER_LOGIN = "FETCH_USER_LOGIN";
 export const FETCH_USER_ERROR = "FETCH_USER_ERROR";
 export const FETCH_USER_SUCCESS = "FETCH_USER_SUCCESS";
 export const USER_LOGOUT = "USER_LOGOUT";
+// when user no login lock features
+export const USER_NOLOGIN = "USER_NOLOGIN";
 
 export const handleLoginRedux = (username, password) => {
   return async (dispatch, getState) => {
@@ -31,3 +32,19 @@ export const handleLoginRedux = (username, password) => {
     }
   };
 };
+
+export const handleLogoutRedux = () => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: USER_LOGOUT
+    })
+  }
+}
+
+export const handleNoLoginRedux = () => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: USER_NOLOGIN
+    })
+  }
+}

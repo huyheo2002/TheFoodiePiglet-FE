@@ -1,11 +1,31 @@
 import clsx from "clsx";
 // import { IconContext } from "react-icons";
-import { AiFillBell, AiOutlineDown, AiFillHeart, AiOutlinePlusCircle, AiFillInstagram, AiFillYoutube, AiOutlineTwitter, AiFillCloseCircle } from "react-icons/ai";
-import { FaAngleRight, FaAngleLeft, FaUserAlt, FaFacebook } from "react-icons/fa";
+import {
+  AiFillBell,
+  AiOutlineDown,
+  AiFillHeart,
+  AiOutlinePlusCircle,
+  AiFillInstagram,
+  AiFillYoutube,
+  AiOutlineTwitter,
+  AiFillCloseCircle,
+  AiOutlineLoading3Quarters,
+} from "react-icons/ai";
+import {
+  FaAngleRight,
+  FaAngleLeft,
+  FaUserAlt,
+  FaFacebook,
+} from "react-icons/fa";
 import { ImEarth } from "react-icons/im";
-import { BsStar, BsStarFill, BsStarHalf, BsCurrencyDollar } from "react-icons/bs";
+import {
+  BsStar,
+  BsStarFill,
+  BsStarHalf,
+  BsCurrencyDollar,
+} from "react-icons/bs";
 import { GiHotMeal } from "react-icons/gi";
-import { RxEyeClosed, RxEyeOpen } from "react-icons/rx"
+import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
 
 export const BellIcon = ({ className, onClick }) => {
   const props = {
@@ -84,7 +104,9 @@ export const DollarIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return <BsCurrencyDollar className={clsx(("w-6 h-6", className))} {...props} />;
+  return (
+    <BsCurrencyDollar className={clsx(("w-6 h-6", className))} {...props} />
+  );
 };
 
 export const HeartFillIcon = ({ className, onClick }) => {
@@ -108,7 +130,9 @@ export const PlusIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return <AiOutlinePlusCircle className={clsx(("w-6 h-6", className))} {...props} />;
+  return (
+    <AiOutlinePlusCircle className={clsx(("w-6 h-6", className))} {...props} />
+  );
 };
 
 export const FacebookIcon = ({ className, onClick }) => {
@@ -124,7 +148,9 @@ export const InstagramIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return <AiFillInstagram className={clsx(("w-6 h-6", className))} {...props} />;
+  return (
+    <AiFillInstagram className={clsx(("w-6 h-6", className))} {...props} />
+  );
 };
 
 export const YoutubeIcon = ({ className, onClick }) => {
@@ -140,7 +166,9 @@ export const TwitterIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return <AiOutlineTwitter className={clsx(("w-6 h-6", className))} {...props} />;
+  return (
+    <AiOutlineTwitter className={clsx(("w-6 h-6", className))} {...props} />
+  );
 };
 
 export const EyeOpenIcon = ({ className, onClick }) => {
@@ -164,5 +192,20 @@ export const CloseCircleIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return <AiFillCloseCircle className={clsx(("w-6 h-6", className))} {...props} />;
+  return (
+    <AiFillCloseCircle className={clsx(("w-6 h-6", className))} {...props} />
+  );
+};
+
+export const LoadingIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <AiOutlineLoading3Quarters
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
 };

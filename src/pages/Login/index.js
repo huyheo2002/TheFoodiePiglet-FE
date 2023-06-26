@@ -14,12 +14,17 @@ import { useNavigate } from "react-router-dom";
 import * as userServices from "../../services/userServices";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
-import { handleLoginRedux } from "../../redux/actions/userAction";
+import {
+  handleLoginRedux,
+  handleNoLoginRedux,
+} from "../../redux/actions/userAction";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import { LoadingIcon } from "../../components/Icons";
 
 function Login() {
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
-  
+
   const dispatch = useDispatch();
 
   const [values, setValues] = useState({
@@ -50,11 +55,17 @@ function Login() {
     },
   ];
 
-  const isLoading = useSelector(state => state.user.isLoading)
-  const dataUserRedux = useSelector(state => state.user.user);
+  const isLoading = useSelector((state) => state.user.isLoading);
+  const dataUserRedux = useSelector((state) => state.user.user);
+  const isError = useSelector((state) => state.user.isError);
+  console.log("isError", isError);
   const [checkError, setCheckError] = useState(false);
-  console.log("isLoading", isLoading)
-  console.log("dataUserRedux", dataUserRedux)
+  // console.log("isLoading", isLoading);
+  // console.log("dataUserRedux", dataUserRedux);
+  // "dataUser", dataUserRedux
+
+  const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
+  // console.log("valueLocal", valueLocal);
 
   const onChangeInput = (e) => {
     // e.target.name lấy key trong obj
@@ -62,30 +73,39 @@ function Login() {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const lockFeatures = useSelector((state) => state.user.isLockFeatures);
+  console.log("lockFeatures home", lockFeatures);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    dispatch(handleLoginRedux(values.username, values.password))    
+    dispatch(handleLoginRedux(values.username, values.password));
     // try {
     //   const res = await userServices.handleLogin(
     //     values.username,
     //     values.password
     //   );
-    //   // console.log("res", res);      
+    //   // console.log("res", res);
     // } catch (error) {
     //   console.log("error", error);
     // }
   };
 
+  const handleBackHome = () => {
+    dispatch(handleNoLoginRedux());
+    navigate("/");
+  };
+
   useEffect(() => {
-    if(dataUserRedux && dataUserRedux.auth === false && dataUserRedux.username !== "") {
-      setCheckError(true); 
+    if (isError) {
+      setCheckError(true);
     }
-    
-    if(dataUserRedux && dataUserRedux.auth === true) {
+
+    if (dataUserRedux && dataUserRedux.auth === true) {
+      setValueLocal(dataUserRedux);
       navigate("/");
-    }    
-  }, [dataUserRedux])
+    }
+  }, [dataUserRedux]);
 
   return (
     <div className="flex justify-center items-center w-full h-[100vh] relative">
@@ -103,23 +123,30 @@ function Login() {
                   value={values[item.name]}
                   onChange={onChangeInput}
                   onClick={() => {
-                    setCheckError(false)
+                    setCheckError(false);
                   }}
                   {...item}
                 />
               );
-            })}
+            })}            
             <span
               className={clsx("text-sm text-red-500 hidden", {
-                "!inline-block": dataUserRedux && dataUserRedux.auth === false && checkError,
+                "!inline-block": isError && checkError,
               })}
-            >        
-              {dataUserRedux && dataUserRedux.auth === false && checkError && t("login.message.loginFail")}                   
+            >
+              {isError && checkError && t("login.message.loginFail")}
             </span>
           </div>
           <div className="flex justify-end">
-            <Button viewMore>{t("login.button.login")}</Button>            
-            <Button viewMore onClick={() => navigate(-1)}>{t("login.button.back")}</Button>
+            <Button viewMore 
+            // clone :V
+            iconRight={<LoadingIcon className="opacity-0"/>}
+            iconLeft={<LoadingIcon className={clsx("text-white text-base mr-1 animate-spin opacity-0", {
+              "!opacity-100": isLoading,
+            })} />}>{t("login.button.login")}</Button>
+            <Button to={"/"} viewMore onClick={() => handleBackHome()}>
+              {t("login.button.back")}
+            </Button>
           </div>
           <div className="flex justify-between px-3 py-2">
             <a className="text-[#d3bc8e] font-normal text-base capitalize cursor-pointer hover:text-[#c29e56] transition-all">

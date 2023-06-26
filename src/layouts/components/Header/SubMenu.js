@@ -1,15 +1,34 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
+import { handleLogoutRedux } from "../../../redux/actions/userAction";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 function SubMenu({ data, className }) {
   const { t, i18n } = useTranslation(["header"]);
+  const navigate = useNavigate();
 
   const changeLanguages = (lng = "vi" || "en" ) => {
     i18n.changeLanguage(lng);
   };
 
-  // console.log("data sub item", data);
+  // USER
+  const user = useSelector(state => state.user.user);
+  const loginErrorRedux = useSelector(state => state.user.isError);
+  const dispatch = useDispatch();
+  // using when user login success
+  const handleLogout = () => {
+    dispatch(handleLogoutRedux());
+  }
+
+  useEffect(() => {
+    if(user && user.auth === false && loginErrorRedux === true) {
+      navigate("/login");
+    }
+  }, [user])
+
+  console.log("data sub item", data);
   return (
     <ul
       className={clsx(
@@ -20,18 +39,13 @@ function SubMenu({ data, className }) {
       {data &&
         data.length > 0 &&
         data.map((item, index) => {
-          // console.log("sub item", item)
-          // handle get languages
           let getKeyword = item.keyword || "";
           let findTypeLanguages = getKeyword !== "" && getKeyword.includes("languages");
-          // default
           let getTypeLanguages = "vi";
-          // console.log("getKeyword", getKeyword);
           if (findTypeLanguages) {
             let convertToArray = getKeyword.split("-");
             getTypeLanguages = convertToArray.length > 0 && convertToArray[convertToArray.length - 1];            
           }
-          // console.log("getTypeLanguages", getTypeLanguages)          
 
           return (
             <li
@@ -40,7 +54,12 @@ function SubMenu({ data, className }) {
               onClick={() => {
                 if (findTypeLanguages) {
                   changeLanguages(getTypeLanguages)
-                }                  
+                }
+                
+                if(item.keyword === "logout") {
+                  handleLogout();
+                }
+                                
               }}
             >
               {item.href && (

@@ -15,6 +15,11 @@
     "store": "Store",
     "about-us": "About Us",
     "languages-vi": "Vietnamese",
-    "languages-en": "English"
+    "languages-en": "English",
+    "logout": "Logout"
+  },
+
+  "userLogin": {
+    "msgWelcome": "Welcome"
   }
 }

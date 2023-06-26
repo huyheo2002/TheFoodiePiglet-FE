@@ -1,9 +1,16 @@
 import { Link } from "react-router-dom";
 import Menu from "./Menu";
-import { BellIcon, EarthIcon, LineDownIcon, UserIcon } from "../../../components/Icons";
+import {
+  BellIcon,
+  EarthIcon,
+  LineDownIcon,
+  UserIcon,
+} from "../../../components/Icons";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import GlobalContext from "../../../contexts/globalContext";
+import { useSelector } from "react-redux";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 const NAVBAR_ITEM = [
   {
@@ -47,7 +54,7 @@ const NAVBAR_ITEM = [
       {
         keyword: "about-us",
         to: "/",
-      }
+      },
     ],
   },
 ];
@@ -56,7 +63,7 @@ const NAVBAR_RIGHT_ITEM = [
   {
     icon: <BellIcon className="!w-6 !h-6" />,
     keyword: "notify",
-    // to: "/news",
+    // to: "/news",    
     onlyShowIcon: true,
   },
   {
@@ -80,12 +87,24 @@ const NAVBAR_RIGHT_ITEM = [
     keyword: "login",
     onlyShowIcon: false,
     to: "/login",
+    // using when login success
+    subNav: [
+      {
+        keyword: "logout",
+        to: "/login",
+      },      
+    ],
   },
 ];
 
 function Header() {
   const { testContext } = useContext(GlobalContext);
-  console.log("testContext", testContext);
+  // console.log("testContext", testContext);
+
+  // const user = useSelector(state => state.user.user);
+  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
+  console.log("dataUser", dataUser);
+
 
   return (
     <header className="w-full h-16 shadow-bs-black-b-0.35 bg-rgba-black-0.75 flex justify-between px-8 fixed z-50 top-0 left-0 right-0">
@@ -107,20 +126,7 @@ function Header() {
       </div>
       {/* right */}
       <div className="flex items-center h-full">
-        <Menu data={NAVBAR_RIGHT_ITEM} />
-        {/* Thông báo */}
-        {/* <Link
-          to=""
-          className="text-gray-200 hover:text-white text-[16px] capitalize px-3 h-full leading-[4rem] flex items-center"
-        >
-          <BellIcon className="!w-8 !h-8" />
-        </Link>
-        <Link
-          to=""
-          className="text-gray-200 hover:text-white text-[16px] capitalize px-3 h-full leading-[4rem]"
-        >
-          Đăng nhập
-        </Link> */}
+        <Menu data={NAVBAR_RIGHT_ITEM} userLogin={dataUser}/>        
       </div>
     </header>
   );

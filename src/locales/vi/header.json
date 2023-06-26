@@ -15,6 +15,12 @@
     "store": "Cửa hàng",
     "about-us": "Về chúng tôi",
     "languages-vi": "Tiếng việt",
-    "languages-en": "Tiếng anh"
+    "languages-en": "Tiếng anh",
+    
+    "logout": "Đăng xuất"
+  },
+
+  "userLogin": {
+    "msgWelcome": "Xin chào"
   }
 }
