@@ -8,20 +8,24 @@ import logoGoogle from "../../assets/images/Base/logo-google.png";
 import logoTwitter from "../../assets/images/Base/logo-twitter.png";
 import logoIos from "../../assets/images/Base/logo-ios.png";
 import InputField from "../../components/FormControl/InputField";
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import * as userServices from "../../services/userServices";
+import clsx from "clsx";
+import { useDispatch, useSelector } from "react-redux";
+import { handleLoginRedux } from "../../redux/actions/userAction";
 
 function Login() {
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
+  
+  const dispatch = useDispatch();
 
   const [values, setValues] = useState({
     username: "",
     password: "",
   });
-
-  // console.log("auth user", t("login.input.nameUsername"))
 
   const inputs = [
     {
@@ -31,7 +35,7 @@ function Login() {
       placeholder: t("login.input.labelUsername"),
       label: t("login.input.labelUsername"),
       errorMessage: t("login.input.errMsgUsername"),
-      pattern: "[A-Za-z0-9_]{3,20}",
+      pattern: "[A-Za-z0-9@()]{3,30}",
       required: true,
     },
     {
@@ -41,10 +45,16 @@ function Login() {
       placeholder: t("login.input.labelPassword"),
       label: t("login.input.labelPassword"),
       errorMessage: t("login.input.errMsgPassword"),
-      pattern: "[A-Za-z0-9_]{3,20}",
+      pattern: "[A-Za-z0-9]{3,30}",
       required: true,
     },
   ];
+
+  const isLoading = useSelector(state => state.user.isLoading)
+  const dataUserRedux = useSelector(state => state.user.user);
+  const [checkError, setCheckError] = useState(false);
+  console.log("isLoading", isLoading)
+  console.log("dataUserRedux", dataUserRedux)
 
   const onChangeInput = (e) => {
     // e.target.name lấy key trong obj
@@ -52,10 +62,35 @@ function Login() {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    dispatch(handleLoginRedux(values.username, values.password))    
+    // try {
+    //   const res = await userServices.handleLogin(
+    //     values.username,
+    //     values.password
+    //   );
+    //   // console.log("res", res);      
+    // } catch (error) {
+    //   console.log("error", error);
+    // }
+  };
+
+  useEffect(() => {
+    if(dataUserRedux && dataUserRedux.auth === false && dataUserRedux.username !== "") {
+      setCheckError(true); 
+    }
+    
+    if(dataUserRedux && dataUserRedux.auth === true) {
+      navigate("/");
+    }    
+  }, [dataUserRedux])
+
   return (
     <div className="flex justify-center items-center w-full h-[100vh] relative">
       <div className="w-1/3 absolute z-20">
-        <Form custom>
+        <Form custom onSubmit={handleSubmit}>
           <Heading className={"!text-black capitalize font-semibold"}>
             {t("login.heading")}
           </Heading>
@@ -67,14 +102,24 @@ function Login() {
                   key={index}
                   value={values[item.name]}
                   onChange={onChangeInput}
+                  onClick={() => {
+                    setCheckError(false)
+                  }}
                   {...item}
                 />
               );
             })}
+            <span
+              className={clsx("text-sm text-red-500 hidden", {
+                "!inline-block": dataUserRedux && dataUserRedux.auth === false && checkError,
+              })}
+            >        
+              {dataUserRedux && dataUserRedux.auth === false && checkError && t("login.message.loginFail")}                   
+            </span>
           </div>
           <div className="flex justify-end">
+            <Button viewMore>{t("login.button.login")}</Button>            
             <Button viewMore onClick={() => navigate(-1)}>{t("login.button.back")}</Button>
-            <Button viewMore>{t("login.button.login")}</Button>
           </div>
           <div className="flex justify-between px-3 py-2">
             <a className="text-[#d3bc8e] font-normal text-base capitalize cursor-pointer hover:text-[#c29e56] transition-all">
