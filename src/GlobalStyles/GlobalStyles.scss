@@ -1,0 +1,56 @@
+// reset css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+button,
+input,
+[tabindex] {
+    outline: none;
+    border: none;
+}
+
+a[href] {
+    text-decoration: none;
+}
+
+ul {
+    list-style-type: none;
+}
+
+// custom css for lib
+.CircularProgressbar {
+    width: 4rem !important;
+    overflow: visible;
+    // transform: translate(15px, -15px);
+
+}
+
+.CircularProgressbar-path {
+    stroke: white !important;
+    stroke-width: 12px !important;
+    filter: drop-shadow(2px 4px 6px white) !important;
+}
+
+.CircularProgressbar-text {
+    fill: white !important;
+    color: white !important;
+}
+
+.CircularProgressbar-trail {
+    display: none;
+}
+
+// chart
+.apexcharts-menu-item {
+    color: #ccc;
+    font-size: 14px;
+} 
+
+.apexcharts-tooltip {
+    color: #000;
+    text-transform: capitalize;
+}
+

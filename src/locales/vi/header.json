@@ -17,7 +17,8 @@
     "languages-vi": "Tiếng việt",
     "languages-en": "Tiếng anh",
     
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "manager": "Danh mục quản lý"
   },
 
   "userLogin": {

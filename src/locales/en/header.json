@@ -16,7 +16,8 @@
     "about-us": "About Us",
     "languages-vi": "Vietnamese",
     "languages-en": "English",
-    "logout": "Logout"
+    "logout": "Logout",
+    "manager": "Manage"
   },
 
   "userLogin": {

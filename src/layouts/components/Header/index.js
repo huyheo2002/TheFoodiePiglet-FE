@@ -11,6 +11,8 @@ import { useContext } from "react";
 import GlobalContext from "../../../contexts/globalContext";
 import { useSelector } from "react-redux";
 import useLocalStorage from "../../../hooks/useLocalStorage";
+import logo from "../../../assets/images/Base/logo-transparent.png";
+import Image from "../../../components/Image";
 
 const NAVBAR_ITEM = [
   {
@@ -88,11 +90,15 @@ const NAVBAR_RIGHT_ITEM = [
     onlyShowIcon: false,
     to: "/login",
     // using when login success
-    subNav: [
+    subNav: [      
+      {
+        keyword: "manager",
+        to: "/admin",
+      },     
       {
         keyword: "logout",
         to: "/login",
-      },      
+      },    
     ],
   },
 ];
@@ -111,15 +117,8 @@ function Header() {
       {/* left */}
       <div className="max-h-16 flex">
         {/* logo */}
-        <Link to="" className="max-h-16 flex items-center">
-          <img
-            src="https://i.pinimg.com/originals/81/1d/31/811d318205e944641a3139dcaebdaa2a.png"
-            className="h-full w-10 py-4 select-none"
-          />
-          <p className="text-white uppercase text-2xl pl-3 font-semibold">
-            The Foodie Piglet
-            {/* {t("Home")} */}
-          </p>
+        <Link to="" className="max-h-16 inline-block h-full">          
+          <Image src={logo} className="h-full"/>          
         </Link>
         {/* navbar */}
         <Menu data={NAVBAR_ITEM} />

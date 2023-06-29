@@ -1,0 +1,18 @@
+{
+    "sidebar": {
+        "title": {
+            "app": "App",
+            "manage": "Manage",
+            "statistical": "Statistical"
+        },
+
+        "nameItems": {
+            "table": "Table",
+            "users": "Users",
+            "personal": "Personal",
+
+            "homepages": "The Foodie Piglet",
+            "calendar": "Calendar"
+        }
+    }
+}

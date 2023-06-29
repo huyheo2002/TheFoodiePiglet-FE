@@ -8,14 +8,14 @@ import HEADER_EN from "../locales/en/header.json";
 import HOME_EN from "../locales/en/home.json";
 import FOOTER_EN from "../locales/en/footer.json";
 import AUTH_EN from "../locales/en/auth.json";
-
+import ADMIN_EN from "../locales/en/admin.json";
 
 // Vi (Vietnamese)
 import HEADER_VI from "../locales/vi/header.json";
 import HOME_VI from "../locales/vi/home.json";
 import FOOTER_VI from "../locales/vi/footer.json";
 import AUTH_VI from "../locales/vi/auth.json";
-
+import ADMIN_VI from "../locales/vi/admin.json";
 
 // export const locales = {
 //   en: "English",
@@ -26,14 +26,16 @@ const resources = {
   en: {
     header: HEADER_EN,
     home: HOME_EN,
-    footer: FOOTER_EN, 
-    auth: AUTH_EN,   
+    footer: FOOTER_EN,
+    auth: AUTH_EN,
+    admin: ADMIN_EN,
   },
   vi: {
     header: HEADER_VI,
-    home: HOME_VI, 
-    footer: FOOTER_VI,   
-    auth: AUTH_VI,   
+    home: HOME_VI,
+    footer: FOOTER_VI,
+    auth: AUTH_VI,
+    admin: ADMIN_VI,
   },
 };
 
@@ -41,9 +43,9 @@ i18n.use(initReactI18next).init({
   resources,
   lng: "vi",
   fallbackLng: "vi",
-  ns: ["header", "home", "footer", "auth"],
+  ns: ["header", "home", "footer", "auth", "admin"],
   defaultNS: "home",
   interpolation: {
     escapeValue: false,
-  },
+  },  
 });

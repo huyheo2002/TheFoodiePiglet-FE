@@ -1,0 +1,18 @@
+{
+    "sidebar": {
+        "title": {
+            "app": "Phần mềm",
+            "manage": "Quản lý",
+            "statistical": "Thống kê"
+        },
+
+        "nameItems": {
+            "table": "Bảng",
+            "users": "Quản lý người dùng",
+            "personal": "Hồ sơ người dùng",
+
+            "homepages": "The Foodie Piglet",
+            "calendar": "Lịch"
+        }
+    }
+}

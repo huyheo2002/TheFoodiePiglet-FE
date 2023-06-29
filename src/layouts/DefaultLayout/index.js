@@ -1,5 +1,4 @@
 import React from "react";
-import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import bg from "../../assets/images/Base/background.png";
 import Footer from "../components/Footer";

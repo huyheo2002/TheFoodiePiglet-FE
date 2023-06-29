@@ -10,6 +10,8 @@ import {
   AiOutlineTwitter,
   AiFillCloseCircle,
   AiOutlineLoading3Quarters,
+  AiOutlineMessage,
+  AiOutlineClose,
 } from "react-icons/ai";
 import {
   FaAngleRight,
@@ -26,6 +28,8 @@ import {
 } from "react-icons/bs";
 import { GiHotMeal } from "react-icons/gi";
 import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
+
+import { BiMenuAltLeft, BiMenu } from "react-icons/bi";
 
 export const BellIcon = ({ className, onClick }) => {
   const props = {
@@ -204,6 +208,58 @@ export const LoadingIcon = ({ className, onClick }) => {
 
   return (
     <AiOutlineLoading3Quarters
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const MessageIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <AiOutlineMessage
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const MemuAltLeftIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <BiMenuAltLeft
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const MemuIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <BiMenu
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const CloseOutlineIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <AiOutlineClose
       className={clsx(("w-6 h-6", className))}
       {...props}
     />
