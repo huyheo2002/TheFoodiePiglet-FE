@@ -16,7 +16,7 @@ function Header() {
         }
     }
     return (  
-        <div className={clsx("bg-white h-16 mx-3 mt-2 px-4 py-2 fixed z-50 w-[calc(80%-1.5rem)] flex justify-between items-center rounded-lg shadow-black-rb-0.35", {
+        <div className={clsx("bg-white h-16 mx-3 mt-2 px-4 py-2 fixed z-50 w-[calc(100%-300px-1.5rem)] flex justify-between items-center rounded-lg shadow-black-rb-0.35", {
             "!w-[calc(100%-1.5rem)]": toggleSidebar === false
         })}>
             <div className="flex items-center">

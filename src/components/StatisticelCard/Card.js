@@ -149,7 +149,7 @@ function ExpandedCard({ dataItem, expanded }) {
           <CloseOutlineIcon className="!w-8 !h-8 text-red-500 font-semibold hover:animate-spin cursor-pointer" />
         </span>
       </header>
-      <div
+      <section
         className={clsx(
           "flex h-auto w-full justify-center mt-4 rounded-xl text-white relative cursor-pointer hover:!shadow-none",
           {
@@ -165,7 +165,7 @@ function ExpandedCard({ dataItem, expanded }) {
         <div className="w-full p-6">
           <Chart series={dataItem.series} type="area" options={data.options} />
         </div>
-      </div>
+      </section>
     </Modal>
   );
 }

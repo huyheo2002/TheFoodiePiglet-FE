@@ -91,11 +91,11 @@ function Menu({ data }) {
   renderListItems();
 
   return (
-    <div className={clsx("py-4 px-3")}>
+    <div className={clsx("px-3 h-full overflow-y-scroll scrollbar")}>
       {data &&
         data.map((item, index) => {
           return (
-            <Fragment key={item.id}>
+            <Fragment key={index}>
               <h1 className="text-lg font-semibold py-2 select-none">
                 {t(`sidebar.title.${item.title}`)}
               </h1>

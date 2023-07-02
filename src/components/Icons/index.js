@@ -18,6 +18,9 @@ import {
   FaAngleLeft,
   FaUserAlt,
   FaFacebook,
+  FaPencilAlt,
+  FaTrash,
+  FaBookOpen,
 } from "react-icons/fa";
 import { ImEarth } from "react-icons/im";
 import {
@@ -29,7 +32,7 @@ import {
 import { GiHotMeal } from "react-icons/gi";
 import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
 
-import { BiMenuAltLeft, BiMenu } from "react-icons/bi";
+import { BiMenuAltLeft, BiMenu, BiDotsHorizontalRounded } from "react-icons/bi";
 
 export const BellIcon = ({ className, onClick }) => {
   const props = {
@@ -260,6 +263,58 @@ export const CloseOutlineIcon = ({ className, onClick }) => {
 
   return (
     <AiOutlineClose
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const TrashIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaTrash
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const PencilIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaPencilAlt
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const BookOpenIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaBookOpen
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const DotHorizontalIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <BiDotsHorizontalRounded
       className={clsx(("w-6 h-6", className))}
       {...props}
     />

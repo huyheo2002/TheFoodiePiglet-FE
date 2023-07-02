@@ -7,3 +7,8 @@ export const handleLogin = (username, password) => {
   });
   return res;
 };
+
+export const getAllUsers = (id) => {
+  const res = axios.get(`/api/get-all-users?id=${id}`)
+  return res;
+}

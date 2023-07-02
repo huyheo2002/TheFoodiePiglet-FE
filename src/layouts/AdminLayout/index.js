@@ -1,21 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
 import Sidebar from "../components/Admin/Sidebar";
 import Header from "../components/Admin/Header";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
+import GlobalContext from "../../contexts/globalContext";
 
 // only header
 const AdminLayout = ({ children }) => {
   const toggleSidebar = useSelector(states => states.admin.toggleSidebar)
+  const { toggleDataTable ,setToggleDataTable } = useContext(GlobalContext);
   return (
-    <div className="w-full relative">
+    <div className="w-full relative"
+      onClick={() => {
+        if(toggleDataTable) {
+          setToggleDataTable(false);
+          // console.log("duma layout", toggleDataTable)        
+        }
+      }}
+    >
       <div className="relative flex">
-        <div className={clsx("fixed inset-y-0 w-1/5 left-0 z-50 bg-white", {
+        <div className={clsx("fixed inset-y-0 w-[300px] left-0 z-50 bg-white", {
           "!w-0": toggleSidebar === false
         })}>
           <Sidebar/>
         </div>
-        <div className={clsx("w-full ml-[20%] relative", {
+        <div className={clsx("w-full ml-[300px] relative", {
           "!ml-0": toggleSidebar === false
         })}>
           <Header/>

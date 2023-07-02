@@ -12,19 +12,19 @@ const SIDEBAR_DATA = [
     items: [
       {
         idItem: 1,
-        to: "table",
+        to: "/system",
         name: "table",
         icon: <UserIcon className="!w-6 !h-6" />,
       },
       {
         idItem: 2,
-        to: "users",
+        to: "/system/users",
         name: "users",
         icon: <UserIcon className="!w-6 !h-6" />,
       },
       {
         idItem: 3,
-        to: "personal",
+        to: "/system",
         name: "personal",
         icon: <UserIcon className="!w-6 !h-6" />,
       },
@@ -42,7 +42,79 @@ const SIDEBAR_DATA = [
       },
       {
         idItem: 5,
-        to: "calendar",
+        to: "/system",
+        name: "calendar",
+        icon: <UserIcon className="!w-6 !h-6" />,
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "statistical",
+    items: [
+      {
+        idItem: 6,
+        // to: "/",
+        name: "homepages",
+        icon: <UserIcon className="!w-6 !h-6" />,
+      },
+      {
+        idItem: 7,
+        // to: "calendar",
+        name: "calendar",
+        icon: <UserIcon className="!w-6 !h-6" />,
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "statistical",
+    items: [
+      {
+        idItem: 6,
+        // to: "/",
+        name: "homepages",
+        icon: <UserIcon className="!w-6 !h-6" />,
+      },
+      {
+        idItem: 7,
+        // to: "calendar",
+        name: "calendar",
+        icon: <UserIcon className="!w-6 !h-6" />,
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "statistical",
+    items: [
+      {
+        idItem: 6,
+        // to: "/",
+        name: "homepages",
+        icon: <UserIcon className="!w-6 !h-6" />,
+      },
+      {
+        idItem: 7,
+        // to: "calendar",
+        name: "calendar",
+        icon: <UserIcon className="!w-6 !h-6" />,
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "statistical",
+    items: [
+      {
+        idItem: 6,
+        // to: "/",
+        name: "homepages",
+        icon: <UserIcon className="!w-6 !h-6" />,
+      },
+      {
+        idItem: 7,
+        // to: "calendar",
         name: "calendar",
         icon: <UserIcon className="!w-6 !h-6" />,
       },
@@ -76,9 +148,13 @@ function Sidebar() {
       "!hidden": toggleSidebar === false
     })}>
       {/* logo */}
-      {toggleSidebar && <Image src={logo} />}      
+      <div className="h-[20vh] absolute inset-x-0 top-0 z-20">
+        {toggleSidebar && <Image src={logo} />}      
+      </div>
       {/* menu */}
-      <Menu data={SIDEBAR_DATA} />
+      <div className="h-[calc(80vh)] absolute inset-x-0 bottom-0 z-30 top-[20vh] py-4">
+        <Menu data={SIDEBAR_DATA} />
+      </div>
     </div>
   );
 }

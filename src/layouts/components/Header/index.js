@@ -93,7 +93,7 @@ const NAVBAR_RIGHT_ITEM = [
     subNav: [      
       {
         keyword: "manager",
-        to: "/admin",
+        to: "/system",
       },     
       {
         keyword: "logout",
