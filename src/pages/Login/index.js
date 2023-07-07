@@ -1,5 +1,4 @@
 import Button from "../../components/Button";
-import Form from "../../components/Form";
 import Heading from "../../components/Heading";
 import overlay from "../../assets/images/Base/bg-news2-homepage.jfif";
 import Image from "../../components/Image";
@@ -11,7 +10,6 @@ import InputField from "../../components/FormControl/InputField";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import * as userServices from "../../services/userServices";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -40,7 +38,7 @@ function Login() {
       placeholder: t("login.input.labelUsername"),
       label: t("login.input.labelUsername"),
       errorMessage: t("login.input.errMsgUsername"),
-      pattern: "[A-Za-z0-9@()]{3,30}",
+      pattern: "[A-Za-z0-9]{3,}",
       required: true,
     },
     {
@@ -50,7 +48,7 @@ function Login() {
       placeholder: t("login.input.labelPassword"),
       label: t("login.input.labelPassword"),
       errorMessage: t("login.input.errMsgPassword"),
-      pattern: "[A-Za-z0-9]{3,30}",
+      pattern: "[A-Za-z0-9]{3,}",
       required: true,
     },
   ];
@@ -60,12 +58,8 @@ function Login() {
   const isError = useSelector((state) => state.user.isError);
   console.log("isError", isError);
   const [checkError, setCheckError] = useState(false);
-  // console.log("isLoading", isLoading);
-  // console.log("dataUserRedux", dataUserRedux);
-  // "dataUser", dataUserRedux
 
   const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
-  // console.log("valueLocal", valueLocal);
 
   const onChangeInput = (e) => {
     // e.target.name lấy key trong obj
@@ -79,16 +73,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    dispatch(handleLoginRedux(values.username, values.password));
-    // try {
-    //   const res = await userServices.handleLogin(
-    //     values.username,
-    //     values.password
-    //   );
-    //   // console.log("res", res);
-    // } catch (error) {
-    //   console.log("error", error);
-    // }
+    dispatch(handleLoginRedux(values.username, values.password));    
   };
 
   const handleBackHome = () => {
@@ -110,81 +95,98 @@ function Login() {
   return (
     <div className="flex justify-center items-center w-full h-[100vh] relative">
       <div className="w-1/3 absolute z-20">
-        <Form custom onSubmit={handleSubmit}>
-          <Heading className={"!text-black capitalize font-semibold"}>
-            {t("login.heading")}
-          </Heading>
-          {/* form control */}
-          <div className="px-4 py-2">
-            {inputs.map((item, index) => {
-              return (
-                <InputField
-                  key={index}
-                  value={values[item.name]}
-                  onChange={onChangeInput}
-                  onClick={() => {
-                    setCheckError(false);
-                  }}
-                  {...item}
-                />
-              );
-            })}            
-            <span
-              className={clsx("text-sm text-red-500 hidden", {
-                "!inline-block": isError && checkError,
+        <form
+          autoComplete="off"
+          className="flex justify-between flex-col w-full min-h-fit max-h-[calc(100vh-64px)] px-4 py-3 rounded-lg bg-white shadow-black-b-0.75"
+          onSubmit={handleSubmit}
+        >
+          <div className="w-full h-full">
+            <Heading variant={"modal"}>
+              {t("login.heading")}
+            </Heading>
+            {/* form control */}
+            <div className="px-4 py-2">
+              {inputs.map((item, index) => {
+                return (
+                  <InputField
+                    key={index}
+                    value={values[item.name]}
+                    onChange={onChangeInput}
+                    onClick={() => {
+                      setCheckError(false);
+                    }}
+                    {...item}
+                  />
+                );
               })}
-            >
-              {isError && checkError && t("login.message.loginFail")}
-            </span>
-          </div>
-          <div className="flex justify-end">
-            <Button viewMore 
-            // clone :V
-            iconRight={<LoadingIcon className="opacity-0"/>}
-            iconLeft={<LoadingIcon className={clsx("text-white text-base mr-1 animate-spin opacity-0", {
-              "!opacity-100": isLoading,
-            })} />}>{t("login.button.login")}</Button>
-            <Button to={"/"} viewMore onClick={() => handleBackHome()}>
-              {t("login.button.back")}
-            </Button>
-          </div>
-          <div className="flex justify-between px-3 py-2">
-            <a className="text-[#d3bc8e] font-normal text-base capitalize cursor-pointer hover:text-[#c29e56] transition-all">
-              {t("login.other.support")}
-            </a>
-            <a className="text-[#d3bc8e] font-normal text-base capitalize cursor-pointer hover:text-[#c29e56] transition-all">
-              {t("login.other.register")}
-            </a>
-          </div>
-          {/* separate */}
-          <div
-            className="text-gray-400 flex font-medium text-sm select-none
+              <span
+                className={clsx("text-sm text-red-500 hidden", {
+                  "!inline-block": isError && checkError,
+                })}
+              >
+                {isError && checkError && t("login.message.loginFail")}
+              </span>
+            </div>
+            <div className="flex justify-end">
+              <Button
+                variant={"viewMore"}
+                // clone :V
+                iconRight={<LoadingIcon className="opacity-0" />}
+                iconLeft={
+                  <LoadingIcon
+                    className={clsx(
+                      "text-white text-base mr-1 animate-spin opacity-0",
+                      {
+                        "!opacity-100": isLoading,
+                      }
+                    )}
+                  />
+                }
+              >
+                {t("login.button.login")}
+              </Button>
+              <Button to={"/"} variant={"viewMore"} onClick={() => handleBackHome()}>
+                {t("login.button.back")}
+              </Button>
+            </div>
+            <div className="flex justify-between px-3 py-2">
+              <a className="text-[#d3bc8e] font-normal text-base capitalize cursor-pointer hover:text-[#c29e56] transition-all">
+                {t("login.other.support")}
+              </a>
+              <a className="text-[#d3bc8e] font-normal text-base capitalize cursor-pointer hover:text-[#c29e56] transition-all">
+                {t("login.other.register")}
+              </a>
+            </div>
+            {/* separate */}
+            <div
+              className="text-gray-400 flex font-medium text-sm select-none
             before:content-[''] before:border-t-[1px] before:border-t-gray-400 before:grow before:self-center before:mr-2
             after:content-[''] after:border-t-[1px] after:border-t-gray-400 after:grow after:self-center after:ml-2
           "
-          >
-            {t("login.other.separate")}
+            >
+              {t("login.other.separate")}
+            </div>
+            {/* social */}
+            <div className="flex justify-center mt-3">
+              <Image
+                src={logoGoogle}
+                className="w-[40px] h-[40px] mx-2 my-3 cursor-pointer rounded-full"
+              />
+              <Image
+                src={logoFacebook}
+                className="w-[40px] h-[40px] mx-2 my-3 cursor-pointer rounded-full"
+              />
+              <Image
+                src={logoIos}
+                className="w-[40px] h-[40px] mx-2 my-3 cursor-pointer rounded-full"
+              />
+              <Image
+                src={logoTwitter}
+                className="w-[40px] h-[40px] mx-2 my-3 cursor-pointer rounded-full"
+              />
+            </div>
           </div>
-          {/* social */}
-          <div className="flex justify-center mt-3">
-            <Image
-              src={logoGoogle}
-              className="w-[40px] h-[40px] mx-2 my-3 cursor-pointer rounded-full"
-            />
-            <Image
-              src={logoFacebook}
-              className="w-[40px] h-[40px] mx-2 my-3 cursor-pointer rounded-full"
-            />
-            <Image
-              src={logoIos}
-              className="w-[40px] h-[40px] mx-2 my-3 cursor-pointer rounded-full"
-            />
-            <Image
-              src={logoTwitter}
-              className="w-[40px] h-[40px] mx-2 my-3 cursor-pointer rounded-full"
-            />
-          </div>
-        </Form>
+        </form>        
       </div>
 
       {/* overlay */}

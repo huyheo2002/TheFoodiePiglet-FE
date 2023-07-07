@@ -52,8 +52,8 @@ function ItemCompact() {
 
         {/* button action */}
         <div className="mt-5 flex">
-          <Button primary>{t("button.addToCart")}</Button>
-          <Button primary>{t("button.detail")}</Button>
+          <Button variant="primary">{t("button.addToCart")}</Button>
+          <Button variant="primary">{t("button.detail")}</Button>
         </div>
       </div>
     </div>

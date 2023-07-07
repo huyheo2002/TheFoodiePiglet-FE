@@ -12,6 +12,7 @@ function InputField({ ...props }) {
     errorMessage,
     onlyRead,
     onClick,
+    hidden,
     ...inputProps
   } = props;
   const [focus, setFocus] = useState(false);
@@ -30,12 +31,13 @@ function InputField({ ...props }) {
     <div
       className={clsx("w-full py-1 select-none", {
         "pointer-events-none": onlyRead,
+        "!hidden": hidden,
       })}
       onClick={onClick}
     >
       <label
         htmlFor={id}
-        className="block text-base font-medium text-black tracking-wider pb-1"
+        className="capitalize block text-base font-medium text-black tracking-wider pb-1"
       >
         {label}
       </label>

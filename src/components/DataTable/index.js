@@ -10,11 +10,21 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import GlobalContext from "../../contexts/globalContext";
 import Pagination from "../Pagination";
 import WindowScrollTop from "../../utils/windowScroll";
+import { useTranslation } from "react-i18next";
+import Button from "../Button";
 
-function DataTable({ data, manyFeatures, dataPreview }) {
+function DataTable({
+  data,
+  manyFeatures,
+  handleModalRead,
+  handleModalEdit,
+  handleModalDelete,
+  handleModalCreate,
+}) {
   const { toggleDataTable, setToggleDataTable } = useContext(GlobalContext);
   const [currentItem, setCurrentItem] = useState(-1);
   const [keyDataPreview, setKeyDataPreview] = useState([]);
+  const { t } = useTranslation(["table"]);
 
   // pages
   const [postPerPage, setPostPerPage] = useState(5);
@@ -26,15 +36,15 @@ function DataTable({ data, manyFeatures, dataPreview }) {
 
   indexOfLastPost = currentPage * postPerPage;
   indexOfFirstPost = indexOfLastPost - postPerPage;
-  currentPost = dataPreview.slice(indexOfFirstPost, indexOfLastPost);
+  currentPost = data.slice(indexOfFirstPost, indexOfLastPost);
   // data.slice(indexOfFirstPost, indexOfLastPost)
   const onChangePage = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
   const handleGetKeyDataPreview = () => {
-    if (dataPreview && dataPreview.length > 0) {
-      const keys = Object.keys(dataPreview[0]);
+    if (data && data.length > 0) {
+      const keys = Object.keys(data[0]);
       if (keys.length > 0) {
         setKeyDataPreview(keys);
       }
@@ -47,14 +57,22 @@ function DataTable({ data, manyFeatures, dataPreview }) {
 
   return (
     <Fragment>
+      <div className="flex justify-end my-2">
+        <Button
+          variant={"baseOrange"}
+          onClick={handleModalCreate && handleModalCreate}
+        >
+          Create user
+        </Button>
+      </div>
       <table className="w-full border border-gray-200 select-none">
-        <thead className="rounded-t-lg overflow-hidden">
+        <thead className="rounded-t-lg">
           <tr className="bg-[#548be6] text-white capitalize text-sm font-semibold leading-normal">
             {keyDataPreview.length > 0 &&
               keyDataPreview.map((key, index) => {
                 return (
                   <th className="py-3 px-6 text-left" key={index}>
-                    {key}
+                    {t(`key.${key}`)}
                   </th>
                 );
               })}
@@ -63,7 +81,8 @@ function DataTable({ data, manyFeatures, dataPreview }) {
                 "w-1/12": manyFeatures,
               })}
             >
-              Action
+              {t(`key.action`)}
+              {/* Action */}
             </th>
           </tr>
         </thead>
@@ -71,10 +90,8 @@ function DataTable({ data, manyFeatures, dataPreview }) {
           {/* display count post */}
           {currentPost.length > 0 &&
             currentPost.map((item, index) => {
-              console.log("item", item);
               let getValuesItem = Object.values(item) || [];
-              console.log("getValuesItem", getValuesItem);
-
+              // console.log("item currentpost", item);
               return (
                 <tr
                   className="bg-white hover:bg-[#e6f2fe] transition-all duration-300 group"
@@ -83,7 +100,8 @@ function DataTable({ data, manyFeatures, dataPreview }) {
                   {getValuesItem.length > 0 &&
                     getValuesItem.map((valueItem, indexValue) => {
                       return (
-                        <td className="py-4 px-6 text-sm font-normal border-b border-gray-200 group-hover:text-[#548be6] transition-all duration-300"
+                        <td
+                          className="py-4 px-6 text-sm font-normal border-b border-gray-200 group-hover:text-[#548be6] transition-all duration-300 overflow-hidden max-w-[8rem] text-ellipsis whitespace-nowrap"
                           key={indexValue}
                         >
                           {valueItem}
@@ -98,9 +116,30 @@ function DataTable({ data, manyFeatures, dataPreview }) {
                   >
                     {!manyFeatures ? (
                       <div className="flex justify-around">
-                        <BookOpenIcon className="!w-6 !h-6 hover:text-[#548be6] transition-all cursor-pointer" />
-                        <PencilIcon className="!w-6 !h-6 hover:text-green-400 transition-all cursor-pointer" />
-                        <TrashIcon className="!w-6 !h-6 hover:text-red-500 transition-all cursor-pointer" />
+                        <BookOpenIcon
+                          className="!w-6 !h-6 hover:text-[#548be6] transition-all cursor-pointer"
+                          onClick={() => {
+                            if (handleModalRead) {
+                              handleModalRead(item.id);
+                            }
+                          }}
+                        />
+                        <PencilIcon
+                          className="!w-6 !h-6 hover:text-green-400 transition-all cursor-pointer"
+                          onClick={() => {
+                            if (handleModalEdit) {
+                              handleModalEdit(item.id);
+                            }
+                          }}
+                        />
+                        <TrashIcon
+                          className="!w-6 !h-6 hover:text-red-500 transition-all cursor-pointer"
+                          onClick={() => {
+                            if (handleModalDelete) {
+                              handleModalDelete(item.id);
+                            }
+                          }}
+                        />
                       </div>
                     ) : (
                       <div className="flex justify-around relative">
@@ -129,7 +168,7 @@ function DataTable({ data, manyFeatures, dataPreview }) {
                                   >
                                     {feature.icon}
                                     <p className="pl-2 text-sm font-semibold leading-normal">
-                                      {feature.name}
+                                      {t(`btnUserAction.${feature.name}`)}
                                     </p>
                                   </div>
                                 );
@@ -146,7 +185,7 @@ function DataTable({ data, manyFeatures, dataPreview }) {
       </table>
       <Pagination
         postsPerPage={postPerPage}
-        totalPosts={dataPreview && dataPreview.length}
+        totalPosts={data && data.length}
         paginate={onChangePage}
       />
     </Fragment>

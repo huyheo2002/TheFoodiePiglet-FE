@@ -35,7 +35,7 @@ function Home() {
         <ItemCompact />
       </div>
       {/* news */}
-      <Heading className={"text-[1.5rem]"}>{t("heading.news")}</Heading>
+      <Heading>{t("heading.news")}</Heading>
       <div className="h-[400px] flex mx-10">
         <div className="h-full w-1/2">
           <SlideShow className={"w-full !h-[400px] !rounded-none"} />
@@ -109,7 +109,7 @@ function Home() {
               </li>
             </ul>
             <div className="flex justify-end mt-3">
-              <Button viewMore iconRight={<PlusIcon />}>
+              <Button variant={"viewMore"} iconRight={<PlusIcon />}>
                 {t("button.more")}
               </Button>
             </div>
@@ -118,7 +118,7 @@ function Home() {
       </div>
       {/* type of foods :v */}
       <div className="mt-3">
-        <Heading className={"text-[1.5rem]"}>{t("heading.menu")}</Heading>
+        <Heading >{t("heading.menu")}</Heading>
       </div>
       <div className="-mx-16 mt-3">
         {typeOfFoods.length > 0 &&

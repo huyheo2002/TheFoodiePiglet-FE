@@ -1,0 +1,16 @@
+{
+    "key": {
+        "id": "Stt",
+        "action": "Hoạt động",
+        "name": "Tên",
+        "username": "Tài khoản",
+        "roleName": "Vai trò",
+        "email": "Email"
+    },
+    
+    "btnUserAction": {
+        "read": "Đọc",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá"
+    }
+}

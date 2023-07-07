@@ -1,0 +1,16 @@
+{
+    "key": {
+        "id": "Id",
+        "action": "Action",
+        "name": "Name",
+        "username": "Username",
+        "roleName": "Role",
+        "email": "Email"
+    },
+    
+    "btnUserAction": {
+        "read": "Read",
+        "edit": "Edit",
+        "delete": "Delete"
+    }
+}

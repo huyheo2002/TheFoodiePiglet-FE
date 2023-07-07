@@ -9,6 +9,17 @@ export const handleLogin = (username, password) => {
 };
 
 export const getAllUsers = (id) => {
-  const res = axios.get(`/api/get-all-users?id=${id}`)
+  const res = axios.get(`/api/get-all-users?id=${id}`);
   return res;
-}
+};
+
+export const getAllUsersCompact = (id) => {
+  const res = axios.get(`/api/get-all-users-compact?id=${id}`);
+  return res;
+};
+
+export const handleCreateUser = (data) => {
+  console.log("dataaaaa", data);
+
+  return axios.post("/api/create-user", data);
+};

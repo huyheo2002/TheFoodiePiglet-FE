@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 
 function Pagination({ postsPerPage, totalPosts, paginate }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [btnNextDisable, setBtnNextDisable] = useState(false);
-  const [btnPrevDisable, setBtnPrevDisable] = useState(true);
   const pageNumbers = [];
+  const [btnNextDisable, setBtnNextDisable] = useState(totalPosts <= 5 ? true : false);
+  const [btnPrevDisable, setBtnPrevDisable] = useState(true);
 
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i);
