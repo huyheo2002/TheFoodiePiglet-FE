@@ -23,3 +23,14 @@ export const handleCreateUser = (data) => {
 
   return axios.post("/api/create-user", data);
 };
+
+export const handleUpdateUser = (data) => {
+  console.log("dataa", data);
+  return axios.put("/api/edit-user", data);
+};
+
+export const handleDeleteUser = (id) => {
+  console.log("dataa id", id);
+
+  return axios.delete("/api/delete-user", {id: id});
+};

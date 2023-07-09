@@ -29,7 +29,7 @@ function DashBoard() {
   ];
 
   const handleTest = () => {
-    console.log("hello world");
+    // console.log("hello world");
   };
 
   const updatedManyFeatures = manyFeatures.map((feature) => {
@@ -41,14 +41,14 @@ function DashBoard() {
 
   const handleGetAllUsers = async () => {
     const res = await userServices.getAllUsers("all");
-    console.log("res", res);
+    // console.log("res", res);
     if (res && res.errCode === 0 && res.users) {
       const dataListUsers = res.users || [];
       let splitFields =
         dataListUsers.length > 0 &&
         dataListUsers.map((item) => {
           // handle role users
-          console.log("item role", item.roleId)
+          // console.log("item role", item.roleId)
           if(item.roleId) {
             if(item.roleId === 1) {
               item.roleName = "Admin";

@@ -116,9 +116,16 @@ function UserManagement() {
   // modal read
   const [openModalRead, setOpenModalRead] = useState(false);
   const [openModalCreate, setOpenModalCreate] = useState(false);
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [openModalDelete, setOpenModalDelete] = useState(false);
 
   // roles
   const [listRoles, setListRoles] = useState([]);
+
+  // data CURD
+  const [dataRead, setDataRead] = useState({});
+  const [valuesUpdate, setValuesUpdate] = useState({});
+  const [idUserDelete, setIdUserDelete] = useState(-1);
 
   // get list roles
   const handleGetlistRoles = async () => {
@@ -200,20 +207,23 @@ function UserManagement() {
     handleGetAllUsersCompact();
   }, []);
 
-  // handle show modal
+  // handle modal show info user
   const handleOpenModalRead = (id) => {
     setOpenModalRead(true);
-    // console.log("id modal", id)
-    // let filterUser =
-    //   listUsersDetail.length > 0 &&
-    //   listUsersDetail.filter((item) => item.id === id);
+    let filterUser =
+      listUsersDetail.length > 0 &&
+      listUsersDetail.filter((item) => item.id === id);
+
+    if (listUsersDetail.length > 0) {
+      setDataRead(filterUser[0]);
+    }
   };
 
   const handleCloseModalRead = () => {
     setOpenModalRead(false);
   };
 
-  // modal create
+  // modal create user
   const handleOpenModalCreate = () => {
     setOpenModalCreate(true);
   };
@@ -225,9 +235,41 @@ function UserManagement() {
     setImage("");
   };
 
+  // modal update user
+  const handleOpenModalUpdate = (id) => {
+    setOpenModalUpdate(true);
+    let filterUser =
+      listUsersDetail.length > 0 &&
+      listUsersDetail.filter((item) => item.id === id);
+
+    if (listUsersDetail.length > 0) {
+      let dataUserUpdate = { ...filterUser[0], ["password"]: "123" };
+      setValuesUpdate(dataUserUpdate);
+    }
+  };
+
+  const handleCloseModalUpdate = () => {
+    setOpenModalUpdate(false);
+
+    // reset image
+    setImage("");
+  };
+
+  const handleOpenModalDelete = (id) => {
+    setOpenModalDelete(true);
+    setIdUserDelete(id);
+  };
+
+  const handleCloseModalDelete = () => {
+    setOpenModalDelete(false);
+  };
   // handle create user
   const onChangeInputCreate = (e) => {
     setValuesCreate({ ...valuesCreate, [e.target.name]: e.target.value });
+  };
+
+  const onChangeInputUpdate = (e) => {
+    setValuesUpdate({ ...valuesUpdate, [e.target.name]: e.target.value });
   };
 
   // handle preview image
@@ -260,18 +302,51 @@ function UserManagement() {
   // handle submit
   const onhandleSubmitCreateUsers = async (e) => {
     e.preventDefault();
-    let newObj = { ...valuesCreate, roleId: roleIndex, gender: gender };       
+    let newObj = { ...valuesCreate, roleId: roleIndex, gender: gender };
     try {
-      const respon = await userServices.handleCreateUser(newObj);      
+      const respon = await userServices.handleCreateUser(newObj);
       // console.log("respon", respon);
 
-      if(respon && respon.errCode === 0) {
+      if (respon && respon.errCode === 0) {
         handleCloseModalCreate();
-      } else if(respon.errCode === 1) {
+      } else if (respon.errCode === 1) {
         alert(respon.message);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
+    }
+  };
+
+  const onhandleSubmitUpdateUser = async (e) => {
+    e.preventDefault();
+    let newObj = { ...valuesUpdate };
+    try {
+      const respon = await userServices.handleUpdateUser(newObj);
+
+      if (respon && respon.errCode === 0) {
+        handleCloseModalUpdate();
+      } else if (respon.errCode === 1) {
+        alert(respon.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // error: cant send param to be
+  const onhandleSubmitDeleteUser = async (e) => {
+    e.preventDefault();
+    console.log("idUserDelete", idUserDelete)
+    try {
+      const respon = await userServices.handleDeleteUser(idUserDelete);
+      console.log("Respoon", respon)
+      if (respon && respon.errCode === 0) {
+        handleCloseModalDelete();
+      } else if (respon.errCode === 1) {
+        alert(respon.message);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -287,6 +362,8 @@ function UserManagement() {
               data={listUsers}
               handleModalRead={handleOpenModalRead}
               handleModalCreate={handleOpenModalCreate}
+              handleModalEdit={handleOpenModalUpdate}
+              handleModalDelete={handleOpenModalDelete}
             />
           )}
         </div>
@@ -294,45 +371,113 @@ function UserManagement() {
 
       {/* modal show detail info user*/}
       {openModalRead && (
-        <div></div>
-        // <Modal open={openModalRead} close={handleCloseModalRead}>
-        //   <Heading variant={"modal"}>
-        //     Information user detail
-        //   </Heading>
-        //   <div className="">
-        //     {inputs.map((item, index) => {
-        //       if (item.type === "file") {
-        //         return (
-        //           <InputFile
-        //             key={index}
-        //             value={values[item.name]}
-        //             onChange={onChangeInput}
-        //             onlyRead={"true"}
-        //             {...item}
-        //           />
-        //         );
-        //       }
+        <Modal open={openModalRead} close={handleCloseModalRead}>
+          <Heading variant={"modal"}>Information user detail</Heading>
+          <div className="">
+            {inputs.map((item, index) => {
+              const optionsGender = [
+                { value: "1", label: "Male" },
+                { value: "0", label: "Female" },
+              ];
 
-        //       return (
-        //         <InputField
-        //           key={index}
-        //           value={values[item.name]}
-        //           onChange={onChangeInput}
-        //           onClick={() => {}}
-        //           onlyRead={"true"}
-        //           {...item}
-        //         />
-        //       );
-        //     })}
-        //   </div>
-        //   {/* footer */}
-        //   <div className="flex justify-end">
-        //     <Button variant={"baseOrange"}>Submit</Button>
-        //     <Button variant={"baseOrange"} onClick={handleCloseModalRead}>
-        //       Cancel
-        //     </Button>
-        //   </div>
-        // </Modal>
+              let genderChecked = null;
+              if (dataRead) {
+                if (dataRead.gender === true) {
+                  genderChecked = 1;
+                } else {
+                  genderChecked = 0;
+                }
+              }
+
+              if (item.type === "password") {
+                return (
+                  <InputField
+                    key={index}
+                    value={dataRead[item.name]}
+                    onChange={() => {}}
+                    hidden={"true"}
+                    {...item}
+                  />
+                );
+              }
+
+              if (item.type === "file") {
+                return (
+                  <InputFile
+                    key={index}
+                    value={dataRead[item.name]}
+                    onChange={() => {}}
+                    onlyRead={"true"}
+                    {...item}
+                  />
+                );
+              }
+
+              if (item.type === "radio" && item.name === "gender") {
+                return (
+                  <InputRadio
+                    key={index}
+                    options={optionsGender}
+                    onChange={() => {}}
+                    checked={genderChecked}
+                    disable
+                    {...item}
+                    id={Math.floor(Math.random() * 10)}
+                  />
+                );
+              }
+
+              if (item.type === "radio" && item.name === "roleId") {
+                const getDataFromRole =
+                  listRoles.length > 0 &&
+                  listRoles.map((option) => {
+                    return {
+                      value: option.id,
+                      label: option.name,
+                    };
+                  });
+                let roleChecked = null;
+                if (dataRead) {
+                  let filterRoleIndex =
+                    getDataFromRole.length > 0 &&
+                    getDataFromRole.filter(
+                      (role) => role.label == dataRead.roleName
+                    );
+                  if (filterRoleIndex.length > 0) {
+                    roleChecked = filterRoleIndex[0].value;
+                  }
+                }
+                return (
+                  <InputRadio
+                    key={index}
+                    options={getDataFromRole}
+                    onChange={() => {}}
+                    checked={roleChecked}
+                    disable
+                    {...item}
+                    id={Math.floor(Math.random() * 10)}
+                  />
+                );
+              }
+
+              return (
+                <InputField
+                  key={index}
+                  value={dataRead[item.name]}
+                  onChange={() => {}}
+                  onlyRead={"true"}
+                  {...item}
+                />
+              );
+            })}
+          </div>
+          {/* footer */}
+          <div className="flex justify-end">
+            <Button variant={"baseOrange"} onClick={handleCloseModalRead}>
+              Cancel
+            </Button>
+          </div>
+        </Modal>
       )}
 
       {/* modal create user */}
@@ -363,8 +508,10 @@ function UserManagement() {
                     <InputRadio
                       key={index}
                       options={optionsGender}
-                      handleSelected={handleGetValueGender}
+                      // handleSelected={handleGetValueGender}
+                      onChange={handleGetValueGender}
                       {...item}
+                      id={Math.floor(Math.random() * 10)}
                     />
                   );
                 }
@@ -383,8 +530,9 @@ function UserManagement() {
                     <InputRadio
                       key={index}
                       options={getDataFromRole}
-                      handleSelected={handleGetValueRole}
+                      onChange={handleGetValueRole}
                       {...item}
+                      id={Math.floor(Math.random() * 10)}
                     />
                   );
                 }
@@ -403,6 +551,164 @@ function UserManagement() {
             <div className="flex justify-end">
               <Button variant={"baseOrange"}>Submit</Button>
               <Button variant={"baseOrange"} onClick={handleCloseModalCreate}>
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {/* modal update user */}
+      {openModalUpdate && (
+        <Modal open={openModalUpdate} close={handleCloseModalUpdate}>
+          <form autoComplete="off" onSubmit={onhandleSubmitUpdateUser}>
+            <Heading variant={"modal"}>Update user</Heading>
+            <div className="">
+              {inputs.map((item, index) => {
+                const optionsGender = [
+                  { value: "1", label: "Male" },
+                  { value: "0", label: "Female" },
+                ];
+
+                let genderChecked = null;
+                if (valuesUpdate) {
+                  if (valuesUpdate.gender === true) {
+                    genderChecked = 1;
+                  } else {
+                    genderChecked = 0;
+                  }
+                }
+
+                if (item.type === "file") {
+                  return (
+                    <InputFile
+                      key={index}
+                      value={valuesUpdate[item.name]}
+                      onChange={() => {}}
+                      onlyRead={"true"}
+                      {...item}
+                    />
+                  );
+                }
+
+                if (item.type === "radio" && item.name === "gender") {
+                  return (
+                    <InputRadio
+                      key={index}
+                      options={optionsGender}
+                      onChange={() => {}}
+                      checked={genderChecked}
+                      {...item}
+                      id={Math.floor(Math.random() * 10)}
+                    />
+                  );
+                }
+
+                if (item.type === "radio" && item.name === "roleId") {
+                  const getDataFromRole =
+                    listRoles.length > 0 &&
+                    listRoles.map((option) => {
+                      return {
+                        value: option.id,
+                        label: option.name,
+                      };
+                    });
+                  let roleChecked = null;
+                  if (valuesUpdate) {
+                    let filterRoleIndex =
+                      getDataFromRole.length > 0 &&
+                      getDataFromRole.filter(
+                        (role) => role.label == valuesUpdate.roleName
+                      );
+                    if (filterRoleIndex.length > 0) {
+                      roleChecked = filterRoleIndex[0].value;
+                    }
+                  }
+                  return (
+                    <InputRadio
+                      key={index}
+                      options={getDataFromRole}
+                      onChange={() => {}}
+                      checked={roleChecked}
+                      {...item}
+                      id={Math.floor(Math.random() * 10)}
+                    />
+                  );
+                }
+
+                return (
+                  <InputField
+                    key={index}
+                    onChange={onChangeInputUpdate}
+                    value={valuesUpdate[item.name]}
+                    onClick={() => {}}
+                    {...item}
+                  />
+                );
+              })}
+            </div>
+            {/* footer */}
+            <div className="flex justify-end">
+              <Button variant={"baseOrange"}>Submit</Button>
+              <Button variant={"baseOrange"} onClick={handleCloseModalUpdate}>
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {/* modal delete user */}
+      {openModalDelete && (
+        <Modal open={openModalDelete} close={handleCloseModalDelete}>
+          <form autoComplete="off" onSubmit={onhandleSubmitDeleteUser}>
+            <Heading variant={"modal"}>Confirm DELETE the user</Heading>
+            <div className="my-3 mx-2">
+              <p className="text-xl font-semibold capitalize mb-3">
+                Are you sure delete this user
+              </p>
+              {listUsersDetail.length > 0 &&
+                listUsersDetail
+                  .filter((item) => item.id === idUserDelete)
+                  .map((itemDelete, index) => {
+                    const keys = Object.keys(itemDelete);
+
+                    const username = keys.find(
+                      (itemKey) => itemKey === "username"
+                    );
+                    const email = keys.find((itemKey) => itemKey === "email");
+
+                    return (
+                      <Fragment key={index}>
+                        {username && (
+                          <p className="text-base font-medium capitalize">
+                            {username}
+                            {": "}
+                            <span className="text-base font-semibold ml-2">
+                              {itemDelete.username}
+                            </span>
+                          </p>
+                        )}
+                        {email && (
+                          <p className="text-base font-medium capitalize">
+                            {email}
+                            {": "}
+                            <span className="text-base font-semibold ml-2">
+                              {itemDelete.email}
+                            </span>
+                          </p>
+                        )}
+                      </Fragment>
+                    );
+                  })}
+              
+              {/* input id clone */}
+              <InputField type="text" name="id" value={idUserDelete} onChange={() => {}}/>
+            </div>
+            {/* footer */}
+            <div className="flex justify-end">
+              <Button variant={"baseOrange"}>Submit</Button>
+              <Button variant={"baseOrange"} onClick={handleCloseModalDelete}>
                 Cancel
               </Button>
             </div>
