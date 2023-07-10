@@ -4,6 +4,7 @@ import {
   BookOpenIcon,
   DotHorizontalIcon,
   PencilIcon,
+  PlusIcon,
   TrashIcon,
 } from "../Icons";
 import { Fragment, useContext, useEffect, useState } from "react";
@@ -61,6 +62,7 @@ function DataTable({
         <Button
           variant={"baseOrange"}
           onClick={handleModalCreate && handleModalCreate}
+          iconLeft={<PlusIcon className={"!w-6 !h-6"}/>}
         >
           Create user
         </Button>
@@ -117,7 +119,7 @@ function DataTable({
                     {!manyFeatures ? (
                       <div className="flex justify-around">
                         <BookOpenIcon
-                          className="!w-6 !h-6 hover:text-[#548be6] transition-all cursor-pointer"
+                          className="!w-6 !h-6 text-green-400 hover:text-green-600 transition-all cursor-pointer"
                           onClick={() => {
                             if (handleModalRead) {
                               handleModalRead(item.id);
@@ -125,7 +127,7 @@ function DataTable({
                           }}
                         />
                         <PencilIcon
-                          className="!w-6 !h-6 hover:text-green-400 transition-all cursor-pointer"
+                          className="!w-6 !h-6 text-yellow-400 hover:text-yellow-600 transition-all cursor-pointer"
                           onClick={() => {
                             if (handleModalEdit) {
                               handleModalEdit(item.id);
@@ -133,7 +135,7 @@ function DataTable({
                           }}
                         />
                         <TrashIcon
-                          className="!w-6 !h-6 hover:text-red-500 transition-all cursor-pointer"
+                          className="!w-6 !h-6 text-red-400 hover:text-red-600 transition-all cursor-pointer"
                           onClick={() => {
                             if (handleModalDelete) {
                               handleModalDelete(item.id);

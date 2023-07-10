@@ -221,6 +221,10 @@ function UserManagement() {
 
   const handleCloseModalRead = () => {
     setOpenModalRead(false);
+
+    // reset input radio
+    setGender(-1);
+    setRoleIndex(-1);
   };
 
   // modal create user
@@ -230,6 +234,10 @@ function UserManagement() {
 
   const handleCloseModalCreate = () => {
     setOpenModalCreate(false);
+
+    // reset input radio
+    setGender(-1);
+    setRoleIndex(-1);
 
     // reset image
     setImage("");
@@ -251,6 +259,10 @@ function UserManagement() {
   const handleCloseModalUpdate = () => {
     setOpenModalUpdate(false);
 
+    // reset input radio
+    setGender(-1);
+    setRoleIndex(-1);
+
     // reset image
     setImage("");
   };
@@ -265,7 +277,7 @@ function UserManagement() {
   };
   // handle create user
   const onChangeInputCreate = (e) => {
-    setValuesCreate({ ...valuesCreate, [e.target.name]: e.target.value });
+    setValuesCreate({ ...valuesCreate, [e.target.name]: e.target.value });    
   };
 
   const onChangeInputUpdate = (e) => {
@@ -297,7 +309,9 @@ function UserManagement() {
   const handleGetValueRole = (currentValue) => {
     setRoleIndex(currentValue);
   };
-  // console.log("gender", gender);
+
+  console.log("gender", gender);
+  console.log("roleindex", roleIndex);
 
   // handle submit
   const onhandleSubmitCreateUsers = async (e) => {
@@ -309,6 +323,8 @@ function UserManagement() {
 
       if (respon && respon.errCode === 0) {
         handleCloseModalCreate();
+        handleGetAllUsers();
+        handleGetAllUsersCompact();
       } else if (respon.errCode === 1) {
         alert(respon.message);
       }
@@ -325,6 +341,8 @@ function UserManagement() {
 
       if (respon && respon.errCode === 0) {
         handleCloseModalUpdate();
+        handleGetAllUsers();
+        handleGetAllUsersCompact();
       } else if (respon.errCode === 1) {
         alert(respon.message);
       }
@@ -342,6 +360,8 @@ function UserManagement() {
       console.log("Respoon", respon)
       if (respon && respon.errCode === 0) {
         handleCloseModalDelete();
+        handleGetAllUsers();
+        handleGetAllUsersCompact();
       } else if (respon.errCode === 1) {
         alert(respon.message);
       }
@@ -596,8 +616,9 @@ function UserManagement() {
                     <InputRadio
                       key={index}
                       options={optionsGender}
-                      onChange={() => {}}
-                      checked={genderChecked}
+                      checked={gender !== -1 ? gender : genderChecked}
+                      onChange={handleGetValueGender}
+                      edit
                       {...item}
                       id={Math.floor(Math.random() * 10)}
                     />
@@ -628,8 +649,9 @@ function UserManagement() {
                     <InputRadio
                       key={index}
                       options={getDataFromRole}
-                      onChange={() => {}}
-                      checked={roleChecked}
+                      checked={roleIndex !== -1 ? roleIndex : roleChecked}
+                      onChange={handleGetValueRole}
+                      edit
                       {...item}
                       id={Math.floor(Math.random() * 10)}
                     />
