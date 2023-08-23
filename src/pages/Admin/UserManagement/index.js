@@ -310,9 +310,6 @@ function UserManagement() {
     setRoleIndex(currentValue);
   };
 
-  console.log("gender", gender);
-  console.log("roleindex", roleIndex);
-
   // handle submit
   const onhandleSubmitCreateUsers = async (e) => {
     e.preventDefault();
@@ -354,10 +351,9 @@ function UserManagement() {
   // error: cant send param to be
   const onhandleSubmitDeleteUser = async (e) => {
     e.preventDefault();
-    console.log("idUserDelete", idUserDelete)
+
     try {
       const respon = await userServices.handleDeleteUser(idUserDelete);
-      console.log("Respoon", respon)
       if (respon && respon.errCode === 0) {
         handleCloseModalDelete();
         handleGetAllUsers();
@@ -392,7 +388,7 @@ function UserManagement() {
       {/* modal show detail info user*/}
       {openModalRead && (
         <Modal open={openModalRead} close={handleCloseModalRead}>
-          <Heading variant={"modal"}>Information user detail</Heading>
+          <Heading variant={"primary"}>Information user detail</Heading>
           <div className="">
             {inputs.map((item, index) => {
               const optionsGender = [
@@ -493,7 +489,7 @@ function UserManagement() {
           </div>
           {/* footer */}
           <div className="flex justify-end">
-            <Button variant={"baseOrange"} onClick={handleCloseModalRead}>
+            <Button variant={"primary"} onClick={handleCloseModalRead}>
               Cancel
             </Button>
           </div>
@@ -504,7 +500,7 @@ function UserManagement() {
       {openModalCreate && (
         <Modal open={openModalCreate} close={handleCloseModalCreate}>
           <form autoComplete="off" onSubmit={onhandleSubmitCreateUsers}>
-            <Heading variant={"modal"}>Create user</Heading>
+            <Heading variant={"primary"}>Create user</Heading>
             <div className="">
               {inputs.map((item, index) => {
                 const optionsGender = [
@@ -569,8 +565,8 @@ function UserManagement() {
             </div>
             {/* footer */}
             <div className="flex justify-end">
-              <Button variant={"baseOrange"}>Submit</Button>
-              <Button variant={"baseOrange"} onClick={handleCloseModalCreate}>
+              <Button variant={"primary"}>Submit</Button>
+              <Button variant={"primary"} onClick={handleCloseModalCreate}>
                 Cancel
               </Button>
             </div>
@@ -582,7 +578,7 @@ function UserManagement() {
       {openModalUpdate && (
         <Modal open={openModalUpdate} close={handleCloseModalUpdate}>
           <form autoComplete="off" onSubmit={onhandleSubmitUpdateUser}>
-            <Heading variant={"modal"}>Update user</Heading>
+            <Heading variant={"primary"}>Update user</Heading>
             <div className="">
               {inputs.map((item, index) => {
                 const optionsGender = [
@@ -597,6 +593,16 @@ function UserManagement() {
                   } else {
                     genderChecked = 0;
                   }
+                }
+
+                if (item.type === "password") {
+                  return (
+                    <InputField
+                      key={index}
+                      onChange={() => {}}
+                      hidden={"true"}                      
+                    />
+                  );
                 }
 
                 if (item.type === "file") {
@@ -671,8 +677,8 @@ function UserManagement() {
             </div>
             {/* footer */}
             <div className="flex justify-end">
-              <Button variant={"baseOrange"}>Submit</Button>
-              <Button variant={"baseOrange"} onClick={handleCloseModalUpdate}>
+              <Button variant={"primary"}>Submit</Button>
+              <Button variant={"primary"} onClick={handleCloseModalUpdate}>
                 Cancel
               </Button>
             </div>
@@ -684,7 +690,7 @@ function UserManagement() {
       {openModalDelete && (
         <Modal open={openModalDelete} close={handleCloseModalDelete}>
           <form autoComplete="off" onSubmit={onhandleSubmitDeleteUser}>
-            <Heading variant={"modal"}>Confirm DELETE the user</Heading>
+            <Heading variant={"primary"}>Confirm DELETE the user</Heading>
             <div className="my-3 mx-2">
               <p className="text-xl font-semibold capitalize mb-3">
                 Are you sure delete this user
@@ -729,8 +735,8 @@ function UserManagement() {
             </div>
             {/* footer */}
             <div className="flex justify-end">
-              <Button variant={"baseOrange"}>Submit</Button>
-              <Button variant={"baseOrange"} onClick={handleCloseModalDelete}>
+              <Button variant={"primary"}>Submit</Button>
+              <Button variant={"primary"} onClick={handleCloseModalDelete}>
                 Cancel
               </Button>
             </div>

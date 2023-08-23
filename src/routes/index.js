@@ -1,10 +1,15 @@
 // layouts
 import AdminLayout from "../layouts/AdminLayout";
 import DefaultLayout from "../layouts/DefaultLayout";
-// pages
+import FullScreenLayout from "../layouts/FullScreenLayout";
+
+// pages client
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Test from "../pages/Test";
+import Menu from "../pages/Menu";
+
+// pages system
 import DashBoard from "../pages/Admin/Dashboard";
 import UserManagement from "../pages/Admin/UserManagement";
 
@@ -12,6 +17,7 @@ import UserManagement from "../pages/Admin/UserManagement";
 const publicRoutes = [
     { path: "/", component: Home, layout: DefaultLayout },
     { path: "/login", component: Login, layout: null },
+    { path: "/menu", component: Menu, layout: FullScreenLayout },
     { path: "/test", component: Test, layout: null },
     
     // system

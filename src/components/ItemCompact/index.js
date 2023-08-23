@@ -28,13 +28,13 @@ function ItemCompact() {
           Food Food Food Food Food Food Food Food Food Food
         </h2>
 
-        <div>
+        <div className="flex items-center gap-4">
           <span className="flex justify-start items-center">
             <p className="text-xl font-normal text-white">400$</p>
           </span>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex items-center gap-2">
             <span className="flex justify-start items-center">
-              <p className="text-xs line-through opacity-50 text-white">500$</p>
+              <p className="text-lg line-through opacity-50 text-white">500$</p>
             </span>
             <span className="productCompact__discountPercent">save 20%</span>
           </div>

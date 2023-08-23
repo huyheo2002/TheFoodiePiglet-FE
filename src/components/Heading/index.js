@@ -18,13 +18,14 @@ function Heading({ children, to, href, onClick, iconLeft, iconRight, variant }) 
     pointer = true;
   }
 
-  const classes = clsx("mx-3 my-2 inline-flex uppercase select-none group items-center text-white", {
+  const classes = clsx("mx-3 my-2 inline-flex uppercase select-none group items-center text-primary", {
     "cursor-pointer": pointer,
     "!mx-0": variant === "modal",
+    "border-b-2 border-primary": true,
   });
 
-  const classesTitle = clsx("text-[1.5rem] font-medium px-2 text-white", {
-    "!text-black !capitalize font-semibold px-0 !text-2xl": variant === "modal",
+  const classesTitle = clsx("text-[1.5rem] font-medium px-2 text-primary", {
+    "!capitalize font-semibold px-0 !text-2xl": variant === "modal",
   });
 
   return (
