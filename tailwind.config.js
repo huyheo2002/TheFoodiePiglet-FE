@@ -6,6 +6,8 @@ module.exports = {
     extend: {
       colors: {
         "text-gray": "#ccc",
+        "primary": "#f4a7ba",
+        "primary-hover": "#cf4764",
       },
       fontSize: {
 
@@ -23,6 +25,8 @@ module.exports = {
         "black-rb-0.1": "5px 7px 7px 0 rgba(0,0,0,0.1)",
       },
       backgroundColor: {
+        "primary": "#f4a7ba",
+        "primary-hover": "#cf4764",
         "rgba-black-0": "rgba(17,17,17,0)",
         "rgba-black-0.25": "rgba(17,17,17,0.25)",
         "rgba-black-0.50": "rgba(17,17,17,0.50)",
@@ -44,9 +48,10 @@ module.exports = {
         
       },
       borderColor: {
-        "primary": "rgba(255, 255, 255, 0.1)",
-        "primary-hover": "#a26336"
-      },      
+        "primary": "#f4a7ba",
+        "primary-hover": "#cf4764",
+        "rgba-white-0.1": "rgba(255, 255, 255, 0.1)",
+      },            
     },
   },
   plugins: [],

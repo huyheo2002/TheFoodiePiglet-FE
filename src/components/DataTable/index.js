@@ -60,7 +60,7 @@ function DataTable({
     <Fragment>
       <div className="flex justify-end my-2">
         <Button
-          variant={"baseOrange"}
+          variant={"primary"}
           onClick={handleModalCreate && handleModalCreate}
           iconLeft={<PlusIcon className={"!w-6 !h-6"}/>}
         >

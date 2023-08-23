@@ -25,7 +25,7 @@ function Menu({ data, userLogin }) {
                   userLogin.auth === true &&
                   item.keyword === "login" ? (
                     <a
-                      className="h-full px-3 inline-flex items-center text-gray-200 text-[16px] capitalize group-hover:text-white transition-all duration-300"
+                      className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300"
                     >
                       {!item.onlyShowIcon ? (
                         <Fragment>
@@ -49,7 +49,7 @@ function Menu({ data, userLogin }) {
                   ) : (
                     <a
                       href={item.href}
-                      className="h-full px-3 inline-flex items-center text-gray-200 text-[16px] capitalize group-hover:text-white transition-all duration-300"
+                      className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300"
                     >
                       {!item.onlyShowIcon ? (
                         <Fragment>
@@ -78,7 +78,7 @@ function Menu({ data, userLogin }) {
                   {userLogin &&
                   userLogin.auth === true &&
                   item.keyword === "login" ? (
-                    <Link className="h-full px-3 inline-flex items-center text-gray-200 text-[16px] capitalize group-hover:text-white transition-all duration-300">
+                    <Link className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300">
                       {!item.onlyShowIcon ? (
                         <Fragment>
                           {t(`userLogin.msgWelcome`) + `, ${userLogin.username}`}
@@ -101,7 +101,7 @@ function Menu({ data, userLogin }) {
                   ) : (
                     <Link
                       to={item.to}
-                      className="h-full px-3 inline-flex items-center text-gray-200 text-[16px] capitalize group-hover:text-white transition-all duration-300"
+                      className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300"
                     >
                       {!item.onlyShowIcon ? (
                         <Fragment>
@@ -127,7 +127,7 @@ function Menu({ data, userLogin }) {
               )}
               {!item.href && !item.to && (
                 <Fragment>
-                  <div className="h-full px-3 inline-flex items-center text-gray-200 text-[16px] capitalize group-hover:text-white transition-all duration-300">
+                  <div className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300">
                     {!item.onlyShowIcon ? (
                       <Fragment>
                         {item.keyword && t(`nav-item.${item.keyword}`)}

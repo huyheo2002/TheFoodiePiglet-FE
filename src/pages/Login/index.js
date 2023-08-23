@@ -129,7 +129,7 @@ function Login() {
             </div>
             <div className="flex justify-end">
               <Button
-                variant={"viewMore"}
+                variant={"primary"}
                 // clone :V
                 iconRight={<LoadingIcon className="opacity-0" />}
                 iconLeft={
@@ -145,15 +145,15 @@ function Login() {
               >
                 {t("login.button.login")}
               </Button>
-              <Button to={"/"} variant={"viewMore"} onClick={() => handleBackHome()}>
+              <Button to={"/"} variant={"primary"} onClick={() => handleBackHome()}>
                 {t("login.button.back")}
               </Button>
             </div>
             <div className="flex justify-between px-3 py-2">
-              <a className="text-[#d3bc8e] font-normal text-base capitalize cursor-pointer hover:text-[#c29e56] transition-all">
+              <a className="text-primary font-normal text-base capitalize cursor-pointer hover:text-primary-hover transition-all">
                 {t("login.other.support")}
               </a>
-              <a className="text-[#d3bc8e] font-normal text-base capitalize cursor-pointer hover:text-[#c29e56] transition-all">
+              <a className="text-primary font-normal text-base capitalize cursor-pointer hover:text-primary-hover transition-all">
                 {t("login.other.register")}
               </a>
             </div>
