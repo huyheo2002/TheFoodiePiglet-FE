@@ -109,7 +109,7 @@ function Home() {
               </li>
             </ul>
             <div className="flex justify-end mt-3">
-              <Button variant={"primary"} iconRight={<PlusIcon />}>
+              <Button variant={"viewMore"} iconRight={<PlusIcon />}>
                 {t("button.more")}
               </Button>
             </div>

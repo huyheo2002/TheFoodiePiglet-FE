@@ -1,5 +1,6 @@
 
 import { EarthIcon, UserIcon } from "../../components/Icons";
+import HorizontalSlider from './HorizontalSlider';
 import Image from "../../components/Image";
 function Menu() {
         const Sidebar_Data = [{
@@ -58,13 +59,13 @@ function Menu() {
                                 </div>
                         </div>
                         {/* Don't Miss */}
-                        <div className="w-[1300px] h-[300px] mt-16 bg-slate-800">
+                        <div className="w-[1300px] h-[400px] mt-16 bg-slate-800">
 
                                 <div className=" w-[180px]  text-black bg-green-300 text-center p-2 font-extrabold text-2xl">
                                         <a> DON'T MISS</a>
                                 </div>
-                                <div className=" w-full h-80 mt-6  text-black bg-green-100  p-2 font-extrabold text-2xl flex ">
-                                        <div className="w-1/4 h-full bg-red-100 mr-5">
+                                <div className="">
+                                        {/* <div className="w-1/4 h-full bg-red-100 mr-5">
                                                 block1
                                         </div>
                                         <div className="w-1/4 h-full bg-red-200 mr-5">
@@ -75,9 +76,12 @@ function Menu() {
                                         </div>
                                         <div className="w-1/4 h-full bg-red-400 mr-5">
                                                 block4
-                                        </div>
+                                        </div> */}
+                                        <HorizontalSlider />
+                                        
 
                                 </div>
+                                
 
 
 
