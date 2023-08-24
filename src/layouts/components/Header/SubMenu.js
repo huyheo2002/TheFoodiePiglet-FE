@@ -65,7 +65,7 @@ function SubMenu({ data, className }) {
               {item.href && (
                 <a
                   href={item.href}
-                  className="px-4 inline-block text-white text-[14px] capitalize w-full h-full"
+                  className="px-4 inline-block text-primary font-semibold hover:text-white text-[14px] capitalize w-full h-full"
                 >
                   {item.keyword && t(`nav-subItem.${item.keyword}`)}
                 </a>
@@ -74,14 +74,14 @@ function SubMenu({ data, className }) {
               {item.to && (
                 <Link
                   to={item.to}
-                  className="px-4 inline-block text-white text-[14px] capitalize w-full h-full"
+                  className="px-4 inline-block text-primary font-semibold hover:text-white text-[14px] capitalize w-full h-full"
                 >
                   {item.keyword && t(`nav-subItem.${item.keyword}`)}
                 </Link>
               )}
   
               {!item.href && !item.to && (
-                <div className="px-4 inline-block text-white text-[14px] capitalize w-full h-full">
+                <div className="px-4 inline-block text-primary font-semibold hover:text-white text-[14px] capitalize w-full h-full">
                   {item.keyword && t(`nav-subItem.${item.keyword}`)}
                 </div>
               )}

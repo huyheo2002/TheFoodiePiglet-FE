@@ -56,7 +56,7 @@ function Login() {
   const isLoading = useSelector((state) => state.user.isLoading);
   const dataUserRedux = useSelector((state) => state.user.user);
   const isError = useSelector((state) => state.user.isError);
-  console.log("isError", isError);
+  // console.log("isError", isError);
   const [checkError, setCheckError] = useState(false);
 
   const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
@@ -68,7 +68,7 @@ function Login() {
   };
 
   const lockFeatures = useSelector((state) => state.user.isLockFeatures);
-  console.log("lockFeatures home", lockFeatures);
+  // console.log("lockFeatures home", lockFeatures);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

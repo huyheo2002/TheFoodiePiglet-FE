@@ -19,6 +19,7 @@ export const handleLoginRedux = (username, password) => {
           type: FETCH_USER_SUCCESS,
           data: {
             username: username,
+            role: res.user.roleId,
             token: res.message,
           },
         });

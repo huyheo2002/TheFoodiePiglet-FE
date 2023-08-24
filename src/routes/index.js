@@ -18,15 +18,18 @@ const publicRoutes = [
     { path: "/", component: Home, layout: DefaultLayout },
     { path: "/login", component: Login, layout: null },
     { path: "/menu", component: Menu, layout: FullScreenLayout },
-    { path: "/test", component: Test, layout: null },
-    
-    // system
-    { path: "/system", component: DashBoard, layout: AdminLayout },
-    { path: "/system/users", component: UserManagement, layout: AdminLayout },
+    // { path: "/test", component: Test, layout: null },    
 ]
 
 // đăng nhập ms sd đc
 const privateRoutes = [
+    // system 
+    // role admin 1
+    { path: "/system", component: DashBoard, layout: AdminLayout, role: 1 },
+    { path: "/system/users", component: UserManagement, layout: AdminLayout, role: 1 },
+
+    // role user 4
+    { path: "/test", component: Test, layout: null, role: 4 },    
 
 ]
 

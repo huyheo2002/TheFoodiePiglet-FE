@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   user: {
     username: "",
     auth: false,
+    role: -1,
     token: "",
   },
   isLoading: false,
@@ -45,6 +46,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         user: {
           username: action.data.username,
           token: action.data.token,
+          role: action.data.role,
           auth: true,
         },
         isLoading: false,
