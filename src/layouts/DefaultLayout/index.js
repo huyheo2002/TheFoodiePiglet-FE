@@ -14,7 +14,7 @@ const DefaultLayout = ({ children }) => {
       <div
         className="w-full h-[100vh] fixed inset-0 -z-10"
         style={{
-          // background: `url(${bg})`,
+          background: `url(${bg})`,
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           backgroundSize: "cover",

@@ -33,7 +33,7 @@ function SubMenu({ data, className }) {
     <ul
       className={clsx(
         className,
-        "bg-white shadow-black-rb-0.35 flex-col min-w-[14rem] z-50 absolute top-full hidden rounded-b-lg overflow-hidden",
+        "bg-[#272626] flex-col min-w-[14rem] z-50 absolute top-full hidden rounded-b-lg overflow-hidden",
       )}
     >
       {data &&
@@ -49,7 +49,7 @@ function SubMenu({ data, className }) {
 
           return (
             <li
-              className="min-w-[10rem] h-full leading-[4rem] relative hover:bg-[#ffe2e8] transition-all duration-300 cursor-pointer"
+              className="min-w-[10rem] h-full leading-[4rem] relative hover:bg-[#3b3a3a] transition-all duration-300 cursor-pointer"
               key={index}
               onClick={() => {
                 if (findTypeLanguages) {
@@ -65,7 +65,7 @@ function SubMenu({ data, className }) {
               {item.href && (
                 <a
                   href={item.href}
-                  className="px-4 inline-block text-black font-semibold hover:text-primary-hover text-[14px] capitalize w-full h-full"
+                  className="px-4 inline-block text-primary font-semibold hover:text-white text-[14px] capitalize w-full h-full"
                 >
                   {item.keyword && t(`nav-subItem.${item.keyword}`)}
                 </a>
@@ -74,14 +74,14 @@ function SubMenu({ data, className }) {
               {item.to && (
                 <Link
                   to={item.to}
-                  className="px-4 inline-block text-black font-semibold hover:text-primary-hover text-[14px] capitalize w-full h-full"
+                  className="px-4 inline-block text-primary font-semibold hover:text-white text-[14px] capitalize w-full h-full"
                 >
                   {item.keyword && t(`nav-subItem.${item.keyword}`)}
                 </Link>
               )}
   
               {!item.href && !item.to && (
-                <div className="px-4 inline-block text-black font-semibold hover:text-primary-hover text-[14px] capitalize w-full h-full">
+                <div className="px-4 inline-block text-primary font-semibold hover:text-white text-[14px] capitalize w-full h-full">
                   {item.keyword && t(`nav-subItem.${item.keyword}`)}
                 </div>
               )}
