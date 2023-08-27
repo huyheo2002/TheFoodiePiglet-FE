@@ -15,42 +15,42 @@ import clsx from "clsx";
 
 const FAKE_DATA = [
   {
-    image: "https://wallpaperaccess.com/full/3838496.jpg",
+    image: "https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     title: "Background 1",
     subTitle: "Slogan 3",
     interval: 1500,
   },
   {
     image:
-      "https://img6.thuthuatphanmem.vn/uploads/2022/07/05/anh-anime-4k-tuyet-dep_043710401.jpg",
+      "https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     title: "Background 2",
     subTitle: "Slogan 3",
     interval: 1500,
   },
   {
     image:
-      "https://duhocchaudaiduong.edu.vn/hinh-nen-may-tinh-anime-4k/imager_2725.jpg",
+      "https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     title: "Background 3",
     subTitle: "Slogan 3",
     interval: 1500,
   },
   {
     image:
-      "https://tophinhanhdep.com/wp-content/uploads/2021/11/Live-Anime-4K-Wallpapers.jpg",
+      "https://images.pexels.com/photos/7655151/pexels-photo-7655151.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     title: "Background 4",
     subTitle: "Slogan 3",
     interval: 1500,
   },
   {
     image:
-      "https://img4.thuthuatphanmem.vn/uploads/2020/05/07/hinh-anh-anh-nen-anime-4k-dep_094210852.jpg",
+      "https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     title: "Background 5",
     subTitle: "Slogan 3",
     interval: 1500,
   },
   {
     image:
-      "https://images.hdqwalls.com/download/anime-girl-moescape-alone-standing-4k-nz-1920x1080.jpg",
+      "https://images.pexels.com/photos/8308886/pexels-photo-8308886.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     title: "Background 6",
     subTitle: "Slogan 3",
     interval: 1500,

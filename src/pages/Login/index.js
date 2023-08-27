@@ -92,6 +92,11 @@ function Login() {
     }
   }, [dataUserRedux]);
 
+  // LOGIN GOOGLE
+  const handleLoginGoogle = async () => {
+    window.open(`${process.env.REACT_APP_BACKEND_URL}/api/auth/google`, "_self")
+  }
+
   return (
     <div className="flex justify-center items-center w-full h-[100vh] relative">
       <div className="w-1/3 absolute z-20">
@@ -171,6 +176,7 @@ function Login() {
               <Image
                 src={logoGoogle}
                 className="w-[40px] h-[40px] mx-2 my-3 cursor-pointer rounded-full"
+                onClick={handleLoginGoogle}
               />
               <Image
                 src={logoFacebook}

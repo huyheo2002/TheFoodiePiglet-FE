@@ -4,6 +4,7 @@ import {
   FETCH_USER_SUCCESS,
   FETCH_USER_ERROR,
   USER_NOLOGIN,
+  USER_LOGIN_GOOGLE,
 } from "../actions/userAction";
 
 const INITIAL_STATE = {
@@ -12,6 +13,12 @@ const INITIAL_STATE = {
     auth: false,
     role: -1,
     token: "",
+    address: null,
+    avatar: null,
+    email: null,
+    gender: null,
+    name: null,
+    phone: null,
   },
   isLoading: false,
   isError: false,
@@ -48,6 +55,12 @@ const userReducer = (state = INITIAL_STATE, action) => {
           token: action.data.token,
           role: action.data.role,
           auth: true,
+          address: action.data.address,
+          avatar: action.data.avatar,
+          email: action.data.email,
+          gender: action.data.gender,
+          name: action.data.name,
+          phone: action.data.phone,
         },
         isLoading: false,
         isError: false,
@@ -71,8 +84,16 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isLoading: false,
-        isError: false,       
-        isLockFeatures: true, 
+        isError: false,
+        isLockFeatures: true,
+      };
+    case USER_LOGIN_GOOGLE:
+      console.log("check action login", action);
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+        isLockFeatures: true,
       };
 
     default:

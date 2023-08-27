@@ -42,10 +42,9 @@ function App() {
             })}
 
             {privateRoutes.map((route, index) => {
-              console.log("dataUserRedux.role", dataUser.role)
-              console.log("route.role", route.role)
+              // console.log("dataUserRedux.role", dataUser.role)
 
-              if(dataUser.auth && dataUser.role === route.role) {
+              if(dataUser.auth) {
                 let Layout = DefaultLayout;
                 const Page = route.component;
 
@@ -54,10 +53,7 @@ function App() {
                 } else if (route.layout === null) {
                   Layout = Fragment;
                 }
-
-                console.log("private route", route)
               
-                console.log("AUTH TRUE")
                 return (
                   <Route
                     path={route.path}

@@ -4,10 +4,12 @@ import { useTranslation } from "react-i18next";
 import { handleLogoutRedux } from "../../../redux/actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 function SubMenu({ data, className }) {
   const { t, i18n } = useTranslation(["header"]);
   const navigate = useNavigate();
+  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
 
   const changeLanguages = (lng = "vi" || "en" ) => {
     i18n.changeLanguage(lng);
@@ -27,8 +29,7 @@ function SubMenu({ data, className }) {
       navigate("/login");
     }
   }, [user])
-
-  console.log("data sub item", data);
+  console.log("dataSubmenu dataUser", dataUser)
   return (
     <ul
       className={clsx(
@@ -49,7 +50,9 @@ function SubMenu({ data, className }) {
 
           return (
             <li
-              className="min-w-[10rem] h-full leading-[4rem] relative hover:bg-[#3b3a3a] transition-all duration-300 cursor-pointer"
+              className={clsx("min-w-[10rem] h-full leading-[4rem] relative hover:bg-[#3b3a3a] transition-all duration-300 cursor-pointer", {
+                "!hidden": item.keyword === "manager" && dataUser.role !== 1,
+              })}
               key={index}
               onClick={() => {
                 if (findTypeLanguages) {
