@@ -13,6 +13,7 @@ import LoginSuccess from "../pages/Login/LoginSuccess";
 // pages system
 import DashBoard from "../pages/Admin/Dashboard";
 import UserManagement from "../pages/Admin/UserManagement";
+import News from "../pages/News";
 
 // k đăng nhập sd đc
 const publicRoutes = [
@@ -20,7 +21,8 @@ const publicRoutes = [
     { path: "/login", component: Login, layout: null },
     { path: "/menu", component: Menu, layout: FullScreenLayout },
     { path: "/login-success/:userId", component: LoginSuccess, layout: null },
-    // { path: "/test", component: Test, layout: null },    
+    { path: "/test", component: Test, layout: null },
+    { path: "/news", component: News, layout: DefaultLayout },
 ]
 
 // đăng nhập ms sd đc
