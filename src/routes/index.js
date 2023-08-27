@@ -8,6 +8,7 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Test from "../pages/Test";
 import Menu from "../pages/Menu";
+import LoginSuccess from "../pages/Login/LoginSuccess";
 
 // pages system
 import DashBoard from "../pages/Admin/Dashboard";
@@ -19,15 +20,20 @@ const publicRoutes = [
     { path: "/", component: Home, layout: DefaultLayout },
     { path: "/login", component: Login, layout: null },
     { path: "/menu", component: Menu, layout: FullScreenLayout },
+    { path: "/login-success/:userId", component: LoginSuccess, layout: null },
     { path: "/test", component: Test, layout: null },
     { path: "/news", component: News, layout: DefaultLayout },
-    // system
-    { path: "/system", component: DashBoard, layout: AdminLayout },
-    { path: "/system/users", component: UserManagement, layout: AdminLayout },
 ]
 
 // đăng nhập ms sd đc
 const privateRoutes = [
+    // system 
+    // role admin 1
+    { path: "/system", component: DashBoard, layout: AdminLayout },
+    { path: "/system/users", component: UserManagement, layout: AdminLayout },
+
+    // role user 4
+    { path: "/test", component: Test, layout: null, role: 4 },    
 
 ]
 

@@ -56,7 +56,7 @@ function Login() {
   const isLoading = useSelector((state) => state.user.isLoading);
   const dataUserRedux = useSelector((state) => state.user.user);
   const isError = useSelector((state) => state.user.isError);
-  console.log("isError", isError);
+  // console.log("isError", isError);
   const [checkError, setCheckError] = useState(false);
 
   const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
@@ -68,7 +68,7 @@ function Login() {
   };
 
   const lockFeatures = useSelector((state) => state.user.isLockFeatures);
-  console.log("lockFeatures home", lockFeatures);
+  // console.log("lockFeatures home", lockFeatures);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,6 +91,11 @@ function Login() {
       navigate("/");
     }
   }, [dataUserRedux]);
+
+  // LOGIN GOOGLE
+  const handleLoginGoogle = async () => {
+    window.open(`${process.env.REACT_APP_BACKEND_URL}/api/auth/google`, "_self")
+  }
 
   return (
     <div className="flex justify-center items-center w-full h-[100vh] relative">
@@ -171,6 +176,7 @@ function Login() {
               <Image
                 src={logoGoogle}
                 className="w-[40px] h-[40px] mx-2 my-3 cursor-pointer rounded-full"
+                onClick={handleLoginGoogle}
               />
               <Image
                 src={logoFacebook}

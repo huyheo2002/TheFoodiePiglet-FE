@@ -7,6 +7,7 @@ module.exports = {
       colors: {
         "text-gray": "#ccc",
         "primary": "#f4a7ba",
+        // "primary": "#cf4764",
         "primary-hover": "#cf4764",
       },
       fontSize: {

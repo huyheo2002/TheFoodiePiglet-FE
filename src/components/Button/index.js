@@ -24,7 +24,7 @@ function Button({ to, href, children, onClick, iconLeft, iconRight, variant }) {
     }
   );
 
-  const classesChild = clsx("text-sm font-normal text-black tracking-wider", {
+  const classesChild = clsx("text-sm font-normal tracking-wider text-white", {
     "text-white": variant === "primary",
     "text-white font-bold text-sm": variant === "viewMore",
     "text-white font-bold text-sm": variant === "baseOrange"
@@ -33,7 +33,7 @@ function Button({ to, href, children, onClick, iconLeft, iconRight, variant }) {
   return (
     <Comp className={classes} {...props}>
       {iconLeft && <span className={classesChild}>{iconLeft}</span>}
-      <span className={clsx("px-1", classesChild)}>{children}</span>
+      <span className={clsx("px-1 text-white", classesChild)}>{children}</span>
       {iconRight && <span className={classesChild}>{iconRight}</span>}
     </Comp>
   );

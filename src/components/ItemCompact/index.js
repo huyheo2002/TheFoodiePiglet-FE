@@ -16,10 +16,10 @@ function ItemCompact() {
       <Image src="https://www.koreandxb.com/images/food1.jpg" effectScale />
       <div className="p-5 flex flex-col gap-3">
         {/* badge */}
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <span className="productCompact__badge">{t("product.dineIn")}</span>
           <span className="productCompact__badge">{t("product.takeOut")}</span>
-        </div>
+        </div> */}
 
         <h2
           className="productCompact__title"
@@ -30,7 +30,7 @@ function ItemCompact() {
 
         <div className="flex items-center gap-4">
           <span className="flex justify-start items-center">
-            <p className="text-xl font-normal text-white">400$</p>
+            <p className="text-xl font-semibold text-white">400$</p>
           </span>
           <div className="flex items-center gap-2">
             <span className="flex justify-start items-center">
@@ -45,7 +45,8 @@ function ItemCompact() {
           <StarFillIcon className="text-yellow-300" />
           <StarFillIcon className="text-yellow-300" />
           <StarFillIcon className="text-yellow-300" />
-          <StarHalfIcon className="text-yellow-300" />
+          <StarFillIcon className="text-yellow-300" />
+          {/* <StarHalfIcon className="text-yellow-300" /> */}
           <StarIcon className="text-yellow-300" />
           <span className="text-xs ml-2 text-gray-400">20k reviews</span>
         </span>

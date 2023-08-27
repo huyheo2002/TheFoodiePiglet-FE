@@ -30,15 +30,15 @@
       transition-all
       duration-300
       block
-      hover:border-primary;
+      hover:border-white;
   }
 
   .productCompact__badge {
-    @apply px-3 py-2 rounded-full text-xs bg-primary text-white;
+    @apply px-3 py-2 rounded-full text-xs bg-[#f26398] text-white;
   }
 
   .productCompact__title {
-    @apply font-semibold text-2xl
+    @apply font-bold text-2xl
       overflow-ellipsis overflow-hidden whitespace-nowrap
       text-white;
   }

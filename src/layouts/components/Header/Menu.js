@@ -29,7 +29,7 @@ function Menu({ data, userLogin }) {
                     >
                       {!item.onlyShowIcon ? (
                         <Fragment>
-                          {t(`userLogin.msgWelcome`) + `, ${userLogin.username}`}
+                          {t(`userLogin.msgWelcome`) + `, ${userLogin.name || userLogin.username}`}
                           {item.icon && (
                             <span className="text-current ml-2">
                               {item.icon}
@@ -81,7 +81,7 @@ function Menu({ data, userLogin }) {
                     <Link className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300">
                       {!item.onlyShowIcon ? (
                         <Fragment>
-                          {t(`userLogin.msgWelcome`) + `, ${userLogin.username}`}
+                          {t(`userLogin.msgWelcome`) + `, ${userLogin.name || userLogin.username}`}
                           {item.icon && (
                             <span className="text-current ml-2">
                               {item.icon}
@@ -146,14 +146,8 @@ function Menu({ data, userLogin }) {
 
                   {/* <div> no to no href</div> */}
                 </Fragment>
-              )}
-              {item.subNav && userLogin && userLogin.auth === true && item.keyword === "login" && (
-                <SubMenu data={item.subNav} className="group-hover:flex" />
-              )}
-
-              {item.subNav && item.keyword !== "login" && (
-                <SubMenu data={item.subNav} className="group-hover:flex" />
-              )}
+              )}              
+              <SubMenu data={item.subNav} className="group-hover:flex" />
             </li>
           );
         })}

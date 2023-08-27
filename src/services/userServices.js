@@ -32,9 +32,14 @@ export const handleUpdateUser = (data) => {
 export const handleDeleteUser = (userId) => {
   // console.log("dataa id", userId);
 
-  return axios.delete("/api/delete-user", {    
+  return axios.delete("/api/delete-user", {
     data: {
-      id: userId
-    }
-  })
+      id: userId,
+    },
+  });
+};
+
+export const handleLoginGoogle = (userId) => {
+  const res = axios.get(`/login-success/${userId}`);
+  return res;
 };
