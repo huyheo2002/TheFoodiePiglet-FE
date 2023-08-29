@@ -9,16 +9,9 @@ import {
 
 const INITIAL_STATE = {
   user: {
-    username: "",
+    dataUser: {},
     auth: false,
-    role: -1,
-    token: "",
-    address: null,
-    avatar: null,
-    email: null,
-    gender: null,
-    name: null,
-    phone: null,
+    token: ""    
   },
   isLoading: false,
   isError: false,
@@ -51,16 +44,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         user: {
-          username: action.data.username,
+          dataUser: action.data.dataUser,
           token: action.data.token,
-          role: action.data.role,
-          auth: true,
-          address: action.data.address,
-          avatar: action.data.avatar,
-          email: action.data.email,
-          gender: action.data.gender,
-          name: action.data.name,
-          phone: action.data.phone,
+          auth: true,          
         },
         isLoading: false,
         isError: false,
@@ -72,7 +58,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         user: {
-          username: "",
+          dataUser: {},
           token: "",
           auth: false,
         },

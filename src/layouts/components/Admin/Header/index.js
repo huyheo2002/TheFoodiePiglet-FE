@@ -14,6 +14,7 @@ import {
 import { useEffect } from "react";
 import useLocalStorage from "../../../../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
+import decodeJwt from "../../../../utils/decodeJwt";
 
 function Header() {
   const navigate = useNavigate();
@@ -21,8 +22,8 @@ function Header() {
   const toggleSidebar = useSelector((states) => states.admin.toggleSidebar);
   const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
 
-  useEffect(() => {
-    if (!dataUser || dataUser.role !== 1) {
+  useEffect(() => {    
+    if (!dataUser || dataUser.dataUser.user.roleId !== 1) {
       navigate("/");
     }
   }, []);

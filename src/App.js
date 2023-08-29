@@ -12,11 +12,12 @@ function App() {
   // const dataUserRedux = useSelector((state) => state.user.user);
   // console.log("dataUserRedux app", dataUserRedux)
   const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-  console.log("dataUser", dataUser);
+  console.log("dataUser app", dataUser);
+  
   return (
     <ContextWrapper>
       <Router>
-        <div className="app">
+        <div className="app">          
           <Routes>
             {publicRoutes.map((route, index) => {
               let Layout = DefaultLayout;
