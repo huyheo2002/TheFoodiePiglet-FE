@@ -1,4 +1,5 @@
 import * as userServices from "../../services/userServices";
+import decodeJwt from "../../utils/decodeJwt";
 
 export const FETCH_USER_LOGIN = "FETCH_USER_LOGIN";
 export const FETCH_USER_ERROR = "FETCH_USER_ERROR";
@@ -16,18 +17,15 @@ export const handleLoginRedux = (username, password) => {
       const res = await userServices.handleLogin(username, password);
       console.log("respon redux", res);
       if (res && res.errCode === 0) {
+
+        let decoded = decodeJwt(res.accessToken);
+        console.log("decoded", decoded)
         dispatch({
           type: FETCH_USER_SUCCESS,
           data: {            
-            username: username,
-            role: res.user?.roleId,
-            address: res.user?.address,
-            avatar: res.user?.avatar,
-            email: res.user?.email,
-            gender: res.user?.gender,
-            name: res.user?.name,
-            phone: res.user?.phone,
-            token: res.message,
+            username: username,            
+            token: res.accessToken,
+            dataUser: decoded
           },
         });
       } else {

@@ -9,6 +9,7 @@ import Login from "../pages/Login";
 import Test from "../pages/Test";
 import Menu from "../pages/Menu";
 import LoginSuccess from "../pages/Login/LoginSuccess";
+import Error from "../pages/Error";
 
 // pages system
 import DashBoard from "../pages/Admin/Dashboard";
@@ -21,6 +22,10 @@ const publicRoutes = [
     { path: "/menu", component: Menu, layout: FullScreenLayout },
     { path: "/login-success/:userId", component: LoginSuccess, layout: null },
     // { path: "/test", component: Test, layout: null },    
+
+    // not other routes match
+    { path: "/not-found", component: Error, layout: null },
+    { path: "*", component: Error, layout: null },
 ]
 
 // đăng nhập ms sd đc

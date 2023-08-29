@@ -72,8 +72,8 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    dispatch(handleLoginRedux(values.username, values.password));    
+    
+    dispatch(handleLoginRedux(values.username, values.password));         
   };
 
   const handleBackHome = () => {
@@ -85,12 +85,12 @@ function Login() {
     if (isError) {
       setCheckError(true);
     }
-
-    if (dataUserRedux && dataUserRedux.auth === true) {
+    
+    if (dataUserRedux && dataUserRedux.auth === true) {         
       setValueLocal(dataUserRedux);
       navigate("/");
     }
-  }, [dataUserRedux]);
+  }, [dataUserRedux])
 
   // LOGIN GOOGLE
   const handleLoginGoogle = async () => {
