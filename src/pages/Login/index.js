@@ -1,6 +1,5 @@
 import Button from "../../components/Button";
 import Heading from "../../components/Heading";
-import overlay from "../../assets/images/Base/bg-news2-homepage.jfif";
 import Image from "../../components/Image";
 import logoFacebook from "../../assets/images/Base/logo-facebook.png";
 import logoGoogle from "../../assets/images/Base/logo-google.png";
@@ -193,16 +192,6 @@ function Login() {
             </div>
           </div>
         </form>        
-      </div>
-
-      {/* overlay */}
-      <div
-        className="absolute z-10 inset-0"
-        style={{
-          background: `url(${overlay}) center/cover no-repeat`,
-        }}
-      >
-        <div className="bg-rgba-black-0.50 absolute inset-0"></div>
       </div>
     </div>
   );

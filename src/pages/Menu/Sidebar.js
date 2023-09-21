@@ -1,20 +1,18 @@
 import { Link } from "react-router-dom";
-import { HeartFillIcon } from "../../components/Icons";
-import Line from "../../assets/images/Menu/base/SidebarLine.png";
 import itemSelect from "../../assets/images/Menu/base/SidebarItem-active.png";
 import clsx from "clsx";
 import { useState } from "react";
 import { homeTypeOfFoods } from "../../data/homeTypeOfFoods";
 import { useTranslation } from "react-i18next";
+import WindowScrollTop from "../../utils/windowScroll";
 
 function Sidebar() {
   const { t } = useTranslation(["home", "header"]);
   const [typeOfFoods, setTypeOfFoods] = useState(homeTypeOfFoods);
   const [indexActive, setIndexActive] = useState(1);
-  let a = true;
   return (
     <div
-      className="w-full h-[calc(100vh-4rem)] overflow-hidden relative py-10 select-none
+      className="w-full h-[calc(100vh-4rem)] overflow-hidden relative py-10 select-none 
       after:absolute after:top-0 after:left-[37px] after:contents-[''] after:block after:w-[0.125rem] after:h-full after:bg-[rgba(255,255,255,0.14);]
     "
     >
@@ -55,6 +53,7 @@ function Sidebar() {
               onClick={() => {
                 if(indexActive !== index) {
                   setIndexActive(index)
+                  WindowScrollTop()
                 }
               }}
               className={clsx("pl-[54px] h-14 items-center flex relative", {

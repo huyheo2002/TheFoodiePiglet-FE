@@ -2,7 +2,8 @@ import axios from "axios";
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
-  // headers: { "Content-Type": "multipart/form-data" }
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded', }
+  
 });
 
 // instance.interceptors.request.use(
@@ -21,6 +22,12 @@ const instance = axios.create({
 // );
 
 instance.defaults.withCredentials = true;
+
+// const logRequestConfig = (config) => {
+//   console.log("Request Config:", config);
+//   return config;
+// };
+// instance.interceptors.request.use(logRequestConfig);
 
 // Add a response interceptor
 instance.interceptors.response.use(

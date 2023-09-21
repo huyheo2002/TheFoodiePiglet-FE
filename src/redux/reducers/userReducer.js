@@ -74,7 +74,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         isLockFeatures: true,
       };
     case USER_LOGIN_GOOGLE:
-      console.log("check action login", action);
+      console.log("check action USER_LOGIN_GOOGLE", action);
       return {
         ...state,
         isLoading: true,

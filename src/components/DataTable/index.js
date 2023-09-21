@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import {
-  BellIcon,
   BookOpenIcon,
   DotHorizontalIcon,
   PencilIcon,
@@ -13,6 +12,8 @@ import Pagination from "../Pagination";
 import WindowScrollTop from "../../utils/windowScroll";
 import { useTranslation } from "react-i18next";
 import Button from "../Button";
+import Image from "../Image";
+import Modal from "../Modal";
 
 function DataTable({
   data,
@@ -21,11 +22,14 @@ function DataTable({
   handleModalEdit,
   handleModalDelete,
   handleModalCreate,
+  btnCreateTitle,
 }) {
   const { toggleDataTable, setToggleDataTable } = useContext(GlobalContext);
   const [currentItem, setCurrentItem] = useState(-1);
   const [keyDataPreview, setKeyDataPreview] = useState([]);
   const { t } = useTranslation(["table"]);
+  const [toggleFullScreenImage, setToggleFullScreenImage] = useState(false);
+  const [linkImage, setLinkImage] = useState(null);
 
   // pages
   const [postPerPage, setPostPerPage] = useState(5);
@@ -56,15 +60,20 @@ function DataTable({
     handleGetKeyDataPreview();
   }, []);
 
+  const handleCloseFullScreenImage = () => {
+    setToggleFullScreenImage(false);
+    setLinkImage(null);
+  }
+
   return (
     <Fragment>
       <div className="flex justify-end my-2">
         <Button
           variant={"primary"}
           onClick={handleModalCreate && handleModalCreate}
-          iconLeft={<PlusIcon className={"!w-6 !h-6"}/>}
+          iconLeft={<PlusIcon className={"!w-6 !h-6"} />}
         >
-          Create user
+          {btnCreateTitle ?? "Create User"}
         </Button>
       </div>
       <table className="w-full border border-gray-200 select-none">
@@ -93,20 +102,33 @@ function DataTable({
           {currentPost.length > 0 &&
             currentPost.map((item, index) => {
               let getValuesItem = Object.values(item) || [];
+              let getKeysItem = Object.keys(item) || [];
               // console.log("item currentpost", item);
+              let getIndexOfImage = getKeysItem.indexOf("image") ?? -1;
+              // console.log("getIndexOfImage", getIndexOfImage)              
               return (
                 <tr
                   className="bg-white hover:bg-[#e6f2fe] transition-all duration-300 group"
                   key={index}
                 >
                   {getValuesItem.length > 0 &&
-                    getValuesItem.map((valueItem, indexValue) => {
+                    getValuesItem.map((valueItem, indexValue) => {     
+                      // console.log("valueItem", valueItem)
                       return (
                         <td
                           className="py-4 px-6 text-sm font-normal border-b border-gray-200 group-hover:text-[#548be6] transition-all duration-300 overflow-hidden max-w-[8rem] text-ellipsis whitespace-nowrap"
                           key={indexValue}
                         >
-                          {valueItem}
+                          {indexValue === getIndexOfImage ?
+                            <Image className={"cursor-pointer"} src={valueItem} 
+                              onClick={() => {
+                                setToggleFullScreenImage(true)
+                                setLinkImage(valueItem)
+                              }}
+                            />
+                            :
+                            valueItem
+                          }
                         </td>
                       );
                     })}
@@ -157,7 +179,7 @@ function DataTable({
                         </span>
                         {toggleDataTable && currentItem === index && (
                           <div
-                            className="absolute bg-white shadow-black-b-0.35 top-[calc(100%+12px)] right-0 z-40 rounded-lg cursor-pointer select-none overflow-hidden"
+                            className="absolute bg-white shadow-black-b-0.35 top-[calc(100%+12px)] right-0 -left-32 z-40 rounded-lg cursor-pointer select-none overflow-hidden"
                             // onClick={e => e.stopPropagation()}
                           >
                             {manyFeatures.length > 0 &&
@@ -165,7 +187,7 @@ function DataTable({
                                 return (
                                   <div
                                     className="flex items-center px-6 py-4 hover:text-[#548be6] hover:bg-[#e6f2fe] transition-all duration-300"
-                                    onClick={feature.onClick}
+                                    onClick={() => feature.onClick(item.id)}
                                     key={index}
                                   >
                                     {feature.icon}
@@ -190,6 +212,10 @@ function DataTable({
         totalPosts={data && data.length}
         paginate={onChangePage}
       />
+
+      <Modal open={toggleFullScreenImage} close={handleCloseFullScreenImage} custom>
+        <Image src={linkImage} />
+      </Modal>
     </Fragment>
   );
 }

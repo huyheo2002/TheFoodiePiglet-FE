@@ -5,6 +5,8 @@ function ContextWrapper(props) {
     const [testContext, setTestContext] = useState(false);
     const [toggleDataTable, setToggleDataTable] = useState(false);
 
+    // order
+    const [totalMoneyToPay, setTotalMoneyToPay] = useState(0);
     
     return (  
         <GlobalContext.Provider
@@ -14,6 +16,10 @@ function ContextWrapper(props) {
                 // dataTable
                 toggleDataTable,
                 setToggleDataTable,
+
+                // order
+                totalMoneyToPay,
+                setTotalMoneyToPay,
             }}
         >
             {props.children}

@@ -13,7 +13,7 @@ function LoginSuccess() {
 //   let spliceId = Number.parseInt(userId.toString().slice(0, 9));
 
   const dataUserRedux = useSelector((state) => state.user.user);
-
+  console.log("dataUserRedux login", dataUserRedux)
   useEffect(() => {
     dispatch(handleLoginGoogleRedux(userId));
   }, [])

@@ -10,6 +10,7 @@ import FOOTER_EN from "../locales/en/footer.json";
 import AUTH_EN from "../locales/en/auth.json";
 import ADMIN_EN from "../locales/en/admin.json";
 import DATATABLE_EN from "../locales/en/dataTable.json";
+import ORDER_EN from "../locales/en/order.json";
 
 
 // Vi (Vietnamese)
@@ -19,7 +20,7 @@ import FOOTER_VI from "../locales/vi/footer.json";
 import AUTH_VI from "../locales/vi/auth.json";
 import ADMIN_VI from "../locales/vi/admin.json";
 import DATATABLE_VI from "../locales/vi/dataTable.json";
-
+import ORDER_VI from "../locales/vi/order.json";
 
 // export const locales = {
 //   en: "English",
@@ -34,6 +35,7 @@ const resources = {
     auth: AUTH_EN,
     admin: ADMIN_EN,
     table: DATATABLE_EN,
+    order: ORDER_EN,
   },
   vi: {
     header: HEADER_VI,
@@ -42,6 +44,8 @@ const resources = {
     auth: AUTH_VI,
     admin: ADMIN_VI,
     table: DATATABLE_VI,
+    order: ORDER_VI,
+
   },
 };
 
@@ -49,7 +53,7 @@ i18n.use(initReactI18next).init({
   resources,
   lng: "vi",
   fallbackLng: "vi",
-  ns: ["header", "home", "footer", "auth", "admin", "table"],
+  ns: ["header", "home", "footer", "auth", "admin", "table", "order"],
   defaultNS: "home",
   interpolation: {
     escapeValue: false,

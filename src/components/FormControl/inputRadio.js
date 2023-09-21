@@ -9,6 +9,7 @@ function InputRadio({ ...props }) {
       </label>
       {options.map((option, index) => {
         let cloneId = Math.floor(Math.random() * 9999);
+        console.log("option.value", option.value)
         return (
           <div className="flex items-center" key={index}>
             <input

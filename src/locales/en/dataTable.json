@@ -1,16 +1,22 @@
 {
-    "key": {
+    "key": {        
         "id": "Id",
         "action": "Action",
         "name": "Name",
         "username": "Username",
         "roleName": "Role",
-        "email": "Email"
+        "email": "Email",
+        "image": "Image",
+        "discount": "Discount",
+        "Desc": "Desc",
+        "categoryName": "Category",        
+        "price": "Price"
     },
     
     "btnUserAction": {
         "read": "Read",
         "edit": "Edit",
-        "delete": "Delete"
+        "delete": "Delete",
+        "variant": "Variants"
     }
 }

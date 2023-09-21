@@ -8,19 +8,18 @@
     "button": {
         "more": "More",
         "detail": "Detail",
-        "addToCart": "Add to cart"
+        "addToCart": "Add to cart",
+        "delete": "Delete"
     },
 
-    "product": {
-        "dineIn": "Dine in",
-        "takeOut": "Take out",
-        "appetizers": "Appertizers",
-        "mainDishes": "Main Dishes",
-        "seaFood": "Seafood",
-        "comboMeals": "Combo Meals",
-        "beverages": "Beverages",
-        "desserts": "Desserts",
-        "comingSoon": "Coming soon"
+    "product": {        
+        "mon-khai-vi": "Appertizers",
+        "mon-chinh": "Main Dishes",
+        "mon-hai-san": "Seafood",
+        "bua-an-ket-hop": "Combo Meals",
+        "do-uong": "Beverages",
+        "mon-trang-mieng": "Desserts",
+        "vui-long-cho": "Coming soon"
     }
 
 }

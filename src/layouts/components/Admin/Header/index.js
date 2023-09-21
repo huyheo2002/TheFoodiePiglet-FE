@@ -14,7 +14,6 @@ import {
 import { useEffect } from "react";
 import useLocalStorage from "../../../../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
-import decodeJwt from "../../../../utils/decodeJwt";
 
 function Header() {
   const navigate = useNavigate();

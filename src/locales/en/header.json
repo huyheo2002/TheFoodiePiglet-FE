@@ -17,7 +17,8 @@
     "languages-vi": "Vietnamese",
     "languages-en": "English",
     "logout": "Logout",
-    "manager": "Manage"
+    "manager": "Manage",
+    "profile": "Profile"
   },
 
   "userLogin": {

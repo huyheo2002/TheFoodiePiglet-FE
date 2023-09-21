@@ -2,7 +2,7 @@ import clsx from "clsx";
 import logo from "../../../../assets/images/Base/logo-transparent.png";
 import Image from "../../../../components/Image";
 import Menu from "./Menu";
-import { BellIcon, EarthIcon, UserIcon } from "../../../../components/Icons";
+import { UserIcon } from "../../../../components/Icons";
 import { useSelector } from "react-redux";
 
 const SIDEBAR_DATA = [
@@ -24,6 +24,12 @@ const SIDEBAR_DATA = [
       },
       {
         idItem: 3,
+        to: "/system/product",
+        name: "products",
+        icon: <UserIcon className="!w-6 !h-6" />,
+      },
+      {
+        idItem: 4,
         to: "/system",
         name: "personal",
         icon: <UserIcon className="!w-6 !h-6" />,

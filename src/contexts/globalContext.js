@@ -6,6 +6,10 @@ const GlobalContext = React.createContext({
     // toggleDataTable
     toggleDataTable: false,
     setToggleDataTable: () => {},
+
+    // order 
+    totalMoneyToPay: 0,
+    setTotalMoneyToPay: () => {},
 });
 
 export default GlobalContext;

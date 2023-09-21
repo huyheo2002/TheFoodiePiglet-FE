@@ -13,6 +13,7 @@ function InputField({ ...props }) {
     onlyRead,
     onClick,
     hidden,
+    className,
     ...inputProps
   } = props;
   const [focus, setFocus] = useState(false);
@@ -25,13 +26,15 @@ function InputField({ ...props }) {
 
   const onHandleFocus = (e) => {
     setFocus(true);
-  };
+  };  
 
+  
   return (
     <div
       className={clsx("w-full py-1 select-none", {
         "pointer-events-none": onlyRead,
         "!hidden": hidden,
+        [className]: className
       })}
       onClick={onClick}
     >
@@ -43,13 +46,12 @@ function InputField({ ...props }) {
       </label>
       <div className="w-full rounded overflow-hidden relative">
         <input
-          className="peer w-full h-12 pl-3 pr-16 py-2 rounded text-base font-light border-2 border-solid border-[#b3b3b3] transition-all duration-300
-            hover:border-[#1dbfaf]
-            focus:outline-none focus:border-[#1dbfaf] focus:ring-1 focus:ring-[#1dbfaf]
-            focus:invalid:outline-none focus:invalid:border-red-500 focus:invalid:ring-1 focus:invalid:ring-red-500
-            placeholder-shown:!border-[#b3b3b3] placeholder-shown:!ring-1 placeholder-shown:!ring-[#b3b3b3]            
-            invalid:border-red-500 invalid:text-red-500                          
-        "
+          className={clsx(
+            "peer w-full h-12 pl-3 py-2 rounded text-base font-light border-2 border-solid border-[#b3b3b3] transition-all duration-300 hover:border-[#1dbfaf] focus:outline-none focus:border-[#1dbfaf] focus:ring-1 focus:ring-[#1dbfaf] focus:invalid:outline-none focus:invalid:border-red-500 focus:invalid:ring-1 focus:invalid:ring-red-500 placeholder-shown:!border-[#b3b3b3] placeholder-shown:!ring-1 placeholder-shown:!ring-[#b3b3b3] invalid:border-red-500 invalid:text-red-500",
+            {
+              "pr-3": type === "date" || type === "time",          
+            }
+          )}
           id={id}
           placeholder={props.placeholder}
           onChange={onChange}

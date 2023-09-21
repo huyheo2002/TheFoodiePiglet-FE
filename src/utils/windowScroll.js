@@ -1,5 +1,3 @@
-import React from "react";
-
 function WindowScrollTop() {
     window.scroll({
         top: 0,

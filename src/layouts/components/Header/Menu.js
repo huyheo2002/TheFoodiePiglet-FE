@@ -3,6 +3,7 @@ import SubMenu from "./SubMenu";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react";
+import NotificationCard from "../../../components/NotificationCard";
 
 function Menu({ data, userLogin }) {
   const { t, i18n } = useTranslation(["header"]);
@@ -22,15 +23,17 @@ function Menu({ data, userLogin }) {
               {item.href && (
                 <Fragment>
                   {userLogin &&
-                  userLogin.auth === true &&
-                  item.keyword === "login" ? (
+                    userLogin.auth === true &&
+                    item.keyword === "login" ? (
                     <a className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300">
                       {!item.onlyShowIcon ? (
                         <Fragment>
                           {t(`userLogin.msgWelcome`) +
-                            `, ${userLogin.dataUser.user.name || userLogin.dataUser.user.username}`}
+                            `, ${userLogin.dataUser.user.name ||
+                            userLogin.dataUser.user.username
+                            }`}
                           {item.icon && (
-                            <span className="text-current ml-2">
+                            <span className="text-current p-2">
                               {item.icon}
                             </span>
                           )}
@@ -38,7 +41,7 @@ function Menu({ data, userLogin }) {
                       ) : (
                         <Fragment>
                           {item.icon && (
-                            <span className="text-current ml-2">
+                            <span className="text-current p-2">
                               {item.icon}
                             </span>
                           )}
@@ -54,7 +57,7 @@ function Menu({ data, userLogin }) {
                         <Fragment>
                           {item.keyword && t(`nav-item.${item.keyword}`)}
                           {item.icon && (
-                            <span className="text-current ml-2">
+                            <span className="text-current p-2">
                               {item.icon}
                             </span>
                           )}
@@ -62,7 +65,7 @@ function Menu({ data, userLogin }) {
                       ) : (
                         <Fragment>
                           {item.icon && (
-                            <span className="text-current ml-2">
+                            <span className="text-current p-2">
                               {item.icon}
                             </span>
                           )}
@@ -75,15 +78,17 @@ function Menu({ data, userLogin }) {
               {item.to && (
                 <Fragment>
                   {userLogin &&
-                  userLogin.auth === true &&
-                  item.keyword === "login" ? (
+                    userLogin.auth === true &&
+                    item.keyword === "login" ? (
                     <Link className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300">
                       {!item.onlyShowIcon ? (
                         <Fragment>
                           {t(`userLogin.msgWelcome`) +
-                            `, ${userLogin.dataUser.user.name || userLogin.dataUser.user.username}`}
+                            `, ${userLogin.dataUser.user.name ||
+                            userLogin.dataUser.user.username
+                            }`}
                           {item.icon && (
-                            <span className="text-current ml-2">
+                            <span className="text-current p-2">
                               {item.icon}
                             </span>
                           )}
@@ -91,7 +96,7 @@ function Menu({ data, userLogin }) {
                       ) : (
                         <Fragment>
                           {item.icon && (
-                            <span className="text-current ml-2">
+                            <span className="text-current p-2">
                               {item.icon}
                             </span>
                           )}
@@ -107,7 +112,7 @@ function Menu({ data, userLogin }) {
                         <Fragment>
                           {item.keyword && t(`nav-item.${item.keyword}`)}
                           {item.icon && (
-                            <span className="text-current ml-2">
+                            <span className="text-current p-2">
                               {item.icon}
                             </span>
                           )}
@@ -115,7 +120,9 @@ function Menu({ data, userLogin }) {
                       ) : (
                         <Fragment>
                           {item.icon && (
-                            <span className="text-current ml-2">
+                            <span className={clsx("text-current p-2", {
+                              "animate-pulse text-red-500": false
+                            })}>
                               {item.icon}
                             </span>
                           )}
@@ -132,13 +139,13 @@ function Menu({ data, userLogin }) {
                       <Fragment>
                         {item.keyword && t(`nav-item.${item.keyword}`)}
                         {item.icon && (
-                          <span className="text-current ml-2">{item.icon}</span>
+                          <span className="text-current p-2">{item.icon}</span>
                         )}
                       </Fragment>
                     ) : (
                       <Fragment>
                         {item.icon && (
-                          <span className="text-current ml-2">{item.icon}</span>
+                          <span className="text-current p-2">{item.icon}</span>
                         )}
                       </Fragment>
                     )}
@@ -159,6 +166,21 @@ function Menu({ data, userLogin }) {
               {item.subNav && item.keyword !== "login" && (
                 <SubMenu data={item.subNav} className="group-hover:flex" />
               )}
+
+              {/* custom dropdown (submenu custom :v) */}
+              {item.customDropdown &&
+                <div className="group-hover:flex bg-[#272626] flex-col min-w-[14rem] z-50 absolute top-full hidden rounded-b-lg overflow-y-scroll scrollbar-primary max-h-[400px]">
+                  <NotificationCard page={"user"}/>
+                  <NotificationCard page={"user"}/>
+                  <NotificationCard page={"user"}/>
+                  <NotificationCard page={"user"}/>
+                  <NotificationCard page={"user"}/>
+                  <NotificationCard page={"user"}/>
+                  <NotificationCard page={"user"}/>
+                  <NotificationCard page={"user"}/>
+                  <NotificationCard page={"user"}/>
+                </div>
+              }
             </li>
           );
         })}

@@ -1,0 +1,58 @@
+export const fakeDataProductsOrder = [
+    {
+        name: "Food 1",
+        price: "100",
+        priceOriginal: "150",
+        reviews: "100",
+        desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    },
+    {
+        name: "Food 2",
+        price: "200",
+        priceOriginal: "220",
+        reviews: "1000",
+        desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    },
+    {
+        name: "Food 3",
+        price: "250",
+        priceOriginal: "300",
+        reviews: "10000",
+        desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    },
+    {
+        name: "Food 4",
+        price: "400",
+        priceOriginal: "450",
+        reviews: "100",
+        desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    },
+    {
+        name: "Food 5",
+        price: "300",
+        priceOriginal: "200",
+        reviews: "10",
+        desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    },
+    {
+        name: "Food 6",
+        price: "600",
+        priceOriginal: null,
+        reviews: "100",
+        desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    },
+    {
+        name: "Food 7",
+        price: "700",
+        priceOriginal: null,
+        reviews: "100000",
+        desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    },
+    {
+        name: "Food 8",
+        price: "800",
+        priceOriginal: "1600",
+        reviews: "100",
+        desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    },
+]

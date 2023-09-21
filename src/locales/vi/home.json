@@ -8,18 +8,17 @@
     "button": {
         "more": "Xem thêm",
         "detail": "Chi tiết",
-        "addToCart": "Thêm vào giỏ hàng"
+        "addToCart": "Thêm vào giỏ hàng",
+        "delete": "Xoá"
     },
 
-    "product": {
-        "dineIn": "Ăn tại chỗ",
-        "takeOut": "Mua mang về",                
-        "appetizers": "Món khai vị",
-        "mainDishes": "Món chính",
-        "seaFood": "Món hải sản",
-        "comboMeals": "Bữa ăn kết hợp",
-        "beverages": "Đồ uống",
-        "desserts": "Món tráng miệng",
-        "comingSoon": "Vui lòng đợi"
+    "product": {                        
+        "mon-khai-vi": "Món khai vị",
+        "mon-chinh": "Món chính",
+        "mon-hai-san": "Món hải sản",
+        "bua-an-ket-hop": "Bữa ăn kết hợp",
+        "do-uong": "Đồ uống",
+        "mon-trang-mieng": "Món tráng miệng",
+        "vui-long-cho": "Vui lòng đợi"
     }
 }

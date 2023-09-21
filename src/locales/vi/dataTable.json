@@ -5,12 +5,18 @@
         "name": "Tên",
         "username": "Tài khoản",
         "roleName": "Vai trò",
-        "email": "Email"
+        "email": "Email",
+        "image": "Ảnh",
+        "discount": "Giảm giá",
+        "Desc": "Mô tả",
+        "categoryName": "Thể loại",
+        "price": "Giá tiền"
     },
     
     "btnUserAction": {
         "read": "Đọc",
         "edit": "Chỉnh sửa",
-        "delete": "Xoá"
+        "delete": "Xoá",
+        "variant": "Loại sản phẩm"
     }
 }

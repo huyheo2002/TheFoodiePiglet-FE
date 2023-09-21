@@ -12,7 +12,7 @@ function App() {
   // const dataUserRedux = useSelector((state) => state.user.user);
   // console.log("dataUserRedux app", dataUserRedux)
   const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-  console.log("dataUser app", dataUser);
+  // console.log("dataUser app", dataUser);
   
   return (
     <ContextWrapper>

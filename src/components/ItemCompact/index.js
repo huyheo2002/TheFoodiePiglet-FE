@@ -1,31 +1,40 @@
 import { useTranslation } from "react-i18next";
 import Button from "../Button";
 import {
-  DollarIcon,
-  HeartFillIcon,
+  // DollarIcon,
+  // HeartFillIcon,
   StarFillIcon,
-  StarHalfIcon,
+  // StarHalfIcon,
   StarIcon,
 } from "../Icons";
 import Image from "../Image";
+import clsx from "clsx";
+import ItemInCart from "./ItemInCart";
+import { fakeDataProductsOrder } from "../../data/fakeDataProductsOrder";
 
-function ItemCompact() {
+function ItemCompact({ size, type, data }) {
   const { t } = useTranslation(["home"]);
-  return (
-    <div className="productCompact group">
-      <Image src="https://www.koreandxb.com/images/food1.jpg" effectScale />
-      <div className="p-5 flex flex-col gap-3">
-        {/* badge */}
-        {/* <div className="flex items-center gap-2">
-          <span className="productCompact__badge">{t("product.dineIn")}</span>
-          <span className="productCompact__badge">{t("product.takeOut")}</span>
-        </div> */}
 
+  if (type === "cart") {
+    return <ItemInCart size={size} data={fakeDataProductsOrder} />;
+  }
+
+  return (
+    <div
+      className={clsx("productCompact group", {
+        "w-[calc(25%-1.5rem)]": size === "fourItems-onRows",
+        "w-[calc(33.33%-1.5rem)]": size === "threeItems-onRows",
+      })}
+    >
+      <Image src={data ? data.image : "https://www.koreandxb.com/images/food1.jpg"} effectScale 
+        className={"max-h-[320px]"}
+      />
+      <div className="p-5 flex flex-col gap-3">
         <h2
           className="productCompact__title"
           title="Food Food Food Food Food Food Food Food Food Food"
         >
-          Food Food Food Food Food Food Food Food Food Food
+          {data ? data.name : "Food Food Food Food Food Food Food Food Food Food"}
         </h2>
 
         <div className="flex items-center gap-4">

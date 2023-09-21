@@ -19,13 +19,13 @@ export const getAllUsersCompact = (id) => {
 };
 
 export const handleCreateUser = (data) => {
-  console.log("dataaaaa", data);
+  // console.log("dataaaaa", data);
 
   return axios.post("/api/create-user", data);
 };
 
 export const handleUpdateUser = (data) => {
-  console.log("dataa", data);
+  // console.log("dataa", data);
   return axios.put("/api/edit-user", data);
 };
 

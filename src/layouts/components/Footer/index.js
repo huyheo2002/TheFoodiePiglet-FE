@@ -98,8 +98,8 @@ function Footer() {
           </ul>
         </div>
         <div className="w-1/4 flex items-center justify-center">
-          {/* <Image src={logo} /> */}
-          <Image src={"https://scontent.fhan14-1.fna.fbcdn.net/v/t1.15752-9/368426111_259349003674501_1649132107272678005_n.png?_nc_cat=105&ccb=1-7&_nc_sid=ae9488&_nc_ohc=JR3EoCaRzloAX-fzIEn&_nc_ht=scontent.fhan14-1.fna&oh=03_AdS8O9UYzIMs_bxovxTcIB_Mu6PPTwmFXKjGSkqN3-DojQ&oe=65103B1E"} className="w-full"/>          
+          <Image src={logo} />
+          {/* <Image src={"https://scontent.fhan14-1.fna.fbcdn.net/v/t1.15752-9/368426111_259349003674501_1649132107272678005_n.png?_nc_cat=105&ccb=1-7&_nc_sid=ae9488&_nc_ohc=JR3EoCaRzloAX-fzIEn&_nc_ht=scontent.fhan14-1.fna&oh=03_AdS8O9UYzIMs_bxovxTcIB_Mu6PPTwmFXKjGSkqN3-DojQ&oe=65103B1E"} className="w-full"/>           */}
         </div>
       </div>
     </div>

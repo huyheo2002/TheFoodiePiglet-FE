@@ -1,0 +1,15 @@
+{
+    "table": {
+        "DC": "For Two",
+        "DR": "For Two",
+        "FR": "For Four",
+        "SV": "For Six"
+    },
+
+    "other": {
+        "Reception": "Reception",
+        "Kitchen": "Kitchen Area",
+        "WC": "WC",
+        "takeAway": "Take Away"
+    }
+}

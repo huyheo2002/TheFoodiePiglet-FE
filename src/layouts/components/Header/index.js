@@ -2,14 +2,13 @@ import { Link } from "react-router-dom";
 import Menu from "./Menu";
 import {
   BellIcon,
+  CartIcon,
   EarthIcon,
   LineDownIcon,
   UserIcon,
 } from "../../../components/Icons";
-import { useTranslation } from "react-i18next";
-import { useContext } from "react";
-import GlobalContext from "../../../contexts/globalContext";
-import { useSelector } from "react-redux";
+// import { useContext } from "react";
+// import GlobalContext from "../../../contexts/globalContext";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import logo from "../../../assets/images/Base/logo-transparent.png";
 import Image from "../../../components/Image";
@@ -63,10 +62,17 @@ const NAVBAR_ITEM = [
 
 const NAVBAR_RIGHT_ITEM = [
   {
+    icon: <CartIcon className="!w-6 !h-6" />,
+    keyword: "cart",
+    to: "/cart",    
+    onlyShowIcon: true,
+  },
+  {
     icon: <BellIcon className="!w-6 !h-6" />,
     keyword: "notify",
     // to: "/news",    
     onlyShowIcon: true,
+    customDropdown: true, 
   },
   {
     icon: <EarthIcon className="!w-6 !h-6 cursor-pointer" />,
@@ -94,7 +100,11 @@ const NAVBAR_RIGHT_ITEM = [
       {
         keyword: "manager",
         to: "/system",
-      },     
+      },  
+      {
+        keyword: "profile",
+        to: "/profile",
+      },   
       {
         keyword: "logout",
         to: "/login",
@@ -104,7 +114,7 @@ const NAVBAR_RIGHT_ITEM = [
 ];
 
 function Header() {
-  const { testContext } = useContext(GlobalContext);
+  // const { testContext } = useContext(GlobalContext);
   // console.log("testContext", testContext);
 
   // const user = useSelector(state => state.user.user);
@@ -117,8 +127,8 @@ function Header() {
       <div className="max-h-16 flex">
         {/* logo */}
         <Link to="" className="max-h-16 inline-block h-full">          
-          {/* <Image src={logo} className="h-full"/> */}
-          <Image src={"https://scontent.fhan14-1.fna.fbcdn.net/v/t1.15752-9/368426111_259349003674501_1649132107272678005_n.png?_nc_cat=105&ccb=1-7&_nc_sid=ae9488&_nc_ohc=JR3EoCaRzloAX-fzIEn&_nc_ht=scontent.fhan14-1.fna&oh=03_AdS8O9UYzIMs_bxovxTcIB_Mu6PPTwmFXKjGSkqN3-DojQ&oe=65103B1E"} className="h-full"/>          
+          <Image src={logo} className="h-full"/>
+          {/* <Image src={"https://scontent.fhan14-1.fna.fbcdn.net/v/t1.15752-9/368426111_259349003674501_1649132107272678005_n.png?_nc_cat=105&ccb=1-7&_nc_sid=ae9488&_nc_ohc=JR3EoCaRzloAX-fzIEn&_nc_ht=scontent.fhan14-1.fna&oh=03_AdS8O9UYzIMs_bxovxTcIB_Mu6PPTwmFXKjGSkqN3-DojQ&oe=65103B1E"} className="h-full"/>           */}
 
         </Link>
         {/* navbar */}

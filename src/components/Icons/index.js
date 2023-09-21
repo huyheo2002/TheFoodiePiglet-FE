@@ -12,6 +12,8 @@ import {
   AiOutlineLoading3Quarters,
   AiOutlineMessage,
   AiOutlineClose,
+  AiOutlinePlus,
+  AiOutlineMinus,
 } from "react-icons/ai";
 import {
   FaAngleRight,
@@ -21,6 +23,7 @@ import {
   FaPencilAlt,
   FaTrash,
   FaBookOpen,
+  FaShoppingCart
 } from "react-icons/fa";
 import { ImEarth } from "react-icons/im";
 import {
@@ -315,6 +318,45 @@ export const DotHorizontalIcon = ({ className, onClick }) => {
 
   return (
     <BiDotsHorizontalRounded
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const CartIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaShoppingCart
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const OutlinePlusIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <AiOutlinePlus
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const OutlineMinusIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <AiOutlineMinus
       className={clsx(("w-6 h-6", className))}
       {...props}
     />

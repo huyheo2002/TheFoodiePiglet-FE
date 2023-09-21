@@ -25,7 +25,7 @@ function Image({
       onClick={onClick}
     >
       <img
-        className={clsx("w-full h-full object-cover", {
+        className={clsx("w-full h-full object-fill", {
             "group-hover:scale-110 transition-all duration-300": effectScale
         })}
         src={fallback || src}

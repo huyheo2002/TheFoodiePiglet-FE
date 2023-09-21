@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
 import DataTable from "../../../components/DataTable";
-import { dataUser } from "../../../data/fakeDataUser";
 import * as userServices from "../../../services/userServices";
 import Modal from "../../../components/Modal";
 import Heading from "../../../components/Heading";
@@ -25,7 +24,7 @@ function UserManagement() {
     //   type: "text",
     //   placeholder: "Enter your username",
     //   label: "Id",
-    //   required: true,
+    //   readOnly: true
     // },
     {
       id: 2,
@@ -214,6 +213,22 @@ function UserManagement() {
       listUsersDetail.length > 0 &&
       listUsersDetail.filter((item) => item.id === id);
 
+    if (filterUser) {
+      filterUser = filterUser.map((user) => {
+        const sanitizedUser = {};
+        for (const key in user) {
+          if (user[key] === null || user[key] === undefined) {
+            sanitizedUser[key] = '';
+          } else {
+            sanitizedUser[key] = user[key];
+          }
+        }
+        return sanitizedUser;
+      });
+    }
+
+    console.log("filterUser", filterUser)
+
     if (listUsersDetail.length > 0) {
       setDataRead(filterUser[0]);
     }
@@ -250,6 +265,20 @@ function UserManagement() {
       listUsersDetail.length > 0 &&
       listUsersDetail.filter((item) => item.id === id);
 
+    if (filterUser) {
+      filterUser = filterUser.map((user) => {
+        const sanitizedUser = {};
+        for (const key in user) {
+          if (user[key] === null || user[key] === undefined) {
+            sanitizedUser[key] = '';
+          } else {
+            sanitizedUser[key] = user[key];
+          }
+        }
+        return sanitizedUser;
+      });
+    }
+
     if (listUsersDetail.length > 0) {
       let dataUserUpdate = { ...filterUser[0], ["password"]: "123" };
       setValuesUpdate(dataUserUpdate);
@@ -277,7 +306,7 @@ function UserManagement() {
   };
   // handle create user
   const onChangeInputCreate = (e) => {
-    setValuesCreate({ ...valuesCreate, [e.target.name]: e.target.value });    
+    setValuesCreate({ ...valuesCreate, [e.target.name]: e.target.value });
   };
 
   const onChangeInputUpdate = (e) => {
@@ -288,7 +317,6 @@ function UserManagement() {
   const handlePreviewImage = (e) => {
     const file = e.target.files[0];
     // console.log(URL.createObjectURL(file))
-
     // tự thêm attribute
     file.preview = URL.createObjectURL(file);
     setImage(file);
@@ -313,9 +341,13 @@ function UserManagement() {
   // handle submit
   const onhandleSubmitCreateUsers = async (e) => {
     e.preventDefault();
-    let newObj = { ...valuesCreate, roleId: roleIndex, gender: gender };
+    const data = new FormData(e.target);
+
+    // console.log("data:", data);
+    // console.log("data entry:", Object.fromEntries(data.entries()));
+
     try {
-      const respon = await userServices.handleCreateUser(newObj);
+      const respon = await userServices.handleCreateUser(data);
       // console.log("respon", respon);
 
       if (respon && respon.errCode === 0) {
@@ -332,9 +364,15 @@ function UserManagement() {
 
   const onhandleSubmitUpdateUser = async (e) => {
     e.preventDefault();
-    let newObj = { ...valuesUpdate };
+
+    const data = new FormData(e.target);
+    if (valuesUpdate) {
+      data.set("id", valuesUpdate.id)
+    }
+
+    console.log("data entry:", Object.fromEntries(data.entries()));
     try {
-      const respon = await userServices.handleUpdateUser(newObj);
+      const respon = await userServices.handleUpdateUser(data);
 
       if (respon && respon.errCode === 0) {
         handleCloseModalUpdate();
@@ -348,7 +386,6 @@ function UserManagement() {
     }
   };
 
-  // error: cant send param to be
   const onhandleSubmitDeleteUser = async (e) => {
     e.preventDefault();
 
@@ -410,7 +447,7 @@ function UserManagement() {
                   <InputField
                     key={index}
                     value={dataRead[item.name]}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     hidden={"true"}
                     {...item}
                   />
@@ -418,12 +455,14 @@ function UserManagement() {
               }
 
               if (item.type === "file") {
+                // console.log("image", dataRead[item.name])
                 return (
                   <InputFile
                     key={index}
                     value={dataRead[item.name]}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     onlyRead={"true"}
+                    imagePreview={dataRead[item.name]}
                     {...item}
                   />
                 );
@@ -434,7 +473,7 @@ function UserManagement() {
                   <InputRadio
                     key={index}
                     options={optionsGender}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     checked={genderChecked}
                     disable
                     {...item}
@@ -467,7 +506,7 @@ function UserManagement() {
                   <InputRadio
                     key={index}
                     options={getDataFromRole}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     checked={roleChecked}
                     disable
                     {...item}
@@ -480,7 +519,7 @@ function UserManagement() {
                 <InputField
                   key={index}
                   value={dataRead[item.name]}
-                  onChange={() => {}}
+                  onChange={() => { }}
                   onlyRead={"true"}
                   {...item}
                 />
@@ -557,7 +596,7 @@ function UserManagement() {
                   <InputField
                     key={index}
                     onChange={onChangeInputCreate}
-                    onClick={() => {}}
+                    onClick={() => { }}
                     {...item}
                   />
                 );
@@ -599,8 +638,8 @@ function UserManagement() {
                   return (
                     <InputField
                       key={index}
-                      onChange={() => {}}
-                      hidden={"true"}                      
+                      onChange={() => { }}
+                      hidden={"true"}
                     />
                   );
                 }
@@ -609,9 +648,9 @@ function UserManagement() {
                   return (
                     <InputFile
                       key={index}
-                      value={valuesUpdate[item.name]}
-                      onChange={() => {}}
-                      onlyRead={"true"}
+                      onChange={handlePreviewImage}
+                      // value={valuesUpdate[item.name]}
+                      imagePreview={image.preview ?? valuesUpdate[item.name]}
                       {...item}
                     />
                   );
@@ -669,7 +708,7 @@ function UserManagement() {
                     key={index}
                     onChange={onChangeInputUpdate}
                     value={valuesUpdate[item.name]}
-                    onClick={() => {}}
+                    onClick={() => { }}
                     {...item}
                   />
                 );
@@ -729,9 +768,15 @@ function UserManagement() {
                       </Fragment>
                     );
                   })}
-              
+
               {/* input id clone */}
-              <InputField type="text" name="id" value={idUserDelete} onChange={() => {}}/>
+              <InputField
+                type="text"
+                name="id"
+                hidden="true"
+                value={idUserDelete}
+                onChange={() => { }}
+              />
             </div>
             {/* footer */}
             <div className="flex justify-end">

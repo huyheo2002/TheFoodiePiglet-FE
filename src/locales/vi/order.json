@@ -1,0 +1,15 @@
+{
+    "table": {
+        "DC": "Bàn đôi",
+        "DR": "Bàn đôi",
+        "FR": "Bàn bốn",
+        "SV": "Bàn sáu"
+    },
+
+    "other": {
+        "Reception": "Lễ tân",
+        "Kitchen": "Khu nhà bếp",
+        "WC": "Khu vệ sinh",
+        "takeAway": "Ra đồ"
+    }
+}
