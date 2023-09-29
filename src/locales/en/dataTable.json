@@ -10,7 +10,11 @@
         "discount": "Discount",
         "Desc": "Desc",
         "categoryName": "Category",        
-        "price": "Price"
+        "price": "Price",
+        "discountVariant": "Discount Variant",
+        "ProductId": "Product Id",
+        "originalPrice": "Original Price",
+        "currentPrice": "Current Price"
     },
     
     "btnUserAction": {

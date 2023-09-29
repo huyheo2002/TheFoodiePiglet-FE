@@ -14,7 +14,7 @@ export const handleCreateProduct = (data) => {
   return axios.post("/api/create-product", data);
 };
 
-export const handleUpdateUser = (data) => {
+export const handleUpdateProduct = (data) => {
   // console.log("dataa", data);
   return axios.put("/api/edit-product", data);
 };

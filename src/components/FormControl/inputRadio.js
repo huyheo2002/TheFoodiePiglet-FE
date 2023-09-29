@@ -1,15 +1,19 @@
-function InputRadio({ ...props }) {
-  const { options, label, checked, onChange, disable, edit, ...inputProps } =
-    props;
+import clsx from "clsx";
 
+function InputRadio({ ...props }) {
+  const { options, label, checked, onChange, disable, edit, hidden, ...inputProps } =
+    props;
+    
   return (
-    <div className="custom-radio-container">
+    <div className={clsx("custom-radio-container", {
+      "!hidden": hidden
+    })}>
       <label className="capitalize block text-base font-medium text-black tracking-wider pb-1">
         {label}
       </label>
-      {options.map((option, index) => {
+      {!hidden && options.map((option, index) => {
         let cloneId = Math.floor(Math.random() * 9999);
-        console.log("option.value", option.value)
+        // console.log("option.value", option.value)
         return (
           <div className="flex items-center" key={index}>
             <input

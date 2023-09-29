@@ -59,24 +59,23 @@ function ProductManagement() {
             type: "text",
             placeholder: "Enter your description",
             label: "Description",
-            required: true,
+            // required: true,
         },
         {
             id: 3,
-            name: "discount",
-            type: "text",
-            placeholder: "Enter your discount",
-            label: "Discount",
-            // required: true,
+            name: "size",
+            type: "radio",
+            label: "Size",
+            required: true,
         },
-        // {
-        //     id: 4,
-        //     name: "price",
-        //     type: "text",
-        //     placeholder: "Enter your price",
-        //     label: "Price",
-        //     required: true,
-        // },
+        {
+            id: 4,
+            name: "price",
+            type: "number",
+            placeholder: "Enter your price",
+            label: "Price",
+            required: true,
+        },
         {
             id: 5,
             name: "categoryId",
@@ -101,6 +100,7 @@ function ProductManagement() {
 
     const [image, setImage] = useState("");
     const [categoryId, setCategoryId] = useState(-1);
+    const [size, setSize] = useState(-1);
 
     // data CURD
     const [dataRead, setDataRead] = useState({});
@@ -139,10 +139,28 @@ function ProductManagement() {
             const dataListProduct = respon.products || [];
             let splitFields =
                 dataListProduct.length > 0 &&
-                dataListProduct.map((item) => {
+                dataListProduct.map((item) => {                    
                     if (item.Variants) {
-                        item.price = item.Variants.length > 0 ? item.Variants[0].price : null;
-                        delete item.Variants;
+                        if (item.Variants.length > 0) {
+                            let minPrice = item.Variants[0].price;
+                            let maxPrice = item.Variants[0].price;
+                            let rangePrice = 0;
+                            if (minPrice === maxPrice) {
+                                rangePrice = minPrice;
+                            }
+
+                            for (const variant of item.Variants) {
+                                if (variant.price < minPrice) {
+                                    minPrice = variant.price;
+                                }
+                                if (variant.price > maxPrice) {
+                                    maxPrice = variant.price;
+                                }
+                            }
+
+                            item.price = `${minPrice} ~ ${maxPrice} $` ?? `0 $`;
+                            delete item.Variants;
+                        }
                     }
 
                     if (item.Category) {
@@ -212,6 +230,9 @@ function ProductManagement() {
             filterProduct = filterProduct.map((product) => {
                 const sanitizedUser = {};
                 for (const key in product) {
+                    if (product.Variants && product.Variants.length > 0 && key == "Variants") {
+                        sanitizedUser["price"] = product.Variants[0].price;
+                    }
                     if (product[key] === null || product[key] === undefined) {
                         sanitizedUser[key] = '';
                     } else {
@@ -234,7 +255,7 @@ function ProductManagement() {
         setCategoryId(-1);
     };
 
-    // modal update user
+    // modal update
     const handleOpenModalUpdate = (id) => {
         setOpenModalUpdate(true);
         let filterProduct =
@@ -316,6 +337,10 @@ function ProductManagement() {
         setCategoryId(currentValue);
     };
 
+    const handleGetValueSize = (currentValue) => {
+        setSize(currentValue);
+    };
+
     // submit 
     const onhandleSubmitCreateProduct = async (e) => {
         e.preventDefault();
@@ -340,7 +365,7 @@ function ProductManagement() {
         }
     };
 
-    const onhandleSubmitUpdateUser = async (e) => {
+    const onhandleSubmitUpdateProduct = async (e) => {
         e.preventDefault();
 
         const data = new FormData(e.target);
@@ -350,7 +375,7 @@ function ProductManagement() {
 
         console.log("data entry:", Object.fromEntries(data.entries()));
         try {
-            const respon = await productServices.handleUpdateUser(data);
+            const respon = await productServices.handleUpdateProduct(data);
 
             if (respon && respon.errCode === 0) {
                 handleCloseModalUpdate();
@@ -363,7 +388,6 @@ function ProductManagement() {
             console.log(error);
         }
     };
-
 
     const onhandleSubmitDeleteProduct = async (e) => {
         e.preventDefault();
@@ -409,6 +433,12 @@ function ProductManagement() {
                         <Heading variant={"primary"}>Create product</Heading>
                         <div className="">
                             {inputProducts.map((item, index) => {
+                                const optionsSize = [
+                                    { value: "S", label: "S" },
+                                    { value: "M", label: "M" },
+                                    { value: "L", label: "L" },
+                                ];
+
                                 if (item.type === "file") {
                                     return (
                                         <InputFile
@@ -416,6 +446,18 @@ function ProductManagement() {
                                             onChange={handlePreviewImage}
                                             imagePreview={image.preview}
                                             {...item}
+                                        />
+                                    );
+                                }
+
+                                if (item.type === "radio" && item.name === "size") {
+                                    return (
+                                        <InputRadio
+                                            key={index}
+                                            options={optionsSize}
+                                            onChange={handleGetValueSize}
+                                            {...item}
+                                            id={Math.floor(Math.random() * 10)}
                                         />
                                     );
                                 }
@@ -460,20 +502,7 @@ function ProductManagement() {
                     <Heading variant={"primary"}>Information product detail</Heading>
                     <div className="">
                         {inputProducts.map((item, index) => {
-                            if (item.type === "password") {
-                                return (
-                                    <InputField
-                                        key={index}
-                                        value={dataRead[item.name]}
-                                        onChange={() => { }}
-                                        hidden={"true"}
-                                        {...item}
-                                    />
-                                );
-                            }
-
                             if (item.type === "file") {
-                                // console.log("image", dataRead[item.name])
                                 return (
                                     <InputFile
                                         key={index}
@@ -482,6 +511,17 @@ function ProductManagement() {
                                         onlyRead={"true"}
                                         imagePreview={dataRead[item.name]}
                                         {...item}
+                                    />
+                                );
+                            }
+
+                            if (item.type === "radio" && item.name === "size") {
+                                return (
+                                    <InputRadio
+                                        key={index}
+                                        hidden={"true"}
+                                        {...item}
+                                        id={Math.floor(Math.random() * 10)}
                                     />
                                 );
                             }
@@ -523,7 +563,7 @@ function ProductManagement() {
             {/* modal update user */}
             {openModalUpdate && (
                 <Modal open={openModalUpdate} close={handleCloseModalUpdate}>
-                    <form autoComplete="off" onSubmit={onhandleSubmitUpdateUser}>
+                    <form autoComplete="off" onSubmit={onhandleSubmitUpdateProduct}>
                         <Heading variant={"primary"}>Update product</Heading>
                         <div className="">
                             {inputProducts.map((item, index) => {
@@ -540,7 +580,29 @@ function ProductManagement() {
                                             {...item}
                                         />
                                     );
-                                }                                
+                                }
+
+                                if (item.type === "radio" && item.name === "size") {
+                                    return (
+                                        <InputRadio
+                                            key={index}
+                                            hidden={"true"}
+                                            {...item}
+                                            id={Math.floor(Math.random() * 10)}
+                                        />
+                                    );
+                                }
+
+                                if (item.name === "price") {
+                                    return (
+                                        <InputField
+                                            type="text"
+                                            name="price"
+                                            hidden="true"
+                                            onChange={() => { }}
+                                        />
+                                    );
+                                }
 
                                 if (item.type === "radio") {
                                     return (

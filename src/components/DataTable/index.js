@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import Button from "../Button";
 import Image from "../Image";
 import Modal from "../Modal";
+import { useNavigate } from "react-router-dom";
 
 function DataTable({
   data,
@@ -23,7 +24,9 @@ function DataTable({
   handleModalDelete,
   handleModalCreate,
   btnCreateTitle,
+  btnBack,
 }) {
+  const navigate = useNavigate();
   const { toggleDataTable, setToggleDataTable } = useContext(GlobalContext);
   const [currentItem, setCurrentItem] = useState(-1);
   const [keyDataPreview, setKeyDataPreview] = useState([]);
@@ -68,6 +71,7 @@ function DataTable({
   return (
     <Fragment>
       <div className="flex justify-end my-2">
+        {btnBack && <Button variant={"primary"} onClick={() => navigate(-1)}>Back</Button>}        
         <Button
           variant={"primary"}
           onClick={handleModalCreate && handleModalCreate}

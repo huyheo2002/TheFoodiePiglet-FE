@@ -10,7 +10,11 @@
         "discount": "Giảm giá",
         "Desc": "Mô tả",
         "categoryName": "Thể loại",
-        "price": "Giá tiền"
+        "price": "Giá tiền",
+        "discountVariant": "Giảm giá",
+        "ProductId": "Id sản phẩm",
+        "originalPrice": "Giá gốc",
+        "currentPrice": "Giá hiện tại"
     },
     
     "btnUserAction": {
