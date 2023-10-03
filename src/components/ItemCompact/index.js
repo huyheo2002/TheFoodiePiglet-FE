@@ -12,7 +12,7 @@ import clsx from "clsx";
 import ItemInCart from "./ItemInCart";
 import { fakeDataProductsOrder } from "../../data/fakeDataProductsOrder";
 
-function ItemCompact({ size, type, data }) {
+function ItemCompact({ size, type, data, onhandleAddToCart, onHandleProductDetail }) {
   const { t } = useTranslation(["home"]);
 
   if (type === "cart") {
@@ -62,8 +62,16 @@ function ItemCompact({ size, type, data }) {
 
         {/* button action */}
         <div className="mt-5 flex">
-          <Button variant="primary">{t("button.addToCart")}</Button>
-          <Button variant="primary">{t("button.detail")}</Button>
+          <Button variant="primary" onClick={() => {
+            if(onhandleAddToCart) {
+              onhandleAddToCart();
+            }
+          }}>{t("button.addToCart")}</Button>
+          <Button variant="primary" onClick={() => {
+            if(onHandleProductDetail) {
+              onHandleProductDetail();
+            }
+          }}>{t("button.detail")}</Button>
         </div>
       </div>
     </div>

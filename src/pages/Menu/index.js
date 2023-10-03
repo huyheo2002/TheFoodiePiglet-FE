@@ -7,33 +7,12 @@ import ItemCompact from "../../components/ItemCompact";
 
 function Menu() {
   return (
-    <div className="w-full relative">
-      <div
-        className="absolute inset-0 z-0 blur-sm"
-        // style={{
-        //   background: `url(${bgTest})`,
-        //   backgroundRepeat: "no-repeat",
-        //   backgroundAttachment: "fixed",
-        //   backgroundSize: "cover",
-        //   backgroundPosition: "center",
-        // }}
-      ></div>
-      {/* <div className="absolute z-50 right-8 top-24">
-        <img src="https://www.koreandxb.com/images/food5.jpg" />
-      </div> */}
-      {/* <img src="https://www.koreandxb.com/images/kc2.png"/> */}
-
+    <div className="w-full relative">      
       <div
         className="relative w-full flex pt-16 overflow-hidden"
-        // style={{
-        //   background: `url(${overlay})`,
-        //   backgroundRepeat: "no-repeat",
-        //   backgroundSize: "cover",
-        //   backgroundPosition: "center",
-        // }}
       >
         <div className="w-[325px] min-w-[325px] min-h-[250px] fixed">
-          <Sidebar />          
+          <Sidebar />
         </div>
 
         <main className="w-full ml-[325px] min-h-[250px] text-white px-3 py-4">

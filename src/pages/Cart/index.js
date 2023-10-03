@@ -1,6 +1,7 @@
 import Button from "../../components/Button";
 import Heading from "../../components/Heading";
 import ItemCompact from "../../components/ItemCompact";
+import WindowScrollTop from "../../utils/windowScroll";
 
 function Cart() {
   return (
@@ -23,6 +24,8 @@ function Cart() {
             Tổng cộng: $60.00
           </h2>
           <div className="flex">
+            <Button variant={"success"}>Làm mới giỏ hàng</Button>
+            <Button variant={"success"} to={"/menu"} onClick={() => WindowScrollTop()}>Mua tiếp</Button>
             <Button variant={"success"}>Thanh toán trực tiếp</Button>
             <Button variant={"success"}>Thanh toán online</Button>
           </div>

@@ -1,11 +1,27 @@
 import bgSlider from "../../assets/images/Base/bgNews-4.png";
-import ItemCompact from "../../components/ItemCompact";
 import Heading from "../../components/Heading";
 import Button from "../../components/Button";
-import Image from "../../components/Image";
 import ItemNews from "../../components/ItemNews";
+import * as genresServices from "../../services/genresServices";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function News() {
+  const { t } = useTranslation(["home", "header"]);
+  const [listGenres, setListGenres] = useState([]);
+  
+  const fetchDataGenres = async () => {
+    let respon = await genresServices.getAllGenres() ?? null;
+
+    if(respon) {
+      setListGenres(respon.genres)
+    }
+  }
+
+  useEffect(() => {
+    fetchDataGenres();
+  }, [])
+
   return (
     <div className="w-full relative">
       {/* sidebar */}
@@ -31,14 +47,13 @@ function News() {
       {/* main content */}
       <div className="my-3">
         <Heading variant={"primary"} line>
-          Hello title
+          {t("heading.news")}
         </Heading>
 
           <div className="flex justify-center items-center mb-3">
-            <Button variant={"primary"}>Hello</Button>
-            <Button variant={"primary"}>Hello</Button>
-            <Button variant={"primary"}>Hello</Button>
-            <Button variant={"primary"}>Hello</Button>
+            {listGenres.length > 0 && listGenres.map((item, index) => {
+              return <Button key={index} variant={"primary"}>{item.name}</Button>
+            })}                        
           </div>
         {/* main content */}
         <div className="flex flex-row flex-wrap">

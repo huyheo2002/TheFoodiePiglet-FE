@@ -1,41 +1,29 @@
 import Button from "../../components/Button";
 import ItemCompact from "../../components/ItemCompact";
 import Heading from "../../components/Heading";
+import Image from "../../components/Image";
+import ava from "../../assets/images/logo-pig-smile.png";
 
 function Profile() {
     return (
         <div className="min-h-screen bg-transparent py-4">
             <div className="relative py-3 w-full">
                 <div className="bg-gray-900 shadow-black-rb-0.75 rounded-lg border-rgba-white-0.1 border-solid border-[3px] mx-3 my-4 p-3 overflow-hidden select-none transition-all duration-300 cursor-pointer hover:border-white">
-                    <div className="max-w-md">
+                    <div className="w-full">
                         <div className="flex items-center space-x-5">
-                            <div className="h-14 w-14 bg-blue-500 rounded-full flex flex-shrink-0 justify-center items-center text-white text-2xl font-mono">U</div>
-                            <div className="block pl-2 font-semibold text-xl self-start text-gray-700">
-                                <h2 className="leading-relaxed">John Doe</h2>
-                                <p className="text-sm text-gray-500 font-normal leading-relaxed">Web Developer</p>
+                            <div className="h-40 w-40 rounded-full flex flex-shrink-0 justify-center items-center text-white text-2xl font-mono overflow-hidden border-2 border-rgba-white-0.1">
+                                <Image src={ava} />
+                            </div>
+                            <div className="block pl-2 font-semibold text-xl self-center text-gray-700">
+                                <h2 className="leading-relaxed text-white font-semibold text-2xl">John Doe</h2>
+                                <p className="text-sm font-normal leading-relaxed text-white">Web Developer</p>
                             </div>
                         </div>
-                        <div className="mt-4">
+                        <div className="mt-4 flex">
                             <Button variant={"primary"}>Thay đổi thông tin</Button>
+                            <Button variant={"primary"}>Thông tin chi tiết</Button>
                             <Button variant={"primary"}>Quên mật khẩu</Button>
-                        </div>
-                        <div className="divide-y divide-gray-200">
-                            <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                                <p>Thông tin cá nhân:</p>
-                                <div className="flex items-center space-x-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                                    </svg>
-                                    <span>Email: john@example.com</span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                    </svg>
-                                    <span>Số điện thoại: (123) 456-7890</span>
-                                </div>
-                            </div>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
             </div>
@@ -44,10 +32,10 @@ function Profile() {
                 <div className="relative px-4 mx-8 shadow rounded-3xl">
                     <Heading line>Món ăn yêu thích</Heading>
                     <div className="flex flex-row flex-wrap">
-                        <ItemCompact size={"threeItems-onRows"} />
-                        <ItemCompact size={"threeItems-onRows"} />
-                        <ItemCompact size={"threeItems-onRows"} />
-                        <ItemCompact size={"threeItems-onRows"} />
+                        <ItemCompact size={"fourItems-onRows"} />
+                        <ItemCompact size={"fourItems-onRows"} />
+                        <ItemCompact size={"fourItems-onRows"} />
+                        <ItemCompact size={"fourItems-onRows"} />
                     </div>
 
                     <Heading line>Đơn hàng đã mua</Heading>

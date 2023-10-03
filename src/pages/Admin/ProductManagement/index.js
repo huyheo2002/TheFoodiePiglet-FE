@@ -143,11 +143,7 @@ function ProductManagement() {
                     if (item.Variants) {
                         if (item.Variants.length > 0) {
                             let minPrice = item.Variants[0].price;
-                            let maxPrice = item.Variants[0].price;
-                            let rangePrice = 0;
-                            if (minPrice === maxPrice) {
-                                rangePrice = minPrice;
-                            }
+                            let maxPrice = item.Variants[0].price;                            
 
                             for (const variant of item.Variants) {
                                 if (variant.price < minPrice) {
@@ -158,7 +154,12 @@ function ProductManagement() {
                                 }
                             }
 
-                            item.price = `${minPrice} ~ ${maxPrice} $` ?? `0 $`;
+                            if(minPrice === maxPrice) {
+                                item.price = `${minPrice} $` ?? `0 $`;
+                            } else {
+                                item.price = `${minPrice} ~ ${maxPrice} $` ?? `0 $`;
+                            }
+                            
                             delete item.Variants;
                         }
                     }

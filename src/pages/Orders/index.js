@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import InputField from "../../components/FormControl/InputField";
 import Button from "../../components/Button";
 import { getAllTables } from "../../services/tableServices";
@@ -6,12 +6,26 @@ import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import * as tableServices from "../../services/tableServices";
 import Modal from "../../components/Modal";
+import DatePicker from "../../components/FormControl/datePicker";
+import TimePicker from "../../components/FormControl/timePicker";
 
 function Orders() {
   const { t } = useTranslation(["order"]);
   const [values, setValues] = useState({});
   const [chooseIdTable, setChooseIdTable] = useState(null);
   const [openModalOrders, setOpenModalOrders] = useState(false);
+  const [openModalOrdersFail, setOpenModalOrdersFail] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTimeStart, setSelectedTimeStart] = useState("");
+  const [selectedTimeEnd, setSelectedTimeEnd] = useState("");
+
+  // handle get current date
+  // const minDate = "2023-10-03"
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
+  const currentDay = String(currentDate.getDate()).padStart(2, "0");
+  const currentDateStr = `${currentYear}-${currentMonth}-${currentDay}`;
 
   const inputs = [
     {
@@ -74,7 +88,6 @@ function Orders() {
 
   const [dataTable, setDataTable] = useState([]);
 
-  // console.log("dataTable", dataTable)
   const handleGetAllTable = async () => {
     try {
       let respon = await getAllTables("all");
@@ -86,13 +99,6 @@ function Orders() {
       console.log("err:", error);
     }
   };
-
-  // useEffect(() => {
-  //   handleGetAllTable();
-
-  //   let getTableDC = dataTable.length > 0 && dataTable.filter(item => (item.name).toString().indexOf("DC") == 0)
-  //   setDataTableDC(getTableDC)
-  // }, [])
 
   useEffect(() => {
     handleGetAllTable();
@@ -124,6 +130,12 @@ function Orders() {
 
   const handleOnSubmitBooking = async (e) => {
     e.preventDefault();
+
+    if (!chooseIdTable) {
+      alert("Vui chọn bàn trước khi đặt bàn!");
+      return;
+    }
+
     let data = new FormData(e.target);
     let dataEntry = Object.fromEntries(data.entries());
     // console.log("dataEntry date", new Date(dataEntry.date))
@@ -143,22 +155,35 @@ function Orders() {
     data.set("dateStart", getNewDateStart)
     data.set("dateEnd", getNewDateEnd)
 
-    console.log("data entry:", Object.fromEntries(data.entries()));
+    
+    // console.log("data entry:", Object.fromEntries(data.entries()));
 
-    // try {
-    //   const respon = await tableServices.createReserveTable(data);
-    //   if (respon && respon.errCode === 0) {
-    //     // handleCloseModalOrders(true);
-    //     // alert("đặt bàn thành công");
-    //   }
-    // } catch (error) {
-    //   console.log("err", error)
-    // }
+    try {
+      const respon = await tableServices.createReserveTable(data);
+      if (respon && respon.errCode === 0) {
+        delayCloseModalOrders();
+        // reset data
+        setValues({});
+        setSelectedTimeStart("");
+        setSelectedTimeEnd("");
+        setSelectedDate("");
+        setChooseIdTable(null);
+      } else if(respon && respon.errCode === 1) {
+        setOpenModalOrdersFail(true);
+      }
+    } catch (error) {
+      console.log("err", error)
+    }
   }
 
   const handleCloseModalOrders = () => {
     setOpenModalOrders(false);
   }
+
+  const handleCloseModalOrdersFail = () => {
+    setOpenModalOrdersFail(false);
+  }
+
 
   const delayCloseModalOrders = () => {
     setOpenModalOrders(true);
@@ -166,6 +191,37 @@ function Orders() {
       handleCloseModalOrders();
     }, 3000);
   }
+
+  const handleTimeStartChange = (valueTimeStart) => {
+    // console.log("valueTimeStart", valueTimeStart)
+    setSelectedTimeStart(valueTimeStart);
+  };
+
+  const handleTimeEndChange = (valueTimeEnd) => {
+    // console.log("valueTimeEnd", valueTimeEnd)
+    setSelectedTimeEnd(valueTimeEnd);
+  };
+
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
+  };
+
+  const timeSlots = useMemo(() => {
+    const startTime = 8 * 60; // 8:00 AM tính bằng phút
+    const endTime = 21 * 60;  // 9:00 PM tính bằng phút        
+    const interval = 30;      // Độ lệch thời gian giữa các khoảng tính bằng phút
+
+    const slots = [];
+    for (let minutes = startTime; minutes <= endTime; minutes += interval) {
+      const hours = Math.floor(minutes / 60);
+      const minutesPart = minutes % 60;
+      const formattedTime = `${hours.toString().padStart(2, '0')}:${minutesPart.toString().padStart(2, '0')}`;
+      slots.push(formattedTime);
+    }
+
+    return slots;
+  }, []);
+
 
   return (
     <Fragment>
@@ -216,7 +272,7 @@ function Orders() {
                         className={clsx(
                           "bg-green-400 font-medium text-white border-4 border-green-600 w-[80px] h-[40px] flex justify-center items-center rounded-md cursor-pointer transition-primary hover:shadow-black-b-0.75",
                           {
-                            "bg-red-400 border-red-600": item.taken === true,
+                            "bg-red-400 border-red-600": chooseIdTable === item.id,
                           }
                         )}
                       >
@@ -238,7 +294,7 @@ function Orders() {
                         className={clsx(
                           "relative w-[40px] h-[80px] border-4 flex justify-center items-center my-[5px] mx-[25px] text-sm text-center after:absolute after:w-[2px] after:top-0 after:bottom-0 after:bg-black after:left-[-25px] rounded-md cursor-pointer border-green-600 bg-green-400 font-medium text-white transition-primary hover:shadow-black-b-0.75",
                           {
-                            "bg-red-400 border-red-600": item.taken === true,
+                            "bg-red-400 border-red-600": chooseIdTable === item.id,
                           }
                         )}
                       >
@@ -275,7 +331,7 @@ function Orders() {
                         onClick={() => handleChooseTable(item.id)}
                         className={clsx(
                           "w-[80px] mx-5 h-[40px] border-4 flex justify-center items-center rounded-md cursor-pointer border-green-600 bg-green-400 font-medium text-white transition-primary hover:shadow-black-b-0.75",
-                          { "bg-red-400 border-red-600": item.taken === true }
+                          { "bg-red-400 border-red-600": chooseIdTable === item.id }
                         )}
                       >
                         {/* {item.name} */}
@@ -310,7 +366,7 @@ function Orders() {
                         className={clsx(
                           "w-[80px] mx-8 h-[40px] border-4 flex justify-center items-center rounded-md cursor-pointer border-green-600 bg-green-400 font-medium text-white transition-primary hover:shadow-black-b-0.75",
                           {
-                            "bg-red-400 border-red-600": item.taken === true,
+                            "bg-red-400 border-red-600": chooseIdTable === item.id,
                           }
                         )}
                       >
@@ -344,6 +400,57 @@ function Orders() {
             />
           }
 
+          if (item.type === "date") {
+            return <DatePicker
+              key={index}
+              className={"!w-2/5 mx-8"}
+              value={selectedDate}
+              onChange={handleDateChange}
+              minDate={currentDateStr}
+              {...item}
+            />
+          }
+
+          if (item.type === "time" && item.name === "timeStart") {
+            const filterListTimeStart = timeSlots.filter((item) => {
+              let currentTime = parseInt(item.split(':')[0]) * 60 + parseInt(item.split(':')[1]);
+              let timeEnd = selectedTimeEnd && parseInt(selectedTimeEnd.split(':')[0]) * 60 + parseInt(selectedTimeEnd.split(':')[1]);
+
+              return currentTime < timeEnd;
+            })
+
+            // console.log("filterListTimeStart", filterListTimeStart)
+
+            return <TimePicker
+              key={index}
+              onValueInpChange={handleTimeStartChange}
+              value={selectedTimeStart}
+              listOptions={selectedTimeEnd ? filterListTimeStart : timeSlots}
+              className={"!w-2/5 mx-8"}
+              {...item}
+            />
+          }
+
+          if (item.type === "time" && item.name === "timeEnd") {
+            const filterListTimeEnd = timeSlots.filter((item) => {
+              let currentTime = parseInt(item.split(':')[0]) * 60 + parseInt(item.split(':')[1]);
+              let timeStart = selectedTimeStart && parseInt(selectedTimeStart.split(':')[0]) * 60 + parseInt(selectedTimeStart.split(':')[1]);
+
+              return currentTime > timeStart;
+            })
+
+            // console.log("filterListTimeEnd", filterListTimeEnd)
+
+            return <TimePicker
+              key={index}
+              onValueInpChange={handleTimeEndChange}
+              value={selectedTimeEnd}
+              listOptions={selectedTimeStart ? filterListTimeEnd : timeSlots}
+              className={"!w-2/5 mx-8"}
+              {...item}
+            />
+          }
+
           return (
             <InputField
               key={index}
@@ -356,8 +463,14 @@ function Orders() {
         })}
 
         <div className="flex justify-end mt-3 w-full">
-          <Button variant={"primary"} onClick={() => delayCloseModalOrders()}>Submit</Button>
-          <Button variant={"primary"} onClick={() => { }}>
+          <Button variant={"primary"} onClick={() => { }}>Submit</Button>
+          <Button variant={"primary"} onClick={() => {
+            setValues({});
+            setSelectedTimeStart("");
+            setSelectedTimeEnd("");
+            setSelectedDate("");
+            setChooseIdTable(null);
+          }}>
             Cancel
           </Button>
         </div>
@@ -368,12 +481,22 @@ function Orders() {
           <form className="bg-white p-6 rounded-lg shadow-lg w-80 mx-auto">
             <div className="mb-4 text-center">
               <svg className="animate-spin h-8 w-8 mx-auto text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 4.418 3.582 8 8 8v-4c-2.664 0-5.134-1.036-7.016-2.915l2.472-2.472zm7.016-5.868l-2.472 2.472A7.962 7.962 0 0112 4V0c-4.418 0-8 3.582-8 8h4c0-2.664 1.036-5.134 2.915-7.016z"></path>
               </svg>
             </div>
             <div className="text-center text-gray-700">Đang xử lý đặt bàn. Vui lòng chờ...</div>
           </form>
+        </Modal>
+      }
+
+      {openModalOrdersFail &&
+        <Modal open={openModalOrdersFail} close={handleCloseModalOrdersFail}>
+          <div className="bg-white p-8 rounded shadow-md text-center flex flex-col justify-center items-center w-full">
+            <h1 className="text-2xl font-semibold mb-4">Đặt bàn thất bại</h1>
+            <p className="text-gray-600 mb-6">Rất tiếc, chúng tôi không thể đặt bàn cho bạn vào thời điểm này.</p>
+            <Button variant={"primary"} onClick={handleCloseModalOrdersFail}>Thử lại</Button>
+          </div>
         </Modal>
       }
 

@@ -9,7 +9,7 @@ import WindowScrollTop from "../../utils/windowScroll";
 function Sidebar() {
   const { t } = useTranslation(["home", "header"]);
   const [typeOfFoods, setTypeOfFoods] = useState(homeTypeOfFoods);
-  const [indexActive, setIndexActive] = useState(1);
+  const [indexActive, setIndexActive] = useState(0);
   return (
     <div
       className="w-full h-[calc(100vh-4rem)] overflow-hidden relative py-10 select-none 

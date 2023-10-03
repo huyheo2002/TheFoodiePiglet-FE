@@ -3,13 +3,13 @@ import Image from "../Image";
 
 function CompactCard({ data }) {
   return (
-    <div class="w-[calc(25%-1.5rem)] bg-gray-900 shadow-black-rb-0.75 rounded-lg border-rgba-white-0.1 border-solid border-[3px] mx-3 my-4 p-3 overflow-hidden select-none transition-all duration-300 cursor-pointer hover:border-white">
+    <div className="w-[calc(25%-1.5rem)] bg-gray-900 shadow-black-rb-0.75 rounded-lg border-rgba-white-0.1 border-solid border-[3px] mx-3 my-4 p-3 overflow-hidden select-none transition-all duration-300 cursor-pointer hover:border-white">
       <Image
         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample87.jpg"
         className={"rounded-md"}
       />
-      <h2 class="text-xl font-semibold text-white my-2">Hans Down</h2>
-      <p class="text-white mt-2 opacity-80">
+      <h2 className="text-xl font-semibold text-white my-2">Hans Down</h2>
+      <p className="text-white mt-2 opacity-80">
         I'm looking for something that can deliver a 50-pound payload of snow on
         a small feminine target. Can you suggest something? Hello...?
       </p>
