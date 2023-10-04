@@ -46,6 +46,7 @@
   .productCompact__discountPercent {
     @apply flex justify-center items-center
       bg-green-400
+      text-center
       px-1.5 py-0.5 rounded-full
       text-xs text-white;
   }

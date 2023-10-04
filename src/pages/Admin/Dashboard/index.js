@@ -86,7 +86,7 @@ function DashBoard() {
   }, []);
 
   return (
-    <div className="pl-3 min-h-[1000px] w-[calc(100%-1rem)]">
+    <div className="pl-3 w-[calc(100%-1rem)]">
       <div className="flex justify-between">
         {/* left */}
         <div className="w-[calc(75%-1rem)] pr-4 ">

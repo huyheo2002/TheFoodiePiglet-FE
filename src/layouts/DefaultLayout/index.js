@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 // only header
 const DefaultLayout = ({ children }) => {
   return (
-    <div className="w-full min-h-[1000px] relative">
+    <div className="w-full relative">
       <Header />
       {/* <Sidebar /> */}
       <div className="mx-16 relative mt-20">{children}</div>

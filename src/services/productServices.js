@@ -10,6 +10,11 @@ export const getAllProductCompact = () => {
   return respon;
 }
 
+export const findOneProduct = (id) => {
+  const respon = axios.get(`/api/find-one-product?id=${id}`);
+  return respon;
+}
+
 export const handleCreateProduct = (data) => {
   return axios.post("/api/create-product", data);
 };

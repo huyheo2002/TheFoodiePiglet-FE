@@ -15,9 +15,9 @@ function Menu({ data, userLogin }) {
       {data &&
         data.length > 0 &&
         data.map((item, index) => {
-          if (item.keyword === "login") {
-            console.log("userLogin", userLogin);
-          }
+          // if (item.keyword === "login") {
+          //   console.log("userLogin", userLogin);
+          // }
           return (
             <li className="h-full leading-[4rem] relative group" key={index}>
               {item.href && (

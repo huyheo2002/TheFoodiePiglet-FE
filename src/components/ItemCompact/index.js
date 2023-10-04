@@ -39,13 +39,13 @@ function ItemCompact({ size, type, data, onhandleAddToCart, onHandleProductDetai
 
         <div className="flex items-center gap-4">
           <span className="flex justify-start items-center">
-            <p className="text-xl font-semibold text-white">400$</p>
+            <p className="text-xl font-semibold text-white whitespace-nowrap">{data ? data.price : "400$"}</p>
           </span>
           <div className="flex items-center gap-2">
             <span className="flex justify-start items-center">
-              <p className="text-lg line-through opacity-50 text-white">500$</p>
+              <p className="text-lg line-through opacity-50 text-white">{data && data.originalPrice ? data.originalPrice : ""}</p>
             </span>
-            <span className="productCompact__discountPercent">save 20%</span>
+            {data && data.discount && <span className="productCompact__discountPercent">{data ? `Save up to ${data.discount}` : "save 20%"}</span>}
           </div>
         </div>
 

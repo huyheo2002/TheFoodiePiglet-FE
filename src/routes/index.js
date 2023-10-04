@@ -13,6 +13,7 @@ import Error from "../pages/Error";
 import Cart from "../pages/Cart";
 import Orders from "../pages/Orders";
 import News from "../pages/News";
+import ProductDetail from "../pages/ProductDetail";
 
 // pages system
 import DashBoard from "../pages/Admin/Dashboard";
@@ -32,6 +33,7 @@ const publicRoutes = [
   { path: "/test", component: Test, layout: null },
   { path: "/news", component: News, layout: DefaultLayout },
   { path: "/order", component: Orders, layout: DefaultLayout },
+  { path: "/product-detail/:prodId", component: ProductDetail, layout: DefaultLayout },
 
   // not other routes match
   { path: "/not-found", component: Error, layout: null },

@@ -23,7 +23,8 @@ import {
   FaPencilAlt,
   FaTrash,
   FaBookOpen,
-  FaShoppingCart
+  FaShoppingCart,
+  FaTruck,
 } from "react-icons/fa";
 import { ImEarth } from "react-icons/im";
 import {
@@ -32,10 +33,10 @@ import {
   BsStarHalf,
   BsCurrencyDollar,
 } from "react-icons/bs";
-import { GiHotMeal } from "react-icons/gi";
+import { GiHotMeal, GiCheckedShield } from "react-icons/gi";
 import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
-
 import { BiMenuAltLeft, BiMenu, BiDotsHorizontalRounded } from "react-icons/bi";
+import { HiReceiptRefund } from "react-icons/hi";
 
 export const BellIcon = ({ className, onClick }) => {
   const props = {
@@ -362,3 +363,44 @@ export const OutlineMinusIcon = ({ className, onClick }) => {
     />
   );
 };
+
+export const TrunkIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaTruck
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const RefundIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <HiReceiptRefund
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const CheckedShieldIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <GiCheckedShield
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+
