@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import Button from "../../components/Button";
 import { CheckedShieldIcon, OutlineMinusIcon, OutlinePlusIcon, RefundIcon, StarFillIcon, StarHalfIcon, StarIcon, TrunkIcon } from "../../components/Icons";
 import Image from "../../components/Image";
@@ -11,11 +11,13 @@ import { handleAddToCartRedux } from "../../redux/actions/cartAction";
 import Modal from "../../components/Modal";
 import WindowScrollTop from "../../utils/windowScroll";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import GlobalContext from "../../contexts/globalContext";
 
 function ProductDetail() {
     const params = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { reloadCart, setReloadCart } = useContext(GlobalContext);
     const [size, setSize] = useState("M");
     const [currentCount, setCurrentCount] = useState(1);
     const [currentPrice, setCurrentPrice] = useState(0);
@@ -24,7 +26,7 @@ function ProductDetail() {
     const [originalPricePreview, setOriginalPricePreview] = useState(null);
     const [discount, setDiscount] = useState(null);
     const [dataProduct, setDataProduct] = useState(null);
-    console.log("dataProduct", dataProduct)
+    // console.log("dataProduct", dataProduct)
 
     // modal add to cart success 
     const [openModalAddToCartSuccess, setOpenModalAddToCartSucess] = useState(false);
@@ -121,7 +123,7 @@ function ProductDetail() {
         data.set("prodId", params.prodId);
         data.set("quantity", currentCount);
         data.set("size", size);
-        data.set("price", Math.round(currentPricePreview) ?? Math.round(currentPrice));
+        data.set("price", currentPricePreview ? Math.round(currentPricePreview * 100) / 100 : Math.round(currentPrice * 100) / 100);
 
         try {
             // const respon = await cartServices.handleAddToCart(data);
@@ -154,7 +156,7 @@ function ProductDetail() {
                             }
                         }
                     }
-                    
+                    setReloadCart(true);
                     setOpenModalAddToCartSucess(true);
                 }
             }
@@ -224,7 +226,7 @@ function ProductDetail() {
                             {/* price */}
                             <div className="flex items-center gap-4 my-3">
                                 <span className="flex justify-start items-center">
-                                    <p className="text-xl font-semibold text-black whitespace-nowrap">Thành tiền: {currentPricePreview ? Math.round(currentPricePreview) : Math.round(currentPrice)}$</p>
+                                    <p className="text-xl font-semibold text-black whitespace-nowrap">Thành tiền: {currentPricePreview ? Math.round(currentPricePreview * 100) / 100 : Math.round(currentPrice * 100) / 100}$</p>
                                 </span>
                                 <div className="flex items-center gap-2">
                                     <span className="flex justify-start items-center">

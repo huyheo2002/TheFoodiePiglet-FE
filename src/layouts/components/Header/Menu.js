@@ -2,13 +2,20 @@ import { Link } from "react-router-dom";
 import SubMenu from "./SubMenu";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react";
+import { Fragment, useContext, useEffect } from "react";
 import NotificationCard from "../../../components/NotificationCard";
+import * as cartServices from "../../../services/cartServices";
+import { useState } from "react";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+import GlobalContext from "../../../contexts/globalContext";
 
 function Menu({ data, userLogin }) {
   const { t, i18n } = useTranslation(["header"]);
+  const { reloadCart, setReloadCart } = useContext(GlobalContext);
   // const currentLanguage = i18n.language;
   // console.log("currentLanguage", currentLanguage)
+
+  console.log("reloadCart in menu", reloadCart);  
 
   return (
     <ul className="flex items-center h-full px-6">
@@ -77,7 +84,7 @@ function Menu({ data, userLogin }) {
               )}
               {item.to && (
                 <Fragment>
-                  {userLogin &&
+                  `{userLogin &&
                     userLogin.auth === true &&
                     item.keyword === "login" ? (
                     <Link className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300">
@@ -120,11 +127,13 @@ function Menu({ data, userLogin }) {
                       ) : (
                         <Fragment>
                           {item.icon && (
-                            <span className={clsx("text-current p-2", {
-                              "animate-pulse text-red-500": false
-                            })}>
-                              {item.icon}
-                            </span>
+                            <Fragment>
+                              <span className={clsx("text-current p-2", {
+                                "animate-pulse text-red-500": reloadCart === true,
+                              })}>
+                                {item.icon}
+                              </span>
+                            </Fragment>
                           )}
                         </Fragment>
                       )}
@@ -170,15 +179,15 @@ function Menu({ data, userLogin }) {
               {/* custom dropdown (submenu custom :v) */}
               {item.customDropdown &&
                 <div className="group-hover:flex bg-[#272626] flex-col min-w-[14rem] z-50 absolute top-full hidden rounded-b-lg overflow-y-scroll scrollbar-primary max-h-[400px]">
-                  <NotificationCard page={"user"}/>
-                  <NotificationCard page={"user"}/>
-                  <NotificationCard page={"user"}/>
-                  <NotificationCard page={"user"}/>
-                  <NotificationCard page={"user"}/>
-                  <NotificationCard page={"user"}/>
-                  <NotificationCard page={"user"}/>
-                  <NotificationCard page={"user"}/>
-                  <NotificationCard page={"user"}/>
+                  <NotificationCard page={"user"} />
+                  <NotificationCard page={"user"} />
+                  <NotificationCard page={"user"} />
+                  <NotificationCard page={"user"} />
+                  <NotificationCard page={"user"} />
+                  <NotificationCard page={"user"} />
+                  <NotificationCard page={"user"} />
+                  <NotificationCard page={"user"} />
+                  <NotificationCard page={"user"} />
                 </div>
               }
             </li>

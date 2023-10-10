@@ -14,9 +14,11 @@ import { handleRefreshCartRedux } from "../../redux/actions/cartAction";
 
 function Cart() {
   const dispatch = useDispatch();
+  const { reloadCart, setReloadCart } = useContext(GlobalContext);
   const [listItemInCart, setListItemInCart] = useState([]);
   const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
 
+  // console.log("reloadCart in cart", reloadCart)
   const fetchListItemInCart = async () => {
     if (valueUserLocal) {
       const responCart = await cartServices.getAllCartItemOfUser(valueUserLocal.dataUser.user.id);
@@ -25,25 +27,25 @@ function Cart() {
       if (responCart && responProducts) {
         const dataListItemCart = responCart.listItem ?? [];
         const dataListItemProduct = responProducts.products ?? [];
-        console.log("10/10/2023 dataListItemCart 1", dataListItemCart)
+        // console.log("10/10/2023 dataListItemCart 1", dataListItemCart)
 
         // handleListProductOfUserInCart
         const handleListProductOfUserInCart = (Array.isArray(dataListItemCart) && dataListItemCart.length > 0) ? dataListItemCart.reduce((filtered, product, index) => {
           let filterListItemInCart = dataListItemCart.filter((item) => product.prodId === item.prodId);
-          console.log("10/10/2023 dataListItemCart 2", dataListItemCart)
-          console.log("10/10/2023 filterListItemInCart", filterListItemInCart)
+          // console.log("10/10/2023 dataListItemCart 2", dataListItemCart)
+          // console.log("10/10/2023 filterListItemInCart", filterListItemInCart)
           if (filterListItemInCart.length > 0) {
             filterListItemInCart.map((itemProductInCart, index) => {
               let filterListProduct = dataListItemProduct.filter((item) => item.id === itemProductInCart.prodId);
-              console.log("10/10/2023 filterListProduct", filterListProduct)
-              
+              // console.log("10/10/2023 filterListProduct", filterListProduct)
+
               if (filterListProduct.length > 0) {
                 itemProductInCart.name = filterListProduct[0].name;
                 itemProductInCart.image = filterListProduct[0].image;
                 itemProductInCart.Variants = filterListProduct[0].Variants
                 if (filterListProduct[0].Variants) {
                   let filterVariants = filterListProduct[0].Variants.filter((variant) => variant.name === product.size);
-                  console.log("10/10/2023 filterVariants", filterVariants)
+                  // console.log("10/10/2023 filterVariants", filterVariants)
 
                   if (filterVariants.length > 0) {
                     itemProductInCart.originalPrice = filterVariants[0].price;
@@ -61,12 +63,18 @@ function Cart() {
 
         if (Array.isArray(handleListProductOfUserInCart)) {
           setListItemInCart(handleListProductOfUserInCart);
+        }        
+
+        if (handleListProductOfUserInCart.length > 0) {
+          setReloadCart(true);
+        } else {
+          setReloadCart(false);
         }
       }
     }
   }
 
-  const handleReloadItemInCart = () => {    
+  const handleReloadItemInCart = () => {
     setListItemInCart([]);
     fetchListItemInCart();
   }
@@ -83,9 +91,6 @@ function Cart() {
       alert("Bạn phải đăng nhập để sử dụng chức năng này");
     }
   }
-
-  console.log("render ác");
-
 
   return (
     <div className="flex flex-col items-center justify-center container">
@@ -122,7 +127,7 @@ function Cart() {
         <div className="w-full my-8 bg-[#1e1e1e] shadow-black-b-0.75 border-2 rounded-lg border-rgba-white-0.1">
           <div className="flex justify-between items-center px-6 py-6">
             <h2 className="text-xl font-semibold text-white">
-              Tổng cộng: {`${listItemInCart.reduce((total, item) => total + item.currentPrice, 0)}$`}
+              Tổng cộng: {`${listItemInCart.reduce((total, item) => total + item.price, 0)}$`}
             </h2>
             <div className="flex">
               <Button variant={"success"}

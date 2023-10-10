@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 // import clsx from "clsx";
 import Sidebar from "./Sidebar";
 import Image from "../../components/Image";
@@ -17,10 +17,12 @@ import Button from "../../components/Button";
 import { useDispatch, useSelector } from "react-redux";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { handleAddToCartRedux } from "../../redux/actions/cartAction";
+import GlobalContext from "../../contexts/globalContext";
 
 function Menu() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { reloadCart, setReloadCart } = useContext(GlobalContext);
   const { t } = useTranslation(["home", "header"]);
   const [dataCategory, setDataCategory] = useState(null);
   const [listProducts, setListProducts] = useState([]);
@@ -93,9 +95,9 @@ function Menu() {
               }
 
               if (minPrice === maxPrice) {
-                item.price = `${Math.round(minPrice)} $` ?? `0 $`;
+                item.price = `${Math.round(minPrice * 100) / 100} $` ?? `0 $`;
               } else {
-                item.price = `${Math.round(minPrice)} ~ ${Math.round(maxPrice)} $` ?? `0 $`;
+                item.price = `${Math.round(minPrice * 100) / 100} ~ ${Math.round(maxPrice * 100) / 100} $` ?? `0 $`;
               }
 
               delete item.Variants;
@@ -219,7 +221,7 @@ function Menu() {
     data.set("prodId", currentIdAddToCart);
     data.set("quantity", currentCount);
     data.set("size", size);
-    data.set("price", currentPricePreview ? Math.round(currentPricePreview) : Math.round(currentPrice));
+    data.set("price", currentPricePreview ? Math.round(currentPricePreview * 100) / 100 : Math.round(currentPrice * 100) / 100);
 
     try {
       // const respon = await cartServices.handleAddToCart(data);
@@ -229,6 +231,7 @@ function Menu() {
         if (responAddToCartSubmit) {
           handleCloseModalAddToCart();
           setOpenModalAddToCartSucess(true);
+          setReloadCart(true);
         }
       }
     } catch (error) {
@@ -361,7 +364,7 @@ function Menu() {
           </div>
 
           <div className="mt-4 py-2 border-t-4 border-gray-500 flex items-center">
-            <p className="text-lg font-semibold text-black">Thành tiền: {currentPricePreview ? Math.round(currentPricePreview) : Math.round(currentPrice)}$</p>
+            <p className="text-lg font-semibold text-black">Thành tiền: {currentPricePreview ? Math.round(currentPricePreview * 100) / 100 : Math.round(currentPrice * 100) / 100}$</p>
             <span className="text-xl line-through opacity-50 font-semibold text-black ml-3">{originalPricePreview ?? originalPrice}$</span>
             {discount && <span className="productCompact__discountPercent ml-3">Save {discount}%</span>}
           </div>
