@@ -32,11 +32,14 @@ import {
   BsStarFill,
   BsStarHalf,
   BsCurrencyDollar,
+  BsFillArrowDownCircleFill,
 } from "react-icons/bs";
 import { GiHotMeal, GiCheckedShield } from "react-icons/gi";
 import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
 import { BiMenuAltLeft, BiMenu, BiDotsHorizontalRounded } from "react-icons/bi";
 import { HiReceiptRefund } from "react-icons/hi";
+import { TiTick } from "react-icons/ti";
+
 
 export const BellIcon = ({ className, onClick }) => {
   const props = {
@@ -402,5 +405,33 @@ export const CheckedShieldIcon = ({ className, onClick }) => {
     />
   );
 };
+
+export const ArrowDownCircleFillIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <BsFillArrowDownCircleFill
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const TickIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <TiTick
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+
 
 

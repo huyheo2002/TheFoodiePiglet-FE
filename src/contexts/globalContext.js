@@ -10,6 +10,10 @@ const GlobalContext = React.createContext({
     // order 
     totalMoneyToPay: 0,
     setTotalMoneyToPay: () => {},
+
+    // render cart 
+    reloadCart: false,
+    setReloadCart: () => {},
 });
 
 export default GlobalContext;

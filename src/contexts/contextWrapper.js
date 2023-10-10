@@ -4,9 +4,10 @@ import GlobalContext from "./globalContext";
 function ContextWrapper(props) {
     const [testContext, setTestContext] = useState(false);
     const [toggleDataTable, setToggleDataTable] = useState(false);
-
     // order
     const [totalMoneyToPay, setTotalMoneyToPay] = useState(0);
+    // cart 
+    const [reloadCart, setReloadCart] = useState(false);
     
     return (  
         <GlobalContext.Provider
@@ -16,10 +17,12 @@ function ContextWrapper(props) {
                 // dataTable
                 toggleDataTable,
                 setToggleDataTable,
-
                 // order
                 totalMoneyToPay,
                 setTotalMoneyToPay,
+                // cart
+                reloadCart,
+                setReloadCart,
             }}
         >
             {props.children}

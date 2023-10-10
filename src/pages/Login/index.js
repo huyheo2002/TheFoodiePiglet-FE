@@ -52,6 +52,8 @@ function Login() {
     },
   ];
 
+  const user = useSelector((state) => state.user);
+  console.log("state user login in login Pages", user)
   const isLoading = useSelector((state) => state.user.isLoading);
   const dataUserRedux = useSelector((state) => state.user.user);
   const isError = useSelector((state) => state.user.isError);

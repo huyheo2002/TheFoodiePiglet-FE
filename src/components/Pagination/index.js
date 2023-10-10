@@ -21,6 +21,7 @@ function Pagination({ postsPerPage, totalPosts, paginate }) {
 
     if (checkNextPage.length > 0) {
       setCurrentPage(currentPage + 1);
+      paginate(currentPage + 1);
       setBtnPrevDisable(false);
       if (checkNextPage.length === 1) {
         setBtnNextDisable(true);
@@ -37,6 +38,7 @@ function Pagination({ postsPerPage, totalPosts, paginate }) {
 
     if (checkPrevPage.length > 0) {
       setCurrentPage(currentPage - 1);
+      paginate(currentPage - 1);
       setBtnNextDisable(false);
       if (checkPrevPage.length === 1) {
         setBtnPrevDisable(true);

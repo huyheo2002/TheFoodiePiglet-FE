@@ -218,7 +218,7 @@ function DataTable({
       />
 
       <Modal open={toggleFullScreenImage} close={handleCloseFullScreenImage} custom>
-        <Image src={linkImage} />
+        <Image src={linkImage} className={"!bg-white !p-5 !overflow-hidden"}/>
       </Modal>
     </Fragment>
   );

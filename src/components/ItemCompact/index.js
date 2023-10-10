@@ -10,13 +10,12 @@ import {
 import Image from "../Image";
 import clsx from "clsx";
 import ItemInCart from "./ItemInCart";
-import { fakeDataProductsOrder } from "../../data/fakeDataProductsOrder";
 
-function ItemCompact({ size, type, data, onhandleAddToCart, onHandleProductDetail }) {
+function ItemCompact({ size, type, data, onhandleAddToCart, onHandleProductDetail, onHandleRefreshCart }) {
   const { t } = useTranslation(["home"]);
 
   if (type === "cart") {
-    return <ItemInCart size={size} data={fakeDataProductsOrder} />;
+    return <ItemInCart size={size} data={data} onHandleRefreshCart={onHandleRefreshCart} />;
   }
 
   return (
@@ -27,12 +26,12 @@ function ItemCompact({ size, type, data, onhandleAddToCart, onHandleProductDetai
       })}
     >
       <Image src={data ? data.image : "https://www.koreandxb.com/images/food1.jpg"} effectScale 
-        className={"max-h-[320px]"}
+        className={"h-[320px]"}
       />
       <div className="p-5 flex flex-col gap-3">
         <h2
           className="productCompact__title"
-          title="Food Food Food Food Food Food Food Food Food Food"
+          title={data ? data.name : "Food Food Food Food Food Food Food Food Food Food"}
         >
           {data ? data.name : "Food Food Food Food Food Food Food Food Food Food"}
         </h2>
@@ -43,7 +42,7 @@ function ItemCompact({ size, type, data, onhandleAddToCart, onHandleProductDetai
           </span>
           <div className="flex items-center gap-2">
             <span className="flex justify-start items-center">
-              <p className="text-lg line-through opacity-50 text-white">{data && data.originalPrice ? data.originalPrice : ""}</p>
+              <p className="text-lg line-through opacity-50 text-white whitespace-nowrap">{data && data.originalPrice ? data.originalPrice : ""}</p>
             </span>
             {data && data.discount && <span className="productCompact__discountPercent">{data ? `Save up to ${data.discount}` : "save 20%"}</span>}
           </div>
