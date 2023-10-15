@@ -96,6 +96,14 @@ function Variant() {
     const onChangeInputUpdate = (e) => {
         setValuesUpdate({ ...valuesUpdate, [e.target.name]: e.target.value });
     };
+    
+    const inputCreateClear = (getKey) => {
+        setValuesCreate({ ...valuesCreate, [getKey]: "" });
+    };
+
+    const inputUpdateClear = (getKey) => {
+        setValuesUpdate({ ...valuesUpdate, [getKey]: "" });
+    };
 
     // modal create product
     const handleOpenModalCreate = () => {
@@ -276,6 +284,8 @@ function Variant() {
                                     <InputField
                                         key={index}
                                         onChange={onChangeInputCreate}
+                                        value={valuesCreate && valuesCreate[item.name]}
+                                        clear={() => inputCreateClear(item.name)}
                                         onClick={() => { }}
                                         {...item}
                                     />
@@ -398,6 +408,7 @@ function Variant() {
                                         key={index}
                                         onChange={onChangeInputUpdate}
                                         value={valuesUpdate[item.name]}
+                                        clear={() => inputUpdateClear(item.name)}
                                         onClick={() => { }}
                                         {...item}
                                     />

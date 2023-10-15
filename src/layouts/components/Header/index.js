@@ -34,7 +34,7 @@ const NAVBAR_ITEM = [
   },
   {
     icon: null,
-    keyword: "order-online",
+    keyword: "order",
     onlyShowIcon: false,
     to: "/order",
   },

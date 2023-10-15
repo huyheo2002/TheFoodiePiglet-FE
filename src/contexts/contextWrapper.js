@@ -19,7 +19,7 @@ function ContextWrapper(props) {
             const respon = await cartServices.getAllCartItemOfUser(valueUserLocal.dataUser.user.id);
             // console.log("respon", respon)
             if (respon && respon.errCode === 0) {
-                if (respon.listItem.length > 0) {
+                if (Array.isArray(respon.listItem) && respon.listItem.length > 0) {
                     setReloadCart(true);
                 } else {
                     setReloadCart(false);

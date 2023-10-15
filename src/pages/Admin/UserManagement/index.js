@@ -309,8 +309,16 @@ function UserManagement() {
     setValuesCreate({ ...valuesCreate, [e.target.name]: e.target.value });
   };
 
+  const inputCreateClear = (getKey) => {
+    setValuesCreate({ ...valuesCreate, [getKey]: "" });
+  };
+
   const onChangeInputUpdate = (e) => {
     setValuesUpdate({ ...valuesUpdate, [e.target.name]: e.target.value });
+  };
+  
+  const inputUpdateClear = (getKey) => {
+    setValuesUpdate({ ...valuesUpdate, [getKey]: "" });
   };
 
   // handle preview image
@@ -596,6 +604,8 @@ function UserManagement() {
                   <InputField
                     key={index}
                     onChange={onChangeInputCreate}
+                    value={valuesCreate && valuesCreate[item.name]}
+                    clear={() => inputCreateClear(item.name)}
                     onClick={() => { }}
                     {...item}
                   />
@@ -707,6 +717,7 @@ function UserManagement() {
                   <InputField
                     key={index}
                     onChange={onChangeInputUpdate}
+                    clear={() => inputUpdateClear(item.name)}
                     value={valuesUpdate[item.name]}
                     onClick={() => { }}
                     {...item}

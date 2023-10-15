@@ -123,6 +123,10 @@ function Orders() {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const inputClear = (getKey) => {
+    setValues({ ...values, [getKey]: "" });
+  };
+
   // handle choose table
   const handleChooseTable = (idTable) => {
     setChooseIdTable(idTable)
@@ -183,7 +187,6 @@ function Orders() {
   const handleCloseModalOrdersFail = () => {
     setOpenModalOrdersFail(false);
   }
-
 
   const delayCloseModalOrders = () => {
     setOpenModalOrders(true);
@@ -394,6 +397,7 @@ function Orders() {
               key={index}
               className={"!w-2/5 mx-8"}
               onChange={onChangeInput}
+              clear={() => inputClear(item.name)}              
               value={chooseIdTable ? chooseIdTable : ""}
               onClick={() => { }}
               {...item}
@@ -456,6 +460,8 @@ function Orders() {
               key={index}
               className={"!w-2/5 mx-8"}
               onChange={onChangeInput}
+              value={values && values[item.name]}
+              clear={() => inputClear(item.name)}
               onClick={() => { }}
               {...item}
             />

@@ -333,6 +333,14 @@ function ProductManagement() {
         setValuesUpdate({ ...valuesUpdate, [e.target.name]: e.target.value });
     };
 
+    const inputCreateClear = (getKey) => {
+        setValuesCreate({ ...valuesCreate, [getKey]: "" });
+    };
+
+    const inputUpdateClear = (getKey) => {
+        setValuesUpdate({ ...valuesUpdate, [getKey]: "" });
+    };
+
     // radio
     const handleGetValueCategory = (currentValue) => {
         setCategoryId(currentValue);
@@ -479,7 +487,9 @@ function ProductManagement() {
                                 return (
                                     <InputField
                                         key={index}
+                                        value={valuesCreate && valuesCreate[item.name]}
                                         onChange={onChangeInputCreate}
+                                        clear={() => inputCreateClear(item.name)}
                                         onClick={() => { }}
                                         {...item}
                                     />
@@ -622,8 +632,9 @@ function ProductManagement() {
                                 return (
                                     <InputField
                                         key={index}
-                                        onChange={onChangeInputUpdate}
+                                        onChange={onChangeInputUpdate}                                        
                                         value={valuesUpdate[item.name]}
+                                        clear={() => inputUpdateClear(item.name)}
                                         onClick={() => { }}
                                         {...item}
                                     />

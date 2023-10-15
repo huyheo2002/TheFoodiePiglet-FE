@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { CloseCircleIcon, EyeClosedIcon, EyeOpenIcon } from "../Icons";
+import { CloseCircleIcon, ContactInfoIcon, EyeClosedIcon, EyeOpenIcon } from "../Icons";
 
 function InputField({ ...props }) {
   const {
@@ -14,21 +14,17 @@ function InputField({ ...props }) {
     onClick,
     hidden,
     className,
+    autoFill,
+    clear,
     ...inputProps
   } = props;
   const [focus, setFocus] = useState(false);
   const [typeInp, setTypeInp] = useState(type);
-  const [valueInp, setValueInp] = useState(value);
-
-  useEffect(() => {
-    setValueInp(value);
-  }, [value]);
 
   const onHandleFocus = (e) => {
     setFocus(true);
-  };  
+  };
 
-  
   return (
     <div
       className={clsx("w-full py-1 select-none", {
@@ -47,27 +43,34 @@ function InputField({ ...props }) {
       <div className="w-full rounded overflow-hidden relative">
         <input
           className={clsx(
-            "peer w-full h-12 pl-3 py-2 rounded text-base font-light border-2 border-solid border-[#b3b3b3] transition-all duration-300 hover:border-[#1dbfaf] focus:outline-none focus:border-[#1dbfaf] focus:ring-1 focus:ring-[#1dbfaf] focus:invalid:outline-none focus:invalid:border-red-500 focus:invalid:ring-1 focus:invalid:ring-red-500 placeholder-shown:!border-[#b3b3b3] placeholder-shown:!ring-1 placeholder-shown:!ring-[#b3b3b3] invalid:border-red-500 invalid:text-red-500",
+            "peer w-full pr-[10%] h-12 pl-3 py-2 rounded text-base font-light border-2 border-solid border-[#b3b3b3] transition-all duration-300 hover:border-[#1dbfaf] focus:outline-none focus:border-[#1dbfaf] focus:ring-1 focus:ring-[#1dbfaf] focus:invalid:outline-none focus:invalid:border-red-500 focus:invalid:ring-1 focus:invalid:ring-red-500 placeholder-shown:!border-[#b3b3b3] placeholder-shown:!ring-1 placeholder-shown:!ring-[#b3b3b3] invalid:border-red-500 invalid:text-red-500",
             {
-              "pr-3": type === "date" || type === "time",          
+              "pr-3": type === "date" || type === "time",
             }
           )}
           id={id}
           placeholder={props.placeholder}
           onChange={onChange}
           type={typeInp || type}
-          value={valueInp}
+          value={value}
           onBlur={onHandleFocus}
           focused={focus.toString()}
           disable={onlyRead}
           {...inputProps}
         />
 
-        <div className="absolute h-12 right-3 top-0 flex items-center">
-          {valueInp && (
+        <div className="absolute w-[10%] h-12 right-0 top-0 flex items-center justify-center">
+          {value && (
             <CloseCircleIcon
-              className="mr-2 cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all"
-              onClick={() => setValueInp("")}
+              className="cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all"
+              onClick={clear}
+            />
+          )}
+
+          {autoFill && !value && (
+            <ContactInfoIcon
+              className="cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all"
+              onClick={autoFill}
             />
           )}
 

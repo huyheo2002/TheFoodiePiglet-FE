@@ -39,6 +39,7 @@ import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
 import { BiMenuAltLeft, BiMenu, BiDotsHorizontalRounded } from "react-icons/bi";
 import { HiReceiptRefund } from "react-icons/hi";
 import { TiTick } from "react-icons/ti";
+import { GrContactInfo } from "react-icons/gr";
 
 
 export const BellIcon = ({ className, onClick }) => {
@@ -431,6 +432,20 @@ export const TickIcon = ({ className, onClick }) => {
     />
   );
 };
+
+export const ContactInfoIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <GrContactInfo
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
 
 
 
