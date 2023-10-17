@@ -17,10 +17,12 @@ import DatePicker from "../../components/FormControl/datePicker";
 import TextareaField from "../../components/FormControl/textAreaField";
 import * as paymentServices from "../../services/paymentServices";
 import imgShipper from "../../assets/images/Base/shipper_01.png";
+import Paypal from "../../components/Paypal";
+import Congrat from "../../components/Congrat";
 
 function Cart() {
   const dispatch = useDispatch();
-  const { reloadCart, setReloadCart } = useContext(GlobalContext);
+  const { reloadCart, setReloadCart, paymentOnlineSuccess, setPaymentOnlineSuccess, showCongrat, setShowCongrat } = useContext(GlobalContext);
   const [listItemInCart, setListItemInCart] = useState([]);
   const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
 
@@ -34,15 +36,9 @@ function Cart() {
     contactInfo: "",
     note: "",
   });
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
-    const currentDay = String(currentDate.getDate()).padStart(2, "0");
-    const currentDateStr = `${currentYear}-${currentMonth}-${currentDay}`;
 
-    return currentDateStr;
-  });
+  const [openModalPaymentOnline, setOpenModalPaymentOnline] = useState(false);
+  const [currentNote, setCurrentNote] = useState("");
 
   const inputs = [
     // {
@@ -54,7 +50,7 @@ function Cart() {
     //   // required: true,
     // },
     {
-      id: 2,
+      id: 1,
       name: "totalPrice",
       type: "text",
       placeholder: "You can't press :v",
@@ -68,9 +64,9 @@ function Cart() {
     //   placeholder: "Enter your discount code",
     //   label: "Discount Code",
     //   // required: true,
-    // },
+    // },    
     {
-      id: 3,
+      id: 2,
       name: "deliveryAddress",
       type: "text",
       placeholder: "Enter your Delivery Address",
@@ -78,7 +74,7 @@ function Cart() {
       required: true,
     },
     {
-      id: 4,
+      id: 3,
       name: "contactInfo",
       type: "text",
       placeholder: "Enter your contact infomation",
@@ -86,7 +82,7 @@ function Cart() {
       required: true,
     },
     {
-      id: 5,
+      id: 4,
       name: "note",
       type: "text",
       placeholder: "You can add notes here",
@@ -95,7 +91,7 @@ function Cart() {
     }
   ];
 
-  console.log("values in cart", values)
+  // console.log("values in cart", values)
   // handle get current date
   // const minDate = "2023-10-03"
   const currentDate = new Date();
@@ -173,15 +169,19 @@ function Cart() {
     if (valueUserLocal) {
       dispatch(handleRefreshCartRedux(valueUserLocal.dataUser.user.id));
       setListItemInCart([]);
+      setReloadCart(false);
     } else {
       alert("Bạn phải đăng nhập để sử dụng chức năng này");
     }
   }
 
-  // handle order 
+  // handle order  
   const onChangeInput = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-  };  
+
+    // fix note :v
+    setCurrentNote([e.target.name] == "note" && e.target.value)
+  };
 
   const handleClearInput = (getKey) => {
     setValues({ ...values, [getKey]: "" });
@@ -197,7 +197,7 @@ function Cart() {
 
   const handleGetCurrentContact = () => {
     if (valueUserLocal && values) {
-      setValues({ ...values, contactInfo: `${valueUserLocal.dataUser.user.email}-${valueUserLocal.dataUser.user.phone}`})      
+      setValues({ ...values, contactInfo: `${valueUserLocal.dataUser.user.email}-${valueUserLocal.dataUser.user.phone}` })
     } else {
       return null;
     }
@@ -232,7 +232,6 @@ function Cart() {
       if (respon && respon.errCode === 0) {
         // delayCloseModalOrders();
         // reset data
-
         setValues(
           {
             totalPrice: "",
@@ -240,7 +239,7 @@ function Cart() {
             contactInfo: "",
             note: "",
           }
-        );        
+        );
         await cartServices.handleRefreshCart(valueUserLocal.dataUser.user.id).then(() => setListItemInCart([]));
         handleCloseModalOrders();
 
@@ -255,10 +254,36 @@ function Cart() {
     }
   }
 
+  // payment online
+  const handleCloseModalPaymentOnline = () => {
+    setOpenModalPaymentOnline(false);
+    handleReloadItemInCart();
+    setValues({
+      totalPrice: "",
+      deliveryAddress: "",
+      contactInfo: "",
+      note: "",
+    })
+  }
+
+  const handleCloseModalPaymentOnlineSuccess = () => {
+    setPaymentOnlineSuccess(false);    
+    handleRefreshCart();
+  }
+
+  useEffect(() => {
+    if(paymentOnlineSuccess) {
+      // console.log("zo 123");
+      handleCloseModalPaymentOnline();
+    }
+  }, [paymentOnlineSuccess])
+
   // console.log("listItemInCart", listItemInCart)
+  // console.log("values", values)
+  // console.log("values note", values?.note)
 
   return (
-    <div className="flex flex-col items-center justify-center container">
+    <div className="flex flex-col items-center justify-center container overflow-hidden">      
       <Heading line variant={"primary"}>
         Giỏ hàng
       </Heading>
@@ -302,7 +327,9 @@ function Cart() {
               <Button variant={"success"}
                 onClick={() => setOpenModalOrders(true)}
               >Đặt hàng</Button>
-              <Button variant={"success"}>Thanh toán online</Button>
+              <Button variant={"success"}
+                onClick={() => setOpenModalPaymentOnline(true)}
+              >Thanh toán online</Button>
             </div>
           </div>
         </div>
@@ -369,6 +396,7 @@ function Cart() {
               return <InputField
                 key={index}
                 className={"!w-2/5 mx-8"}
+                value={values[item.name]}
                 onChange={onChangeInput}
                 onClick={() => { }}
                 clear={() => handleClearInput(item.name)}
@@ -413,7 +441,7 @@ function Cart() {
                 deliveryAddress: "",
                 contactInfo: "",
                 note: "",
-              });              
+              });
               handleCloseModalOrders();
             }}>
               Cancel
@@ -445,6 +473,149 @@ function Cart() {
               >Xem đơn hàng của bạn</Button>
               <Button variant={"primary"} onClick={() => {
                 handleCloseModalOrdersSuccess();
+                WindowScrollTop();
+              }}>Thoát</Button>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* payment online */}
+      <Modal open={openModalPaymentOnline} close={handleCloseModalPaymentOnline}>
+        <form autoComplete="off" onSubmit={() => { }}>
+          <Heading variant={"primary"}>Thanh toán online</Heading>
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-8 mb-4" role="alert">
+            <strong className="font-bold mr-3">Chú ý!</strong>
+            <span className="block sm:inline">Hãy nhập đầy đủ các dữ liệu trước khi thanh toán</span>
+          </div>
+          <div className="flex flex-wrap justify-between">
+            {inputs.map((item, index) => {
+              // console.log("item", item)
+              const getTotalPrice = `${Math.round(listItemInCart.reduce((total, item) => total + item.price, 0) * 100) / 100}$`;
+
+              if (item.name === "note") {
+                return <TextareaField
+                  key={index}
+                  className={"!w-full mx-8"}
+                  value={values[item.name]}
+                  onChange={onChangeInput}
+                  onClick={() => { }}
+                  {...item}
+                />
+              }
+
+              // totalPrice
+              if (item.name === "totalPrice") {
+                return <InputField
+                  key={index}
+                  className={"!w-2/5 mx-8"}
+                  onChange={onChangeInput}
+                  value={getTotalPrice}
+                  onClick={() => { }}
+                  clear={() => handleClearInput(item.name)}
+                  onlyRead={"true"}
+                  {...item}
+                />
+              }
+              // console.log("values[item.name]", values[item.name])
+              if (item.name === "contactInfo") {
+                return <InputField
+                  key={index}
+                  className={"!w-full mx-8"}
+                  value={values[item.name]}
+                  onChange={onChangeInput}
+                  onClick={() => { }}
+                  autoFill={handleGetCurrentContact}
+                  clear={() => handleClearInput(item.name)}
+                  {...item}
+                />
+              }
+
+              return <InputField
+                key={index}
+                className={"!w-2/5 mx-8"}
+                value={values[item.name]}
+                onChange={onChangeInput}
+                onClick={() => { }}
+                clear={() => handleClearInput(item.name)}
+                {...item}
+              />
+            })}
+
+            {/* table purchasedItems */}
+            <div className="mt-6 mx-8 w-full">
+              <h3 className="text-lg font-semibold mb-2">Chi tiết sản phẩm</h3>
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr>
+                    <th className="p-2 border">Tên món ăn</th>
+                    <th className="p-2 border">Số lượng</th>
+                    <th className="p-2 border">Kích cỡ</th>
+                    <th className="p-2 border">Giá</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {listItemInCart.length > 0 && listItemInCart.map((item, index) => {
+
+                    return (
+                      <tr key={index}>
+                        <td className="p-2 border">{item.name}</td>
+                        <td className="p-2 border">{item.quantity}</td>
+                        <td className="p-2 border">{item.size}</td>
+                        <td className="p-2 border">{`${item.price}$`}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {values.deliveryAddress !== "" && values.contactInfo !== "" &&
+            <div className="mt-7">
+              <Paypal
+                totalPrice={listItemInCart.length > 0 ? Math.round(listItemInCart.reduce((total, item) => total + item.price, 0) * 100) / 100 : 0}
+                payload={{
+                  contactInfo: values?.contactInfo,
+                  deliveryAddress: values?.deliveryAddress,
+                  note: currentNote,
+                  purchasedItems: listItemInCart.length > 0 && listItemInCart.reduce((result, item) => {
+                    let getDescItems = `name:${item.name}-size:${item.size}-quantity:${item.quantity}-price:${item.price};`;
+
+                    return result + getDescItems;
+                  }, ""),
+                  userId: valueUserLocal ? valueUserLocal.dataUser.user.id : null,
+                  totalPrice: listItemInCart.length > 0 ? Math.round(listItemInCart.reduce((total, item) => total + item.price, 0) * 100) / 100 : 0,
+                }}
+              />
+            </div>
+          }
+        </form>
+      </Modal>
+
+      <Modal open={paymentOnlineSuccess} custom close={handleCloseModalPaymentOnlineSuccess}>
+        {showCongrat && <Congrat />}
+        <div className="flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-md">
+            <div className="flex items-center space-x-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <p className="text-lg font-semibold text-green-600">Thanh toán thành công</p>
+            </div>
+            <Image src={imgShipper} className={"mx-auto mb-4 w-52 my-3"} />
+            <div className="mt-4">
+              <p className="text-gray-700 text-center">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.
+                <br />
+                Đơn hàng của bạn đang được xử lý. Vui lòng đợi trong ít phút.
+              </p>
+            </div>
+            <div className="mt-6 flex justify-start">
+              <Button variant={"primary"} to={"/profile"}
+                onClick={() => WindowScrollTop()}
+              >Xem đơn hàng của bạn</Button>
+              <Button variant={"primary"} onClick={() => {
+                handleCloseModalPaymentOnlineSuccess();
                 WindowScrollTop();
               }}>Thoát</Button>
             </div>

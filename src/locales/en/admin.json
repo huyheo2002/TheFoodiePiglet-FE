@@ -11,6 +11,8 @@
             "users": "Users",
             "products": "Products",
             "personal": "Personal",
+            "cart": "Cart",
+            "bill": "Bill",
 
             "homepages": "The Foodie Piglet",
             "calendar": "Calendar"

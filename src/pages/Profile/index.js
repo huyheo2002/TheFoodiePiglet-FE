@@ -779,7 +779,7 @@ function Profile() {
                                     </table>
 
                                     <div className="my-4 flex justify-end">
-                                        <h3 className="text-lg font-semibold mb-2">Tổng hóa đơn: <span className="text-base text-gray-600 font-medium">{dataOrderDetail && dataOrderDetail.totalPrice}</span></h3>
+                                        <h3 className="text-lg font-semibold mb-2">Tổng hóa đơn: <span className="text-base text-gray-600 font-medium">{dataOrderDetail && `${dataOrderDetail.totalPrice}$`}</span></h3>
                                     </div>
                                 </div>
                             </div>

@@ -14,13 +14,14 @@ import Cart from "../pages/Cart";
 import Orders from "../pages/Orders";
 import News from "../pages/News";
 import ProductDetail from "../pages/ProductDetail";
+import Profile from "../pages/Profile";
 
 // pages system
 import DashBoard from "../pages/Admin/Dashboard";
 import UserManagement from "../pages/Admin/UserManagement";
 import ProductManagement from "../pages/Admin/ProductManagement";
-import Variant from "../pages/Admin/ProductManagement/variant";
-import Profile from "../pages/Profile";
+import VariantManagement from "../pages/Admin/ProductManagement/variant";
+import PaymentManagement from "../pages/Admin/PaymentManagement";
 
 // k đăng nhập sd đc
 const publicRoutes = [
@@ -47,9 +48,8 @@ const privateRoutes = [
   { path: "/system", component: DashBoard, layout: AdminLayout },
   { path: "/system/users", component: UserManagement, layout: AdminLayout },
   { path: "/system/product", component: ProductManagement, layout: AdminLayout },  
-  { path: "/system/product/:id", component: Variant, layout: AdminLayout },  
-
-  { path: "/system/product/:id", component: Variant, layout: AdminLayout },  
+  { path: "/system/product/:id", component: VariantManagement, layout: AdminLayout },
+  { path: "/system/bill", component: PaymentManagement, layout: AdminLayout },  
 
   // role user 4
   { path: "/profile", component: Profile, layout: DefaultLayout },

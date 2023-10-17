@@ -51,8 +51,8 @@ function InputField({ ...props }) {
           id={id}
           placeholder={props.placeholder}
           onChange={onChange}
-          type={typeInp || type}
-          value={value}
+          type={typeInp ? typeInp : type}
+          value={value ?? ""}
           onBlur={onHandleFocus}
           focused={focus.toString()}
           disable={onlyRead}

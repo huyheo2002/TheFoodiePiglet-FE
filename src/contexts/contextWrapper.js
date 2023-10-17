@@ -10,7 +10,11 @@ function ContextWrapper(props) {
     const [totalMoneyToPay, setTotalMoneyToPay] = useState(0);
     // cart 
     const [reloadCart, setReloadCart] = useState(false);
+    // payment
+    const [paymentOnlineSuccess, setPaymentOnlineSuccess] = useState(false);
+    const [showCongrat, setShowCongrat] = useState(false);
 
+    
     // value local
     const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
 
@@ -48,6 +52,12 @@ function ContextWrapper(props) {
                 // cart
                 reloadCart,
                 setReloadCart,
+                // payment
+                paymentOnlineSuccess,
+                setPaymentOnlineSuccess,
+                showCongrat,
+                setShowCongrat,
+
             }}
         >
             {props.children}

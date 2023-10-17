@@ -9,7 +9,7 @@ import Button from "../../../components/Button";
 import Heading from "../../../components/Heading";
 import replaceNullUndefinedWithEmptyString from "../../../utils/replaceDataToEmptyString";
 
-function Variant() {
+function VariantManagement() {
     const params = useParams();
     const [dataVariantInProduct, setDataVariantInProduct] = useState([]);
 
@@ -459,4 +459,4 @@ function Variant() {
     );
 }
 
-export default Variant;
+export default VariantManagement;

@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 
 function FullScreenLayout({ children }) {
   return (
-    <div className="w-full relative">
+    <div className="w-full relative overflow-hidden">
       <Header />
       {/* <Sidebar /> */}
       <div className="relative">{children}</div>

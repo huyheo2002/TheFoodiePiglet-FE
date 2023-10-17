@@ -14,13 +14,18 @@
         "discountVariant": "Discount Variant",
         "ProductId": "Product Id",
         "originalPrice": "Original Price",
-        "currentPrice": "Current Price"
+        "currentPrice": "Current Price",
+        "paymentDate": "Payment Date",
+        "totalPrice": "Total Price",
+        "paymentStatus": "Payment Status",
+        "orderStatus": "Order Status"
     },
     
     "btnUserAction": {
         "read": "Read",
         "edit": "Edit",
         "delete": "Delete",
-        "variant": "Variants"
+        "variant": "Variants",
+        "infoUser": "Infomation User"
     }
 }

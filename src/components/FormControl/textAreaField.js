@@ -22,6 +22,8 @@ function TextareaField({ ...props }) {
         setFocus(true);
     };
 
+    console.log("value input field", value)
+
     return (
         <div
             className={clsx("w-full py-1 select-none", {
@@ -46,7 +48,7 @@ function TextareaField({ ...props }) {
                     placeholder={props.placeholder}
                     type={type}
                     onChange={onChange}
-                    value={value}
+                    value={value ?? ""}
                     onBlur={onHandleFocus}
                     focused={focus.toString()}
                     disabled={onlyRead}

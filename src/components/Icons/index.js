@@ -25,6 +25,7 @@ import {
   FaBookOpen,
   FaShoppingCart,
   FaTruck,
+  FaMoneyBillWave,
 } from "react-icons/fa";
 import { ImEarth } from "react-icons/im";
 import {
@@ -33,6 +34,7 @@ import {
   BsStarHalf,
   BsCurrencyDollar,
   BsFillArrowDownCircleFill,
+  BsFillBox2Fill,
 } from "react-icons/bs";
 import { GiHotMeal, GiCheckedShield } from "react-icons/gi";
 import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
@@ -40,6 +42,7 @@ import { BiMenuAltLeft, BiMenu, BiDotsHorizontalRounded } from "react-icons/bi";
 import { HiReceiptRefund } from "react-icons/hi";
 import { TiTick } from "react-icons/ti";
 import { GrContactInfo } from "react-icons/gr";
+import { MdDashboard } from "react-icons/md";
 
 
 export const BellIcon = ({ className, onClick }) => {
@@ -445,6 +448,47 @@ export const ContactInfoIcon = ({ className, onClick }) => {
     />
   );
 };
+
+export const BoxFillIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <BsFillBox2Fill
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const DashboardIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <MdDashboard
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const MoneyBillWaveIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaMoneyBillWave
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+
 
 
 

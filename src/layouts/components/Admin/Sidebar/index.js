@@ -2,7 +2,7 @@ import clsx from "clsx";
 import logo from "../../../../assets/images/Base/logo-transparent.png";
 import Image from "../../../../components/Image";
 import Menu from "./Menu";
-import { UserIcon } from "../../../../components/Icons";
+import { BoxFillIcon, DashboardIcon, MoneyBillWaveIcon, UserIcon } from "../../../../components/Icons";
 import { useSelector } from "react-redux";
 
 const SIDEBAR_DATA = [
@@ -14,7 +14,7 @@ const SIDEBAR_DATA = [
         idItem: 1,
         to: "/system",
         name: "table",
-        icon: <UserIcon className="!w-6 !h-6" />,
+        icon: <DashboardIcon className="!w-6 !h-6" />,
       },
       {
         idItem: 2,
@@ -26,13 +26,19 @@ const SIDEBAR_DATA = [
         idItem: 3,
         to: "/system/product",
         name: "products",
-        icon: <UserIcon className="!w-6 !h-6" />,
+        icon: <BoxFillIcon className="!w-6 !h-6" />,
       },
       {
         idItem: 4,
-        to: "/system",
-        name: "personal",
+        to: "/system/cart",
+        name: "cart",
         icon: <UserIcon className="!w-6 !h-6" />,
+      },
+      {
+        idItem: 5,
+        to: "/system/bill",
+        name: "bill",
+        icon: <MoneyBillWaveIcon className="!w-6 !h-6" />,
       },
     ],
   },
@@ -41,13 +47,13 @@ const SIDEBAR_DATA = [
     title: "app",
     items: [
       {
-        idItem: 5,
+        idItem: 9999999999999,
         to: "/",
         name: "homepages",
         icon: <UserIcon className="!w-6 !h-6" />,
       },
       {
-        idItem: 6,
+        idItem: 999999999998,
         to: "/system",
         name: "calendar",
         icon: <UserIcon className="!w-6 !h-6" />,
@@ -59,13 +65,13 @@ const SIDEBAR_DATA = [
     title: "statistical",
     items: [
       {
-        idItem: 6,
+        idItem: 999999999997,
         // to: "/",
         name: "homepages",
         icon: <UserIcon className="!w-6 !h-6" />,
       },
       {
-        idItem: 7,
+        idItem: 99999999996,
         // to: "calendar",
         name: "calendar",
         icon: <UserIcon className="!w-6 !h-6" />,
@@ -77,13 +83,13 @@ const SIDEBAR_DATA = [
     title: "statistical",
     items: [
       {
-        idItem: 6,
+        idItem: 91919196,
         // to: "/",
         name: "homepages",
         icon: <UserIcon className="!w-6 !h-6" />,
       },
       {
-        idItem: 7,
+        idItem: 14949497,
         // to: "calendar",
         name: "calendar",
         icon: <UserIcon className="!w-6 !h-6" />,
@@ -95,13 +101,13 @@ const SIDEBAR_DATA = [
     title: "statistical",
     items: [
       {
-        idItem: 6,
+        idItem: 161616166,
         // to: "/",
         name: "homepages",
         icon: <UserIcon className="!w-6 !h-6" />,
       },
       {
-        idItem: 7,
+        idItem: 16168557,
         // to: "calendar",
         name: "calendar",
         icon: <UserIcon className="!w-6 !h-6" />,
@@ -113,13 +119,13 @@ const SIDEBAR_DATA = [
     title: "statistical",
     items: [
       {
-        idItem: 6,
+        idItem: 161685586,
         // to: "/",
         name: "homepages",
         icon: <UserIcon className="!w-6 !h-6" />,
       },
       {
-        idItem: 7,
+        idItem: 15216857,
         // to: "calendar",
         name: "calendar",
         icon: <UserIcon className="!w-6 !h-6" />,
@@ -131,13 +137,13 @@ const SIDEBAR_DATA = [
     title: "statistical",
     items: [
       {
-        idItem: 6,
+        idItem: 16168556,
         // to: "/",
         name: "homepages",
         icon: <UserIcon className="!w-6 !h-6" />,
       },
       {
-        idItem: 7,
+        idItem: 1313168867,
         // to: "calendar",
         name: "calendar",
         icon: <UserIcon className="!w-6 !h-6" />,

@@ -14,13 +14,18 @@
         "discountVariant": "Giảm giá",
         "ProductId": "Id sản phẩm",
         "originalPrice": "Giá gốc",
-        "currentPrice": "Giá hiện tại"
+        "currentPrice": "Giá hiện tại",
+        "paymentDate": "Ngày thanh toán",
+        "totalPrice": "Tổng đơn hàng",
+        "paymentStatus": "Trạng thái thanh toán",
+        "orderStatus": "Trạng thái đơn hàng"
     },
     
     "btnUserAction": {
         "read": "Đọc",
         "edit": "Chỉnh sửa",
         "delete": "Xoá",
-        "variant": "Loại sản phẩm"
+        "variant": "Loại sản phẩm",
+        "infoUser": "Thông tin người dùng"
     }
 }
