@@ -2,17 +2,23 @@
     "sidebar": {
         "title": {
             "app": "Phần mềm",
-            "manage": "Quản lý",
-            "statistical": "Thống kê"
+            "manageSystem": "Quản lý hệ thống",
+            "manageContent": "Quản lý nội dung",
+            "statistical": "Thống kê",
+            "homePage": "Trang chủ"
         },
 
         "nameItems": {
-            "table": "Bảng",
+            "dashboard": "Bảng điều khiển",
             "users": "Quản lý người dùng",
             "products": "Quản lý sản phẩm",
             "personal": "Hồ sơ người dùng",
-            "cart": "Quản lý giỏ hàng",
             "bill": "Quản lý hóa đơn",
+            "permissionGroup": "Quản lý nhóm quyền",
+            "permission": "Quản lý quyền",
+            "role": "Quản lý vai trò",
+            "news": "Quản lý tin tức",
+            "reserveTable": "Quản lý đặt bàn",
 
             "homepages": "The Foodie Piglet",
             "calendar": "Lịch"

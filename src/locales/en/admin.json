@@ -2,17 +2,24 @@
     "sidebar": {
         "title": {
             "app": "App",
-            "manage": "Manage",
-            "statistical": "Statistical"
+            "manageSystem": "System Management",
+            "manageContent": "Content Management.",
+            "statistical": "Statistical",
+            "homePage": "Home Page"
         },
 
         "nameItems": {
-            "table": "Table",
+            "dashboard": "Dashboard",
             "users": "Users",
             "products": "Products",
             "personal": "Personal",
             "cart": "Cart",
             "bill": "Bill",
+            "permissionGroup": "Permission Group",
+            "permission": "Permission",
+            "role": "Role",
+            "news": "News",
+            "reserveTable": "Reserve Table",
 
             "homepages": "The Foodie Piglet",
             "calendar": "Calendar"

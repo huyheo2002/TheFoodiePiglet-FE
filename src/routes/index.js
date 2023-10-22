@@ -22,6 +22,11 @@ import UserManagement from "../pages/Admin/UserManagement";
 import ProductManagement from "../pages/Admin/ProductManagement";
 import VariantManagement from "../pages/Admin/ProductManagement/variant";
 import PaymentManagement from "../pages/Admin/PaymentManagement";
+import PermissionGroupManagement from "../pages/Admin/PermissionGroupManagement";
+import PermissionManagement from "../pages/Admin/PermissionManagement";
+import RoleManagement from "../pages/Admin/RoleManagement";
+import NewsManagement from "../pages/Admin/NewsManagement";
+import RerserveTableManagement from "../pages/Admin/ReserveTableManagement";
 
 // k đăng nhập sd đc
 const publicRoutes = [
@@ -49,7 +54,13 @@ const privateRoutes = [
   { path: "/system/users", component: UserManagement, layout: AdminLayout },
   { path: "/system/product", component: ProductManagement, layout: AdminLayout },  
   { path: "/system/product/:id", component: VariantManagement, layout: AdminLayout },
-  { path: "/system/bill", component: PaymentManagement, layout: AdminLayout },  
+  { path: "/system/bill", component: PaymentManagement, layout: AdminLayout },
+  { path: "/system/permissions-groups", component: PermissionGroupManagement, layout: AdminLayout },
+  { path: "/system/permissions", component: PermissionManagement, layout: AdminLayout },  
+  { path: "/system/role", component: RoleManagement, layout: AdminLayout },  
+  { path: "/system/news", component: NewsManagement, layout: AdminLayout },  
+  { path: "/system/reserve-table", component: RerserveTableManagement, layout: AdminLayout },  
+
 
   // role user 4
   { path: "/profile", component: Profile, layout: DefaultLayout },

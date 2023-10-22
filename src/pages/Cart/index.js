@@ -19,6 +19,8 @@ import * as paymentServices from "../../services/paymentServices";
 import imgShipper from "../../assets/images/Base/shipper_01.png";
 import Paypal from "../../components/Paypal";
 import Congrat from "../../components/Congrat";
+import * as commonServices from "../../services/commonServices";
+
 
 function Cart() {
   const dispatch = useDispatch();
@@ -26,7 +28,21 @@ function Cart() {
   const [listItemInCart, setListItemInCart] = useState([]);
   const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
 
-  // console.log("valueUserLocal", valueUserLocal)
+  const [dataUserDecoded, setDataUserDecoded] = useState(null);
+  const decoded = async () => {
+    if(valueUserLocal) {
+      const respon = await commonServices.handleDecoded(valueUserLocal.token);
+      // console.log("respon.decoded", respon)
+      if(respon && respon.errCode === 0) {
+        setDataUserDecoded(respon.decoded);
+      }
+    }
+  };
+
+  useEffect(() => {
+    decoded();
+  }, [])
+
   // orders
   const [openModalOrders, setOpenModalOrders] = useState(false);
   const [openModalOrdersSuccess, setOpenModalOrdersSuccess] = useState(false);
@@ -102,8 +118,8 @@ function Cart() {
 
   // console.log("reloadCart in cart", reloadCart)
   const fetchListItemInCart = async () => {
-    if (valueUserLocal) {
-      const responCart = await cartServices.getAllCartItemOfUser(valueUserLocal.dataUser.user.id);
+    if (dataUserDecoded) {
+      const responCart = await cartServices.getAllCartItemOfUser(dataUserDecoded.user.id);
       const responProducts = await productServices.getAllProductCompact() ?? null;
 
       if (responCart && responProducts) {
@@ -166,8 +182,8 @@ function Cart() {
   }, []);
 
   const handleRefreshCart = () => {
-    if (valueUserLocal) {
-      dispatch(handleRefreshCartRedux(valueUserLocal.dataUser.user.id));
+    if (dataUserDecoded) {
+      dispatch(handleRefreshCartRedux(dataUserDecoded.user.id));
       setListItemInCart([]);
       setReloadCart(false);
     } else {
@@ -196,8 +212,8 @@ function Cart() {
   }
 
   const handleGetCurrentContact = () => {
-    if (valueUserLocal && values) {
-      setValues({ ...values, contactInfo: `${valueUserLocal.dataUser.user.email}-${valueUserLocal.dataUser.user.phone}` })
+    if (dataUserDecoded && values) {
+      setValues({ ...values, contactInfo: `${dataUserDecoded.user.email}-${dataUserDecoded.user.phone}` })
     } else {
       return null;
     }
@@ -222,7 +238,7 @@ function Cart() {
     console.log("getPurchasedItems", getPurchasedItems)
 
     data.set("totalPrice", totalPriceNumber)
-    data.set("userId", valueUserLocal ? valueUserLocal.dataUser.user.id : null)
+    data.set("userId", dataUserDecoded ? dataUserDecoded.user.id : null)
     data.set("purchasedItems", getPurchasedItems)
 
     console.log("data entry:", Object.fromEntries(data.entries()));
@@ -240,7 +256,7 @@ function Cart() {
             note: "",
           }
         );
-        await cartServices.handleRefreshCart(valueUserLocal.dataUser.user.id).then(() => setListItemInCart([]));
+        await cartServices.handleRefreshCart(dataUserDecoded.user.id).then(() => setListItemInCart([]));
         handleCloseModalOrders();
 
         // open modal order success
@@ -584,7 +600,7 @@ function Cart() {
 
                     return result + getDescItems;
                   }, ""),
-                  userId: valueUserLocal ? valueUserLocal.dataUser.user.id : null,
+                  userId: dataUserDecoded ? dataUserDecoded.user.id : null,
                   totalPrice: listItemInCart.length > 0 ? Math.round(listItemInCart.reduce((total, item) => total + item.price, 0) * 100) / 100 : 0,
                 }}
               />

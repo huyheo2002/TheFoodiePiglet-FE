@@ -59,7 +59,7 @@ function InputField({ ...props }) {
           {...inputProps}
         />
 
-        <div className="absolute w-[10%] h-12 right-0 top-0 flex items-center justify-center">
+        <div className="absolute w-[10%] h-12 right-0 top-0 flex items-center justify-center mr-2">
           {value && (
             <CloseCircleIcon
               className="cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all"
@@ -77,12 +77,12 @@ function InputField({ ...props }) {
           {/* password */}
           {typeInp === "password" && props.name === "password" ? (
             <EyeClosedIcon
-              className="cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all"
+              className="cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all ml-3"
               onClick={() => setTypeInp("text")}
             />
           ) : typeInp !== "password" && props.name === "password" ? (
             <EyeOpenIcon
-              className="cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all"
+              className="cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all ml-3"
               onClick={() => setTypeInp("password")}
             />
           ) : (

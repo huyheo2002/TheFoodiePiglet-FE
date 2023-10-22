@@ -4,13 +4,12 @@ import { useTranslation } from "react-i18next";
 import { handleLogoutRedux } from "../../../redux/actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import useLocalStorage from "../../../hooks/useLocalStorage";
 
-function SubMenu({ data, className }) {
+function SubMenu({ data, className, dataUserLogin }) {
   const { t, i18n } = useTranslation(["header"]);
   const navigate = useNavigate();
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
 
+  // console.log("dataUserLogin", dataUserLogin);
   const changeLanguages = (lng = "vi" || "en" ) => {
     i18n.changeLanguage(lng);
   };
@@ -24,8 +23,11 @@ function SubMenu({ data, className }) {
     dispatch(handleLogoutRedux());
   }
 
+  // console.log("user redux", user)
+  // console.log("user loginErrorRedux", loginErrorRedux)
+
   useEffect(() => {
-    if(user && user.auth === false && loginErrorRedux === true) {
+    if(user && loginErrorRedux === true) {
       navigate("/login");
     }
   }, [user])
@@ -51,7 +53,7 @@ function SubMenu({ data, className }) {
           return (
             <li
               className={clsx("min-w-[10rem] h-full leading-[4rem] relative hover:bg-[#3b3a3a] transition-all duration-300 cursor-pointer", {
-                "!hidden": item.keyword === "manager" && dataUser.dataUser.user.roleId !== 1,
+                "!hidden": item.keyword === "manager" && dataUserLogin.user.roleName === "User",
               })}
               key={index}
               onClick={() => {

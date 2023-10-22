@@ -7,12 +7,26 @@ import "./i18n";
 import ContextWrapper from "./contexts/contextWrapper";
 import { useSelector } from "react-redux";
 import useLocalStorage from "./hooks/useLocalStorage";
+import * as commonServices from "./services/commonServices";
 
 function App() {
   // const dataUserRedux = useSelector((state) => state.user.user);
   // console.log("dataUserRedux app", dataUserRedux)
   const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
   // console.log("dataUser app", dataUser);
+  const [dataUserDecoded, setDataUserDecoded] = useState(null);
+
+  const decoded = async () => {
+    const respon = await commonServices.handleDecoded(dataUser.token);
+    // console.log("respon.decoded", respon)
+    if(respon && respon.errCode === 0) {
+      setDataUserDecoded(respon.decoded);
+    }
+  };
+
+  useEffect(() => {
+    decoded();
+  }, [])
   
   return (
     <ContextWrapper>
@@ -43,9 +57,7 @@ function App() {
             })}
 
             {privateRoutes.map((route, index) => {
-              // console.log("dataUserRedux.role", dataUser.role)
-
-              if(dataUser.auth) {
+              if(dataUserDecoded && dataUserDecoded.user.roleName !== "User") {
                 let Layout = DefaultLayout;
                 const Page = route.component;
 
@@ -66,9 +78,7 @@ function App() {
                     }
                   />
                 );
-              } else {
-              
-              }              
+              }             
             })}            
           </Routes>
         </div>

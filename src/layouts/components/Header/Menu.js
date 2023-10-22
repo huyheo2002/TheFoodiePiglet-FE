@@ -6,7 +6,6 @@ import { Fragment, useContext, useEffect } from "react";
 import NotificationCard from "../../../components/NotificationCard";
 import * as cartServices from "../../../services/cartServices";
 import { useState } from "react";
-import useLocalStorage from "../../../hooks/useLocalStorage";
 import GlobalContext from "../../../contexts/globalContext";
 
 function Menu({ data, userLogin }) {
@@ -15,7 +14,9 @@ function Menu({ data, userLogin }) {
   // const currentLanguage = i18n.language;
   // console.log("currentLanguage", currentLanguage)
 
-  console.log("reloadCart in menu", reloadCart);  
+  // console.log("reloadCart in menu", reloadCart);  
+
+  console.log("userLogin", userLogin);
 
   return (
     <ul className="flex items-center h-full px-6">
@@ -29,15 +30,13 @@ function Menu({ data, userLogin }) {
             <li className="h-full leading-[4rem] relative group" key={index}>
               {item.href && (
                 <Fragment>
-                  {userLogin &&
-                    userLogin.auth === true &&
-                    item.keyword === "login" ? (
+                  {userLogin && item.keyword === "login" ? (
                     <a className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300">
                       {!item.onlyShowIcon ? (
                         <Fragment>
                           {t(`userLogin.msgWelcome`) +
-                            `, ${userLogin.dataUser.user.name ||
-                            userLogin.dataUser.user.username
+                            `, ${userLogin.user.name ||
+                            userLogin.user.username
                             }`}
                           {item.icon && (
                             <span className="text-current p-2">
@@ -84,15 +83,14 @@ function Menu({ data, userLogin }) {
               )}
               {item.to && (
                 <Fragment>
-                  `{userLogin &&
-                    userLogin.auth === true &&
+                  `{userLogin && 
                     item.keyword === "login" ? (
                     <Link className="h-full px-3 inline-flex items-center text-primary font-semibold uppercase text-sm group-hover:text-white transition-all duration-300">
                       {!item.onlyShowIcon ? (
                         <Fragment>
                           {t(`userLogin.msgWelcome`) +
-                            `, ${userLogin.dataUser.user.name ||
-                            userLogin.dataUser.user.username
+                            `, ${userLogin.user.name ||
+                            userLogin.user.username
                             }`}
                           {item.icon && (
                             <span className="text-current p-2">
@@ -167,13 +165,12 @@ function Menu({ data, userLogin }) {
               {/* submenu */}
               {item.subNav &&
                 userLogin &&
-                userLogin.auth === true &&
                 item.keyword === "login" && (
-                  <SubMenu data={item.subNav} className="group-hover:flex" />
+                  <SubMenu data={item.subNav} className="group-hover:flex" dataUserLogin={userLogin ?? null} />
                 )}
 
               {item.subNav && item.keyword !== "login" && (
-                <SubMenu data={item.subNav} className="group-hover:flex" />
+                <SubMenu data={item.subNav} className="group-hover:flex" dataUserLogin={userLogin ?? null} />
               )}
 
               {/* custom dropdown (submenu custom :v) */}

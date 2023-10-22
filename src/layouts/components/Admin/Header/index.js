@@ -11,9 +11,10 @@ import {
   handleCloseSidebar,
   handleOpenSidebar,
 } from "../../../../redux/actions/adminAction";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useLocalStorage from "../../../../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
+import * as commonServices from "../../../../services/commonServices";
 
 function Header() {
   const navigate = useNavigate();
@@ -21,11 +22,29 @@ function Header() {
   const toggleSidebar = useSelector((states) => states.admin.toggleSidebar);
   const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
 
+  // decoded dataUser
+  const [dataUserDecoded, setDataUserDecoded] = useState(null);
+
+  const decoded = async () => {
+    if(dataUser) {
+      const respon = await commonServices.handleDecoded(dataUser.token);
+      // console.log("respon.decoded", respon)
+      if(respon && respon.errCode === 0) {
+        setDataUserDecoded(respon.decoded);
+      }
+    }
+  };
+
+  useEffect(() => {
+    decoded();
+  }, [])  
+
   useEffect(() => {    
-    if (!dataUser || dataUser.dataUser.user.roleId !== 1) {
+    if (dataUserDecoded && dataUserDecoded.user.roleName === "User") {
       navigate("/");
     }
   }, []);
+
   const handleToggleSidebar = () => {
     if (toggleSidebar === true) {
       dispatch(handleCloseSidebar());

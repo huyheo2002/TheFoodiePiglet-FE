@@ -58,6 +58,7 @@ function Login() {
   const dataUserRedux = useSelector((state) => state.user.user);
   const isError = useSelector((state) => state.user.isError);
   // console.log("isError", isError);
+  console.log("dataUserRedux", dataUserRedux)
   const [checkError, setCheckError] = useState(false);
 
   const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");

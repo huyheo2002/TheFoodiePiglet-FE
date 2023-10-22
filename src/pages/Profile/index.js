@@ -18,9 +18,26 @@ import WindowScrollTop from "../../utils/windowScroll";
 import ExportToPNG from "../../utils/exportToPng";
 import html2canvas from "html2canvas";
 import FormatDateTime from "../../utils/formatDateTime";
+import * as commonServices from "../../services/commonServices";
+
 
 function Profile() {
     const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
+    const [dataUserDecoded, setDataUserDecoded] = useState(null);
+    const decoded = async () => {
+        if(valueLocal) {
+            const respon = await commonServices.handleDecoded(valueLocal.token);
+            // console.log("respon.decoded", respon)
+            if (respon && respon.errCode === 0) {
+                setDataUserDecoded(respon.decoded);
+            }            
+        }
+    };
+
+    useEffect(() => {
+        decoded();
+    }, [])
+
     const [roleName, setRoleName] = useState("");
 
     const [listUsersDetail, setListUsersDetail] = useState([]);
@@ -144,10 +161,10 @@ function Profile() {
 
     // console.log("listPurchasedItems", listPurchasedItems)
     const handleGetNameRole = async () => {
-        let respon = await roleServices.getAllRoles(valueLocal.dataUser.user.roleId)
+        let respon = await roleServices.getAllRoles(dataUserDecoded && dataUserDecoded.user.roleId)
         // console.log("respon profile", respon);
         if (respon && respon.errCode === 0) {
-            setRoleName(respon.roles.name);
+            setRoleName(respon.roles && respon.roles.name);
         }
     }
 
@@ -269,8 +286,8 @@ function Profile() {
             const respon = await userServices.handleUpdateUser(data);
             // console.log("respon", respon);
             if (respon && respon.errCode === 0) {
-                valueLocal.dataUser.user = respon.user;
-                setValueLocal(valueLocal);
+                dataUserDecoded.user = respon.user;
+                setValueLocal(dataUserDecoded);
                 handleCloseModalUpdate();
                 handleGetAllUsers();
             } else if (respon.errCode === 1) {
@@ -295,7 +312,7 @@ function Profile() {
 
     // handle order
     const fetchListPayment = async () => {
-        const respon = await paymentServices.getAllPaymentOfUser(valueLocal.dataUser.user.id ?? null);
+        const respon = await paymentServices.getAllPaymentOfUser(dataUserDecoded && dataUserDecoded.user.id);
         // console.log("respon payment", respon);
         if (respon && respon.errCode === 0) {
             setListOrder(respon.payments);
@@ -460,19 +477,19 @@ function Profile() {
                         <div className="w-full">
                             <div className="flex items-center space-x-5">
                                 <div className="h-40 w-40 rounded-full flex flex-shrink-0 justify-center items-center text-white text-2xl font-mono overflow-hidden border-2 border-rgba-white-0.1">
-                                    <Image className={"w-full h-full"} src={valueLocal && `${process.env.REACT_APP_BACKEND_URL}/public/avatar/${valueLocal.dataUser.user.avatar}`} fallback={ava} />
+                                    <Image className={"w-full h-full"} src={dataUserDecoded && `${process.env.REACT_APP_BACKEND_URL}/public/avatar/${dataUserDecoded.user.avatar}`} fallback={ava} />
                                 </div>
                                 <div className="block pl-2 font-semibold text-xl self-center text-gray-700">
-                                    <h2 className="leading-relaxed text-white font-semibold text-2xl">{valueLocal && valueLocal.dataUser.user.name}</h2>
+                                    <h2 className="leading-relaxed text-white font-semibold text-2xl">{dataUserDecoded && dataUserDecoded.user.name}</h2>
                                     <p className="text-sm font-normal leading-relaxed text-white">{roleName}</p>
                                 </div>
                             </div>
                             <div className="mt-4 flex">
                                 <Button variant={"primary"}
-                                    onClick={() => handleOpenModalUpdate(valueLocal.dataUser.user.id)}
+                                    onClick={() => handleOpenModalUpdate(dataUserDecoded.user.id)}
                                 >Thay đổi thông tin</Button>
                                 <Button variant={"primary"}
-                                    onClick={() => handleOpenModalRead(valueLocal.dataUser.user.id)}
+                                    onClick={() => handleOpenModalRead(dataUserDecoded.user.id)}
                                 >Thông tin chi tiết</Button>
                                 <Button variant={"primary"}>Quên mật khẩu</Button>
                             </div>

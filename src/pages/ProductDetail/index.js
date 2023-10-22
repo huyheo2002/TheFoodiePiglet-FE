@@ -12,6 +12,8 @@ import Modal from "../../components/Modal";
 import WindowScrollTop from "../../utils/windowScroll";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import GlobalContext from "../../contexts/globalContext";
+import * as commonServices from "../../services/commonServices";
+
 
 function ProductDetail() {
     const params = useParams();
@@ -33,6 +35,21 @@ function ProductDetail() {
 
     // localstorage
     const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
+
+    const [dataUserDecoded, setDataUserDecoded] = useState(null);
+    const decoded = async () => {
+        if(valueUserLocal) {
+            const respon = await commonServices.handleDecoded(valueUserLocal.token);
+            // console.log("respon.decoded", respon)
+            if (respon && respon.errCode === 0) {
+                setDataUserDecoded(respon.decoded);
+            }
+        }
+    };
+
+    useEffect(() => {
+        decoded();
+    }, [])
 
     const optionsSize = [
         { value: "S", label: "S" },
@@ -100,7 +117,7 @@ function ProductDetail() {
     };
 
     // onhandle selected size
-    const handleGetValueSize = (currentValue) => {    
+    const handleGetValueSize = (currentValue) => {
         setSize(currentValue);
         setCurrentCount(1);
         setCurrentPricePreview(null);
@@ -112,8 +129,8 @@ function ProductDetail() {
         const data = new FormData();
         let checkAllowAddToCart = true;
 
-        if (valueUserLocal) {
-            data.set("userId", valueUserLocal.dataUser.user.id);
+        if (dataUserDecoded) {
+            data.set("userId", dataUserDecoded.user.id);
         } else {
             // alert("Bạn phải đăng nhập mới có thể mở khoá chức năng này");
             checkAllowAddToCart = false;
@@ -265,13 +282,13 @@ function ProductDetail() {
                             <form onSubmit={onhandleSubmitAddToCart} autoComplete="off" className="flex space-x-4 mb-4">
                                 <Button variant={"primary"}
                                     onClick={() => {
-                                        if (!valueUserLocal) {
+                                        if (!dataUserDecoded) {
                                             alert("Bạn phải đăng nhập mới có thể mở khoá chức năng này");
                                         }
                                     }}
                                 >Add to Cart</Button>
-                                <Button variant={"primary"}                                
-                                    onClick={() => {                                        
+                                <Button variant={"primary"}
+                                    onClick={() => {
                                         navigate(-1);
                                     }}
                                 >Back</Button>

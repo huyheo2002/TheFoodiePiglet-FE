@@ -12,6 +12,8 @@ import {
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import logo from "../../../assets/images/Base/logo-transparent.png";
 import Image from "../../../components/Image";
+import * as commonServices from "../../../services/commonServices";
+import { useEffect, useState } from "react";
 
 const NAVBAR_ITEM = [
   {
@@ -119,7 +121,23 @@ function Header() {
 
   // const user = useSelector(state => state.user.user);
   const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-  // console.log("dataUser", dataUser);
+  const [dataUserDecoded, setDataUserDecoded] = useState(null);
+
+  const decoded = async () => {
+    if(dataUser) {
+      const respon = await commonServices.handleDecoded(dataUser.token);
+      // console.log("respon.decoded", respon)
+      if(respon && respon.errCode === 0) {
+        setDataUserDecoded(respon.decoded);
+      }
+    }
+  };
+
+  useEffect(() => {
+    decoded();
+  }, [])
+
+  console.log("dataUserDecoded", dataUserDecoded);
 
   return (
     <header className="w-full h-16 shadow-bs-black-b-0.35 bg-rgba-black-0.75 flex justify-between px-8 fixed z-50 top-0 left-0 right-0">
@@ -136,7 +154,7 @@ function Header() {
       </div>
       {/* right */}
       <div className="flex items-center h-full">
-        <Menu data={NAVBAR_RIGHT_ITEM} userLogin={dataUser}/>        
+        <Menu data={NAVBAR_RIGHT_ITEM} userLogin={dataUserDecoded ? dataUserDecoded : null}/>        
       </div>
     </header>
   );

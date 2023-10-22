@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import * as cartServices from "../../services/cartServices";
 import * as productServices from "../../services/productServices";
+import * as commonServices from "../../services/commonServices";
 import GlobalContext from "../../contexts/globalContext";
 
 
@@ -37,6 +38,23 @@ function ItemInCart({ size, type, data, onHandleRefreshCart }) {
 
   const [changeItem, setChangeItem] = useState(false);
   const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
+
+  // decoded dataUser
+  const [dataUserDecoded, setDataUserDecoded] = useState(null);
+
+  const decoded = async () => {
+    const respon = await commonServices.handleDecoded(valueUserLocal.token);
+    // console.log("respon.decoded", respon)
+    if(respon && respon.errCode === 0) {
+      setDataUserDecoded(respon.decoded);
+    }
+  };
+
+  useEffect(() => {
+    decoded();
+  }, [])
+
+
 
   const onHandlePlusItem = (currentCount) => {
     let priceOneItem = data && parseInt(data.price / data.quantity);
@@ -107,8 +125,8 @@ function ItemInCart({ size, type, data, onHandleRefreshCart }) {
     const dataSubmit = new FormData();
     let checkAllowAddToCart = true;
 
-    if (valueUserLocal) {
-      dataSubmit.set("userId", valueUserLocal.dataUser.user.id);
+    if (dataUserDecoded) {
+      dataSubmit.set("userId", dataUserDecoded.user.id);
     } else {
       // alert("Bạn phải đăng nhập mới có thể mở khoá chức năng này");
       checkAllowAddToCart = false;

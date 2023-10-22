@@ -10,7 +10,7 @@ function LoginSuccess() {
   const navigate = useNavigate();
   const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
 
-//   let spliceId = Number.parseInt(userId.toString().slice(0, 9));
+  // let spliceId = Number.parseInt(userId.toString().slice(0, 9));
 
   const dataUserRedux = useSelector((state) => state.user.user);
   console.log("dataUserRedux login", dataUserRedux)

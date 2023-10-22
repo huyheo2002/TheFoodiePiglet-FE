@@ -15,17 +15,16 @@ export const handleLoginRedux = (username, password) => {
 
     try {
       const res = await userServices.handleLogin(username, password);
-      console.log("respon redux", res);
+      console.log("respon login redux", res);
       if (res && res.errCode === 0) {
 
-        let decoded = decodeJwt(res.accessToken);
-        console.log("decoded", decoded)
+        // let decoded = decodeJwt(res.accessToken);
+        // console.log("decoded", decoded)
         dispatch({
           type: FETCH_USER_SUCCESS,
           data: {
             username: username,
             token: res.accessToken,
-            dataUser: decoded
           },
         });
       } else {
@@ -65,13 +64,12 @@ export const handleLoginGoogleRedux = (userId) => {
       const res = await userServices.handleLoginGoogle(userId);
       console.log("respon redux google", res);
       if (res && res.errCode === 0) {
-        let decoded = decodeJwt(res.accessToken);
-        console.log("decoded", decoded)
+        // let decoded = decodeJwt(res.accessToken);
+        // console.log("decoded", decoded)
         dispatch({
           type: FETCH_USER_SUCCESS,
           data: {
             token: res.accessToken,
-            dataUser: decoded
           },
         });
       } else {

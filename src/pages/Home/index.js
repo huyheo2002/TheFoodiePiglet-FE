@@ -20,6 +20,8 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import { handleAddToCartRedux } from "../../redux/actions/cartAction";
 import getRandomListItem from "../../utils/getRandomItem";
 import GlobalContext from "../../contexts/globalContext";
+import * as commonServices from "../../services/commonServices";
+
 
 function Home() {
   const navigate = useNavigate();
@@ -43,6 +45,21 @@ function Home() {
 
   // localstorage
   const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
+
+  const [dataUserDecoded, setDataUserDecoded] = useState(null);
+  const decoded = async () => {
+    if(valueUserLocal) {
+      const respon = await commonServices.handleDecoded(valueUserLocal.token);
+      // console.log("respon.decoded", respon)
+      if(respon && respon.errCode === 0) {
+        setDataUserDecoded(respon.decoded);
+      }
+    }
+  };
+
+  useEffect(() => {
+    decoded();
+  }, [])
 
   const optionsSize = [
     { value: "S", label: "S" },
@@ -201,14 +218,8 @@ function Home() {
     const data = new FormData();
     let checkAllowAddToCart = true;
 
-    // console.log("userId", valueUserLocal.dataUser.user.id)
-    // console.log("prodId", currentIdAddToCart)
-    // console.log("quantity", currentCount)
-    // console.log("size", size)
-    // console.log("price", currentPricePreview ?? currentPrice)
-
-    if (valueUserLocal) {
-      data.set("userId", valueUserLocal.dataUser.user.id);
+    if (dataUserDecoded) {
+      data.set("userId", dataUserDecoded.user.id);
     } else {
       alert("Bạn phải đăng nhập mới có thể mở khoá chức năng này");
       checkAllowAddToCart = false;
@@ -221,7 +232,6 @@ function Home() {
     data.set("price", currentPricePreview ? Math.round(currentPricePreview * 100) / 100 : Math.round(currentPrice * 100) / 100);
 
     try {
-      // const respon = await cartServices.handleAddToCart(data);
       if (checkAllowAddToCart) {
         let responAddToCartSubmit = null;
         responAddToCartSubmit = dispatch(handleAddToCartRedux(data));

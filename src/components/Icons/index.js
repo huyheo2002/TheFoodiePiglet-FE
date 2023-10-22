@@ -14,6 +14,7 @@ import {
   AiOutlineClose,
   AiOutlinePlus,
   AiOutlineMinus,
+  AiTwotoneHome,
 } from "react-icons/ai";
 import {
   FaAngleRight,
@@ -26,6 +27,9 @@ import {
   FaShoppingCart,
   FaTruck,
   FaMoneyBillWave,
+  FaUsers,
+  FaUserCog,
+  FaUserShield,
 } from "react-icons/fa";
 import { ImEarth } from "react-icons/im";
 import {
@@ -38,11 +42,11 @@ import {
 } from "react-icons/bs";
 import { GiHotMeal, GiCheckedShield } from "react-icons/gi";
 import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
-import { BiMenuAltLeft, BiMenu, BiDotsHorizontalRounded } from "react-icons/bi";
+import { BiMenuAltLeft, BiMenu, BiDotsHorizontalRounded, BiNews } from "react-icons/bi";
 import { HiReceiptRefund } from "react-icons/hi";
 import { TiTick } from "react-icons/ti";
 import { GrContactInfo } from "react-icons/gr";
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard, MdTableRestaurant } from "react-icons/md";
 
 
 export const BellIcon = ({ className, onClick }) => {
@@ -487,6 +491,89 @@ export const MoneyBillWaveIcon = ({ className, onClick }) => {
     />
   );
 };
+
+export const UsersIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaUsers
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const UserCogIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaUserCog
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const UserShieldIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaUserShield
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const NewsIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <BiNews
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const HomeIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <AiTwotoneHome
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const TableRestaurantIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <MdTableRestaurant
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+
+
+
+
 
 
 
