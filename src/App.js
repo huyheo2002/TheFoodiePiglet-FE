@@ -57,7 +57,7 @@ function App() {
             })}
 
             {privateRoutes.map((route, index) => {
-              if(dataUserDecoded && dataUserDecoded.user.roleName !== "User") {
+              if(dataUserDecoded) {
                 let Layout = DefaultLayout;
                 const Page = route.component;
 

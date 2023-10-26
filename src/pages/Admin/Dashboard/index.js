@@ -21,11 +21,7 @@ function DashBoard() {
     {
       name: "delete",
       icon: <BookOpenIcon />,
-    },
-    {
-      name: "updateRole",
-      icon: <BookOpenIcon />,
-    },
+    }    
   ];
 
   const handleTest = () => {
@@ -49,18 +45,11 @@ function DashBoard() {
         dataListUsers.map((item) => {
           // handle role users
           // console.log("item role", item.roleId)
-          if(item.roleId) {
-            if(item.roleId === 1) {
-              item.roleName = "Admin";
-            } else if(item.roleId === 2) {
-              item.roleName = "Manager";              
-            } else if(item.roleId === 3) {
-              item.roleName = "Staff";              
-            } else if(item.roleId === 4) {
-              item.roleName = "User";              
-            }
+          if (item.Role) {
+            item.roleName = item.Role.name;
 
             delete item.roleId;
+            delete item.Role;
           }
 
           delete item.address;

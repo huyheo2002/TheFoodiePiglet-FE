@@ -45,6 +45,7 @@ function DataTable({
   indexOfLastPost = currentPage * postPerPage;
   indexOfFirstPost = indexOfLastPost - postPerPage;
   currentPost = data.slice(indexOfFirstPost, indexOfLastPost);
+  // console.log("currentPost", currentPost);
   // data.slice(indexOfFirstPost, indexOfLastPost)
   const onChangePage = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -71,7 +72,7 @@ function DataTable({
   return (
     <Fragment>
       <div className="flex justify-end my-2">
-        {btnBack && <Button variant={"primary"} onClick={() => navigate(-1)}>Back</Button>}        
+        {btnBack && <Button variant={"primary"} onClick={() => navigate(-1)}>Back</Button>}
         <Button
           variant={"primary"}
           onClick={handleModalCreate && handleModalCreate}
@@ -106,6 +107,7 @@ function DataTable({
           {currentPost.length > 0 &&
             currentPost.map((item, index) => {
               let getValuesItem = Object.values(item) || [];
+              // console.log("getValuesItem", getValuesItem)
               let getKeysItem = Object.keys(item) || [];
               // console.log("item currentpost", item);
               let getIndexOfImage = getKeysItem.indexOf("image") ?? -1;
@@ -116,15 +118,33 @@ function DataTable({
                   key={index}
                 >
                   {getValuesItem.length > 0 &&
-                    getValuesItem.map((valueItem, indexValue) => {     
+                    getValuesItem.map((valueItem, indexValue) => {
                       // console.log("valueItem", valueItem)
+                      if (Array.isArray(valueItem)) {
+                        // console.log("valueItem", valueItem);
+                        const strValue = valueItem.join(';\n') || "";
+                        return (
+                          <td
+                            className="py-2 px-6 text-sm font-normal border-b border-gray-200 overflow-hidden max-w-[8rem] text-ellipsis whitespace-nowrap"
+                            key={indexValue}
+                          >
+                            <textarea
+                              className="w-full h-32 resize-none border-[1px] border-black text-base font-medium p-1 rounded-md overflow-hidden"
+                              value={strValue}
+                              readOnly
+                              style={{ maxHeight: '10rem', overflowY: 'auto' }}
+                            />
+                          </td>
+                        )
+                      }
+
                       return (
                         <td
                           className="py-4 px-6 text-sm font-normal border-b border-gray-200 group-hover:text-[#548be6] transition-all duration-300 overflow-hidden max-w-[8rem] text-ellipsis whitespace-nowrap"
                           key={indexValue}
                         >
                           {indexValue === getIndexOfImage ?
-                            <Image className={"cursor-pointer"} src={valueItem} 
+                            <Image className={"cursor-pointer"} src={valueItem}
                               onClick={() => {
                                 setToggleFullScreenImage(true)
                                 setLinkImage(valueItem)
@@ -136,6 +156,8 @@ function DataTable({
                         </td>
                       );
                     })}
+
+
                   {/* action features */}
                   <td
                     className={clsx("border-b border-gray-200", {
@@ -184,7 +206,7 @@ function DataTable({
                         {toggleDataTable && currentItem === index && (
                           <div
                             className="absolute bg-white shadow-black-b-0.35 top-[calc(100%+12px)] right-0 -left-32 z-40 rounded-lg cursor-pointer select-none overflow-hidden"
-                            // onClick={e => e.stopPropagation()}
+                          // onClick={e => e.stopPropagation()}
                           >
                             {manyFeatures.length > 0 &&
                               manyFeatures.map((feature, index) => {
@@ -218,7 +240,7 @@ function DataTable({
       />
 
       <Modal open={toggleFullScreenImage} close={handleCloseFullScreenImage} custom>
-        <Image src={linkImage} className={"!bg-white !p-5 !overflow-hidden"}/>
+        <Image src={linkImage} className={"!bg-white !p-5 !overflow-hidden"} />
       </Modal>
     </Fragment>
   );

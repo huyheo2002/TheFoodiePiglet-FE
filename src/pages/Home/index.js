@@ -26,7 +26,7 @@ import * as commonServices from "../../services/commonServices";
 function Home() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { reloadCart, setReloadCart } = useContext(GlobalContext);
+  const { reloadCart, setReloadCart, reloadItemInCart, setReloadItemInCart } = useContext(GlobalContext);
   const { t } = useTranslation(["home", "header"]);
   const [typeOfProduct, setTypeOfProduct] = useState(homeTypeOfFoods);
   const [dataProducts, setDataProducts] = useState([]);

@@ -145,17 +145,9 @@ function UserManagement() {
       let splitFields =
         dataListUsers.length > 0 &&
         dataListUsers.map((item) => {
-          if (item.roleId) {
-            if (item.roleId === 1) {
-              item.roleName = "Admin";
-            } else if (item.roleId === 2) {
-              item.roleName = "Manager";
-            } else if (item.roleId === 3) {
-              item.roleName = "Staff";
-            } else if (item.roleId === 4) {
-              item.roleName = "User";
-            }
-            delete item.roleId;
+          if(item.Role) {
+            item.roleName = item.Role.name;
+            delete item.Role;
           }
 
           return item;
@@ -179,17 +171,11 @@ function UserManagement() {
       let splitFields =
         dataListUsers.length > 0 &&
         dataListUsers.map((item) => {
-          if (item.roleId) {
-            if (item.roleId === 1) {
-              item.roleName = "Admin";
-            } else if (item.roleId === 2) {
-              item.roleName = "Manager";
-            } else if (item.roleId === 3) {
-              item.roleName = "Staff";
-            } else if (item.roleId === 4) {
-              item.roleName = "User";
-            }
+          if (item.Role) {
+            item.roleName = item.Role.name;
+
             delete item.roleId;
+            delete item.Role;
           }
 
           return item;
@@ -226,8 +212,6 @@ function UserManagement() {
         return sanitizedUser;
       });
     }
-
-    console.log("filterUser", filterUser)
 
     if (listUsersDetail.length > 0) {
       setDataRead(filterUser[0]);
@@ -316,7 +300,7 @@ function UserManagement() {
   const onChangeInputUpdate = (e) => {
     setValuesUpdate({ ...valuesUpdate, [e.target.name]: e.target.value });
   };
-  
+
   const inputUpdateClear = (getKey) => {
     setValuesUpdate({ ...valuesUpdate, [getKey]: "" });
   };
@@ -499,6 +483,7 @@ function UserManagement() {
                       label: option.name,
                     };
                   });
+               
                 let roleChecked = null;
                 if (dataRead) {
                   let filterRoleIndex =
@@ -510,6 +495,7 @@ function UserManagement() {
                     roleChecked = filterRoleIndex[0].value;
                   }
                 }
+                
                 return (
                   <InputRadio
                     key={index}

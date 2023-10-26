@@ -6,7 +6,7 @@ import ava from "../../assets/images/logo-pig-smile.png";
 import * as roleServices from "../../services/roleServices";
 import * as userServices from "../../services/userServices";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import InputField from "../../components/FormControl/InputField";
 import InputRadio from "../../components/FormControl/inputRadio";
 import Modal from "../../components/Modal";
@@ -19,24 +19,13 @@ import ExportToPNG from "../../utils/exportToPng";
 import html2canvas from "html2canvas";
 import FormatDateTime from "../../utils/formatDateTime";
 import * as commonServices from "../../services/commonServices";
+import GlobalContext from "../../contexts/globalContext";
 
 
 function Profile() {
+    const { reloadCart, setReloadCart } = useContext(GlobalContext);
     const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
     const [dataUserDecoded, setDataUserDecoded] = useState(null);
-    const decoded = async () => {
-        if(valueLocal) {
-            const respon = await commonServices.handleDecoded(valueLocal.token);
-            // console.log("respon.decoded", respon)
-            if (respon && respon.errCode === 0) {
-                setDataUserDecoded(respon.decoded);
-            }            
-        }
-    };
-
-    useEffect(() => {
-        decoded();
-    }, [])
 
     const [roleName, setRoleName] = useState("");
 
@@ -159,14 +148,28 @@ function Profile() {
     const [openModalChangeInfoOrder, setOpenModalChangeInfoOrder] = useState(false);
     const [openModalChangeInfoOrderSuccess, setOpenModalChangeInfoOrderSuccess] = useState(false);
 
-    // console.log("listPurchasedItems", listPurchasedItems)
-    const handleGetNameRole = async () => {
-        let respon = await roleServices.getAllRoles(dataUserDecoded && dataUserDecoded.user.roleId)
-        // console.log("respon profile", respon);
-        if (respon && respon.errCode === 0) {
-            setRoleName(respon.roles && respon.roles.name);
+    const decoded = async () => {
+        if (valueLocal) {
+            const respon = await commonServices.handleDecoded(valueLocal.token);
+            // console.log("respon.decoded", respon)
+            if (respon && respon.errCode === 0) {
+                console.log("respon.decoded.user", respon.decoded.user);
+                setRoleName(respon.decoded.user.roleName);
+                setDataUserDecoded(respon.decoded);
+
+                // fetchList payment
+                const responOrder = await paymentServices.getAllPaymentOfUser(respon.decoded.user.id);
+                // console.log("responOrder payment", responOrder);
+                if (responOrder && responOrder.errCode === 0) {
+                    setListOrder(responOrder.payments);
+                }
+            }
         }
-    }
+    };
+
+    useEffect(() => {
+        decoded();
+    }, [refreshPayment])
 
     // handle get api users full
     const handleGetAllUsers = async () => {
@@ -181,7 +184,6 @@ function Profile() {
     };
 
     useEffect(() => {
-        handleGetNameRole();
         handleGetAllUsers();
     }, [])
 
@@ -311,18 +313,21 @@ function Profile() {
     };
 
     // handle order
-    const fetchListPayment = async () => {
-        const respon = await paymentServices.getAllPaymentOfUser(dataUserDecoded && dataUserDecoded.user.id);
-        // console.log("respon payment", respon);
-        if (respon && respon.errCode === 0) {
-            setListOrder(respon.payments);
-        }
-    }
+    // const fetchListPayment = async () => {
+    //     const respon = await paymentServices.getAllPaymentOfUser(dataUserDecoded && dataUserDecoded.user.id);
+    //     // console.log("respon payment", respon);
+    //     if (respon && respon.errCode === 0) {
+    //         setListOrder(respon.payments);
+    //     }
+    // }
 
     // console.log("listOrder", listOrder)
-    useEffect(() => {
-        fetchListPayment();
-    }, [refreshPayment])
+    // useEffect(() => {
+    //     decoded().then(() => {
+    //         fetchListPayment();
+    //     })
+
+    // }, [refreshPayment])
 
     // export to png
     const handleExportClick = () => {
@@ -468,6 +473,7 @@ function Profile() {
     }
 
     // console.log("dataOrderDetail", dataOrderDetail)
+    console.log("listOrder", listOrder)
 
     return (
         <Fragment>
@@ -477,7 +483,7 @@ function Profile() {
                         <div className="w-full">
                             <div className="flex items-center space-x-5">
                                 <div className="h-40 w-40 rounded-full flex flex-shrink-0 justify-center items-center text-white text-2xl font-mono overflow-hidden border-2 border-rgba-white-0.1">
-                                    <Image className={"w-full h-full"} src={dataUserDecoded && `${process.env.REACT_APP_BACKEND_URL}/public/avatar/${dataUserDecoded.user.avatar}`} fallback={ava} />
+                                    <Image className={"w-full h-full"} src={dataUserDecoded && dataUserDecoded.user.avatar !== null ? `${process.env.REACT_APP_BACKEND_URL}/public/avatar/${dataUserDecoded.user.avatar}` : ""} fallback={ava} />
                                 </div>
                                 <div className="block pl-2 font-semibold text-xl self-center text-gray-700">
                                     <h2 className="leading-relaxed text-white font-semibold text-2xl">{dataUserDecoded && dataUserDecoded.user.name}</h2>
@@ -514,6 +520,7 @@ function Profile() {
                         })}>
                             {listOrder.length > 0 ?
                                 listOrder.map((item, index) => {
+                                    console.log("itemitemitem", item)
                                     // handle date
                                     const dateObject = new Date(item.createdAt); // Chuyển đổi thành đối tượng ngày
                                     const day = dateObject.getDate();
@@ -534,16 +541,23 @@ function Profile() {
                                                     "text-green-500 text-lg font-semibold": item.orderStatus === "Hoàn thành",
                                                 })}>{item.orderStatus}</span>
                                             </p>
+                                            <p className="text-gray-600">
+                                                Trạng thái thanh toán:
+                                                <span className={clsx("ml-2", {
+                                                    "text-gray-500 text-lg font-semibold": item.paymentStatus === "Chưa thanh toán",                                                    
+                                                    "text-green-500 text-lg font-semibold": item.paymentStatus === "Đã thanh toán",
+                                                })}>{item.paymentStatus}</span>
+                                            </p>
                                             <p className="text-gray-600 mt-2">Ngày đặt hàng: {formattedDate ? formattedDate : item.createdAt}</p>
-                                            <p className="text-gray-600">Tổng tiền: {item.totalPrice}$</p>
-                                            <div className="flex mt-3">
-                                                <Button variant={"primary"}
-                                                    onClick={() => {
-                                                        handleOpenModalOrderDetail(item);
-                                                    }}
-                                                >Xem chi tiết</Button>
-                                                <Button variant={"primary"}>Thanh toán online</Button>
-                                            </div>
+                                            <p className="text-gray-600">Tổng tiền: {item.totalPrice}$</p>                                            
+                                                <div className="flex mt-3">
+                                                    <Button variant={"primary"}
+                                                        onClick={() => {
+                                                            handleOpenModalOrderDetail(item);
+                                                        }}
+                                                    >Xem chi tiết</Button>
+                                                    {item.paymentStatus !== "Đã thanh toán" && <Button variant={"primary"}>Thanh toán online</Button>}                                                    
+                                                </div>                                            
                                         </div>
                                     )
                                 })
@@ -639,7 +653,7 @@ function Profile() {
                                     value={dataRead[item.name]}
                                     onChange={() => { }}
                                     onlyRead={"true"}
-                                    clear={() => {}}
+                                    clear={() => { }}
                                     {...item}
                                 />
                             );
@@ -709,7 +723,7 @@ function Profile() {
                                             id={Math.floor(Math.random() * 10)}
                                         />
                                     );
-                                }                                
+                                }
 
                                 return (
                                     <InputField
@@ -911,7 +925,7 @@ function Profile() {
                         <strong className="font-bold mr-3">Thành công!</strong>
                         <span className="block sm:inline">Địa chỉ nhận hàng của bạn đã được thay đổi thành công.</span>
                     </div>
-                </Modal>            
+                </Modal>
             }
         </Fragment>
     );

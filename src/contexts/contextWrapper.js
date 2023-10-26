@@ -12,6 +12,8 @@ function ContextWrapper(props) {
     const [totalMoneyToPay, setTotalMoneyToPay] = useState(0);
     // cart 
     const [reloadCart, setReloadCart] = useState(false);
+    const [reloadItemInCart, setReloadItemInCart] = useState(false);
+
     // payment
     const [paymentOnlineSuccess, setPaymentOnlineSuccess] = useState(false);
     const [showCongrat, setShowCongrat] = useState(false);
@@ -60,6 +62,8 @@ function ContextWrapper(props) {
                 // cart
                 reloadCart,
                 setReloadCart,
+                reloadItemInCart,
+                setReloadItemInCart,
                 // payment
                 paymentOnlineSuccess,
                 setPaymentOnlineSuccess,

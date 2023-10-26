@@ -44,8 +44,8 @@ const ButtonWrapper = ({ currency, showSpinner, totalPrice, payload }) => {
                     return actions.order.capture().then(async (respon) => {
                         if (respon.status === "COMPLETED") {
                             // console.log("respon pay online", respon)
-                            // console.log("payload paypal", payload);
-                            const dataSend = { ...payload, paymentMethod: "Thanh toán online", paymentStatus: "Đã thanh toán" }
+                            console.log("payload paypal", payload);
+                            const dataSend = { ...payload, paymentMethod: "Thanh toán online", paymentStatus: "Đã thanh toán"}
                             // console.log("dataSend paypal", dataSend);
 
                             const responPayment = await paymentServices.handleCreateNewOrder(dataSend);

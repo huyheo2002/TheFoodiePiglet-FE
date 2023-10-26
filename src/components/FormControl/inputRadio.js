@@ -3,7 +3,7 @@ import clsx from "clsx";
 function InputRadio({ ...props }) {
   const { options, label, checked, onChange, disable, edit, hidden, row, ...inputProps } =
     props;
-    
+
   return (
     <div className={clsx("custom-radio-container", {
       "!hidden": hidden
@@ -15,8 +15,8 @@ function InputRadio({ ...props }) {
         let cloneId = Math.floor(Math.random() * 9999);
         // console.log("option.value", option.value)
         return (
-          <div className={clsx("flex items-center", {
-            "inline-flex": row
+          <div className={clsx("flex items-center py-1", {
+            "inline-flex justify-between min-w-[80px]": row
           })} key={index}>
             <input
               type="radio"

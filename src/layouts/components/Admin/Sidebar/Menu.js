@@ -24,7 +24,7 @@ function Menu({ data }) {
       setDataUserDecoded(respon.decoded);
     }
   };
-  console.log("dataUserDecoded.permissions", dataUserDecoded && dataUserDecoded.permissions);
+  // console.log("dataUserDecoded.permissions", dataUserDecoded && dataUserDecoded.permissions);
   // console.log("dataUserDecoded", dataUserDecoded);
 
   const handleCheckPermission = async () => {

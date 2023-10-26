@@ -15,6 +15,9 @@ const GlobalContext = React.createContext({
     reloadCart: false,
     setReloadCart: () => {},
 
+    reloadItemInCart: false,
+    setReloadItemInCart: () => {},
+
     // check payment online success
     paymentOnlineSuccess: false,
     setPaymentOnlineSuccess: () => {},

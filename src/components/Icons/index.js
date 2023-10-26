@@ -47,6 +47,7 @@ import { HiReceiptRefund } from "react-icons/hi";
 import { TiTick } from "react-icons/ti";
 import { GrContactInfo } from "react-icons/gr";
 import { MdDashboard, MdTableRestaurant } from "react-icons/md";
+import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from "react-icons/tb";
 
 
 export const BellIcon = ({ className, onClick }) => {
@@ -570,6 +571,31 @@ export const TableRestaurantIcon = ({ className, onClick }) => {
   );
 };
 
+export const DoubleNextIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <TbPlayerTrackNextFilled
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const DoublePrevIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <TbPlayerTrackPrevFilled
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
 
 
 

@@ -50,6 +50,8 @@ function SubMenu({ data, className, dataUserLogin }) {
             getTypeLanguages = convertToArray.length > 0 && convertToArray[convertToArray.length - 1];            
           }
 
+          // console.log("getTypeLanguages", getTypeLanguages);
+
           return (
             <li
               className={clsx("min-w-[10rem] h-full leading-[4rem] relative hover:bg-[#3b3a3a] transition-all duration-300 cursor-pointer", {

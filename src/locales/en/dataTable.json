@@ -18,7 +18,14 @@
         "paymentDate": "Payment Date",
         "totalPrice": "Total Price",
         "paymentStatus": "Payment Status",
-        "orderStatus": "Order Status"
+        "orderStatus": "Order Status",
+        "keyword": "Keyword",
+        "permissionGroupName": "Name Permission Group",
+        "listPermission": "List Permission",
+        "phone": "Phone",
+        "tableCode": "Table Code",
+        "date": "Date",
+        "timeUse": "Time Use"
     },
     
     "btnUserAction": {

@@ -18,7 +18,14 @@
         "paymentDate": "Ngày thanh toán",
         "totalPrice": "Tổng đơn hàng",
         "paymentStatus": "Trạng thái thanh toán",
-        "orderStatus": "Trạng thái đơn hàng"
+        "orderStatus": "Trạng thái đơn hàng",
+        "keyword": "Từ khóa",
+        "permissionGroupName": "Tên Nhóm quyền",
+        "listPermission": "Danh sách quyền",
+        "phone": "Số điện thoại",
+        "tableCode": "Mã bàn",
+        "date": "Ngày sử dụng",
+        "timeUse": "Thời gian sử dụng"
     },
     
     "btnUserAction": {
