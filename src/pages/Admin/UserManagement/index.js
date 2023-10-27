@@ -8,8 +8,17 @@ import InputFile from "../../../components/FormControl/inputFile";
 import Button from "../../../components/Button";
 import InputRadio from "../../../components/FormControl/inputRadio";
 import * as roleServices from "../../../services/roleServices";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+import * as commonServices from "../../../services/commonServices";
+import * as permissionServices from "../../../services/permissionServices";
 
 function UserManagement() {
+  const currentPermissionGroup = "quan-ly-nguoi-dung";
+  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
+  const [dataUserDecoded, setDataUserDecoded] = useState(null);
+  const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
+  const [listPermissionCurrentInPage, setListPermissionCurrentInPage] = useState([]);
+
   const [listUsers, setListUsers] = useState([]);
   const [listUsersDetail, setListUsersDetail] = useState([]);
   const [valuesCreate, setValuesCreate] = useState({});
@@ -126,6 +135,68 @@ function UserManagement() {
   const [valuesUpdate, setValuesUpdate] = useState({});
   const [idUserDelete, setIdUserDelete] = useState(-1);
 
+  // decoded and handle permission
+  const decoded = async () => {
+    const respon = await commonServices.handleDecoded(dataUser.token);
+    // console.log("respon.decoded", respon)
+    if (respon && respon.errCode === 0) {
+      setDataUserDecoded(respon.decoded);
+
+      // handle permissions
+      const dataListPermission = respon.decoded.permissions || [];
+      let splitFields =
+        dataListPermission.length > 0 &&
+        dataListPermission.map((item) => {
+          if (item.Permission) {
+            item.permissionName = item.Permission.name;
+            item.permissionGroupId = item.Permission.permissionGroupId;
+
+            delete item.Permission;
+          }
+
+          return item;
+        });
+
+      // show full info
+      if (splitFields.length > 0) {
+        setListPermissionOfUser(splitFields)
+      }
+    }
+  };
+
+  const handleGetAllPermissionInPage = async () => {
+    const respon = await permissionServices.getAllPermissionGroup();
+    // console.log("respon permission group", respon);
+    if (respon && respon.errCode == 0) {
+      const dataPermissionGroup = respon.permissionGroup || [];
+
+      const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
+      // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
+
+      if (filterCurrentPermissionGroup.length > 0) {
+        const responPermission = await permissionServices.getAllPermission();
+        if (responPermission && responPermission.errCode == 0) {
+          const dataPermission = responPermission.permission || [];
+
+          const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
+
+          if (filterCurrentPermission.length > 0) {
+            setListPermissionCurrentInPage(filterCurrentPermission);
+          }
+        }
+      }
+    }
+  }
+
+  // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
+
+  useEffect(() => {
+    decoded();
+    handleGetAllPermissionInPage();
+  }, [])
+
+  // console.log("listPermissionOfUser", listPermissionOfUser);
+
   // get list roles
   const handleGetlistRoles = async () => {
     const res = await roleServices.getAllRoles("all");
@@ -145,7 +216,7 @@ function UserManagement() {
       let splitFields =
         dataListUsers.length > 0 &&
         dataListUsers.map((item) => {
-          if(item.Role) {
+          if (item.Role) {
             item.roleName = item.Role.name;
             delete item.Role;
           }
@@ -409,6 +480,9 @@ function UserManagement() {
               handleModalCreate={handleOpenModalCreate}
               handleModalEdit={handleOpenModalUpdate}
               handleModalDelete={handleOpenModalDelete}
+              // permission
+              listPermission={listPermissionOfUser}
+              listPermissionCurrentInPage={listPermissionCurrentInPage}
             />
           )}
         </div>
@@ -483,7 +557,7 @@ function UserManagement() {
                       label: option.name,
                     };
                   });
-               
+
                 let roleChecked = null;
                 if (dataRead) {
                   let filterRoleIndex =
@@ -495,7 +569,7 @@ function UserManagement() {
                     roleChecked = filterRoleIndex[0].value;
                   }
                 }
-                
+
                 return (
                   <InputRadio
                     key={index}

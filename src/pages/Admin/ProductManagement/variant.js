@@ -8,9 +8,19 @@ import InputRadio from "../../../components/FormControl/inputRadio";
 import Button from "../../../components/Button";
 import Heading from "../../../components/Heading";
 import replaceNullUndefinedWithEmptyString from "../../../utils/replaceDataToEmptyString";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+import * as commonServices from "../../../services/commonServices";
+import * as permissionServices from "../../../services/permissionServices";
 
 function VariantManagement() {
     const params = useParams();
+
+    const currentPermissionGroup = "quan-ly-san-pham";
+    const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
+    const [dataUserDecoded, setDataUserDecoded] = useState(null);
+    const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
+    const [listPermissionCurrentInPage, setListPermissionCurrentInPage] = useState([]);
+
     const [dataVariantInProduct, setDataVariantInProduct] = useState([]);
 
     const inputVariant = [
@@ -59,6 +69,68 @@ function VariantManagement() {
     const [valuesUpdate, setValuesUpdate] = useState({});
     const [idVariantInProductDelete, setIdVariantInProductDelete] = useState(-1);
 
+    // decoded and handle permission
+    const decoded = async () => {
+        const respon = await commonServices.handleDecoded(dataUser.token);
+        // console.log("respon.decoded", respon)
+        if (respon && respon.errCode === 0) {
+            setDataUserDecoded(respon.decoded);
+
+            // handle permissions
+            const dataListPermission = respon.decoded.permissions || [];
+            let splitFields =
+                dataListPermission.length > 0 &&
+                dataListPermission.map((item) => {
+                    if (item.Permission) {
+                        item.permissionName = item.Permission.name;
+                        item.permissionGroupId = item.Permission.permissionGroupId;
+
+                        delete item.Permission;
+                    }
+
+                    return item;
+                });
+
+            // show full info
+            if (splitFields.length > 0) {
+                setListPermissionOfUser(splitFields)
+            }
+        }
+    };
+
+    const handleGetAllPermissionInPage = async () => {
+        const respon = await permissionServices.getAllPermissionGroup();
+        // console.log("respon permission group", respon);
+        if (respon && respon.errCode == 0) {
+            const dataPermissionGroup = respon.permissionGroup || [];
+
+            const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
+            // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
+
+            if (filterCurrentPermissionGroup.length > 0) {
+                const responPermission = await permissionServices.getAllPermission();
+                if (responPermission && responPermission.errCode == 0) {
+                    const dataPermission = responPermission.permission || [];
+
+                    const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
+
+                    if (filterCurrentPermission.length > 0) {
+                        setListPermissionCurrentInPage(filterCurrentPermission);
+                    }
+                }
+            }
+        }
+    }
+
+    // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
+
+    useEffect(() => {
+        decoded();
+        handleGetAllPermissionInPage();
+    }, [])
+
+    // console.log("listPermissionOfUser", listPermissionOfUser);
+
     const fetchDataVariantInProduct = async () => {
         let respon = await variantServices.findVariantInProduct(params.id) ?? null;
         if (respon) {
@@ -96,7 +168,7 @@ function VariantManagement() {
     const onChangeInputUpdate = (e) => {
         setValuesUpdate({ ...valuesUpdate, [e.target.name]: e.target.value });
     };
-    
+
     const inputCreateClear = (getKey) => {
         setValuesCreate({ ...valuesCreate, [getKey]: "" });
     };
@@ -238,6 +310,9 @@ function VariantManagement() {
                             handleModalRead={handleOpenModalRead}
                             handleModalEdit={handleOpenModalUpdate}
                             handleModalDelete={handleOpenModalDelete}
+                            // permission
+                            listPermission={listPermissionOfUser}
+                            listPermissionCurrentInPage={listPermissionCurrentInPage}
                         />
                     )}
                 </div>
@@ -443,7 +518,7 @@ function VariantManagement() {
                                 hidden="true"
                                 value={idVariantInProductDelete}
                                 onChange={() => { }}
-                            />                            
+                            />
                         </div>
                         {/* footer */}
                         <div className="flex justify-end">

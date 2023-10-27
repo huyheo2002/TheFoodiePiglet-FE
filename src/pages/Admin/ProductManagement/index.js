@@ -16,9 +16,19 @@ import InputFile from "../../../components/FormControl/inputFile";
 import Button from "../../../components/Button";
 import InputRadio from "../../../components/FormControl/inputRadio";
 import { useNavigate } from "react-router-dom";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+import * as commonServices from "../../../services/commonServices";
+import * as permissionServices from "../../../services/permissionServices";
 
 function ProductManagement() {
     const navigate = useNavigate();
+
+    const currentPermissionGroup = "quan-ly-san-pham";
+    const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
+    const [dataUserDecoded, setDataUserDecoded] = useState(null);
+    const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
+    const [listPermissionCurrentInPage, setListPermissionCurrentInPage] = useState([]);
+
     const [listProducts, setListProducts] = useState([])
     const [listProductsCompact, setListProductsCompact] = useState([])
     const [optionCategory, setOptionCategory] = useState([]);
@@ -107,6 +117,65 @@ function ProductManagement() {
     const [valuesUpdate, setValuesUpdate] = useState({});
     const [idProductDelete, setIdProductDelete] = useState(-1);
 
+    // decoded and handle permission
+    const decoded = async () => {
+        const respon = await commonServices.handleDecoded(dataUser.token);
+        // console.log("respon.decoded", respon)
+        if (respon && respon.errCode === 0) {
+            setDataUserDecoded(respon.decoded);
+
+            // handle permissions
+            const dataListPermission = respon.decoded.permissions || [];
+            let splitFields =
+                dataListPermission.length > 0 &&
+                dataListPermission.map((item) => {
+                    if (item.Permission) {
+                        item.permissionName = item.Permission.name;
+                        item.permissionGroupId = item.Permission.permissionGroupId;
+
+                        delete item.Permission;
+                    }
+
+                    return item;
+                });
+
+            // show full info
+            if (splitFields.length > 0) {
+                setListPermissionOfUser(splitFields)
+            }
+        }
+    };
+
+    const handleGetAllPermissionInPage = async () => {
+        const respon = await permissionServices.getAllPermissionGroup();
+        // console.log("respon permission group", respon);
+        if (respon && respon.errCode == 0) {
+            const dataPermissionGroup = respon.permissionGroup || [];
+
+            const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
+            // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
+
+            if (filterCurrentPermissionGroup.length > 0) {
+                const responPermission = await permissionServices.getAllPermission();
+                if (responPermission && responPermission.errCode == 0) {
+                    const dataPermission = responPermission.permission || [];
+
+                    const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
+
+                    if (filterCurrentPermission.length > 0) {
+                        setListPermissionCurrentInPage(filterCurrentPermission);
+                    }
+                }
+            }
+        }
+    }
+
+
+    useEffect(() => {
+        decoded();
+        handleGetAllPermissionInPage();
+    }, [])
+
     const updatedManyFeatures = manyFeatures.map((feature) => {
         const updatedFeature = {
             ...feature, onClick: (id) => {
@@ -139,11 +208,11 @@ function ProductManagement() {
             const dataListProduct = respon.products || [];
             let splitFields =
                 dataListProduct.length > 0 &&
-                dataListProduct.map((item) => {                    
+                dataListProduct.map((item) => {
                     if (item.Variants) {
                         if (item.Variants.length > 0) {
                             let minPrice = item.Variants[0].price;
-                            let maxPrice = item.Variants[0].price;                            
+                            let maxPrice = item.Variants[0].price;
 
                             for (const variant of item.Variants) {
                                 if (variant.price < minPrice) {
@@ -154,12 +223,12 @@ function ProductManagement() {
                                 }
                             }
 
-                            if(minPrice === maxPrice) {
+                            if (minPrice === maxPrice) {
                                 item.price = `${minPrice} $` ?? `0 $`;
                             } else {
                                 item.price = `${minPrice} ~ ${maxPrice} $` ?? `0 $`;
                             }
-                            
+
                             delete item.Variants;
                         }
                     }
@@ -219,33 +288,79 @@ function ProductManagement() {
         setImage("");
     };
 
+    const [permissionCreate, setPermissionCreate] = useState(false);
+    const [permissionRead, setPermissionRead] = useState(false);
+    const [permissionUpdate, setPermissionUpdate] = useState(false);
+    const [permissionDelete, setPermissionDelete] = useState(false);
+
+    // handle permission
+    const handleOpenFeatures = () => {
+        if (listPermissionCurrentInPage && listPermissionCurrentInPage.length > 0) {
+            // console.log("listPermissionCurrentInPage dataTable", listPermissionCurrentInPage);
+
+            listPermissionCurrentInPage.map((item) => {
+                // check views
+                let strKeyword = item.keyword || "";
+                let convertToArray = strKeyword.split("-");
+                let getKeyword = convertToArray.length > 0 && convertToArray[0];
+
+                const filterPermission = listPermissionOfUser.length > 0 && listPermissionOfUser.filter((itemFilter) => itemFilter.permissionId === item.id);
+                if (getKeyword === "view") {
+                    if (filterPermission.length > 0) {
+                        setPermissionRead(true);
+                    }
+                } else if (getKeyword === "create") {
+                    if (filterPermission.length > 0) {
+                        setPermissionCreate(true);
+                    }
+                } else if (getKeyword === "update") {
+                    if (filterPermission.length > 0) {
+                        setPermissionUpdate(true);
+                    }
+                } else if (getKeyword === "delete") {
+                    if (filterPermission.length > 0) {
+                        setPermissionDelete(true);
+                    }
+                }
+            });
+        }
+    }
+
+    useEffect(() => {
+        handleOpenFeatures();
+    }, []);
+
     // modal read 
     const handleOpenModalRead = (id) => {
         // console.log("id modal read", id);
-        setOpenModalRead(true);
-        let filterProduct =
-            listProducts.length > 0 &&
-            listProducts.filter((item) => item.id === id);
+        if (permissionRead) {
+            setOpenModalRead(true);
+            let filterProduct =
+                listProducts.length > 0 &&
+                listProducts.filter((item) => item.id === id);
 
-        if (filterProduct) {
-            filterProduct = filterProduct.map((product) => {
-                const sanitizedUser = {};
-                for (const key in product) {
-                    if (product.Variants && product.Variants.length > 0 && key == "Variants") {
-                        sanitizedUser["price"] = product.Variants[0].price;
+            if (filterProduct) {
+                filterProduct = filterProduct.map((product) => {
+                    const sanitizedUser = {};
+                    for (const key in product) {
+                        if (product.Variants && product.Variants.length > 0 && key == "Variants") {
+                            sanitizedUser["price"] = product.Variants[0].price;
+                        }
+                        if (product[key] === null || product[key] === undefined) {
+                            sanitizedUser[key] = '';
+                        } else {
+                            sanitizedUser[key] = product[key];
+                        }
                     }
-                    if (product[key] === null || product[key] === undefined) {
-                        sanitizedUser[key] = '';
-                    } else {
-                        sanitizedUser[key] = product[key];
-                    }
-                }
-                return sanitizedUser;
-            });
-        }
+                    return sanitizedUser;
+                });
+            }
 
-        if (filterProduct.length > 0) {
-            setDataRead(filterProduct[0]);
+            if (filterProduct.length > 0) {
+                setDataRead(filterProduct[0]);
+            }
+        } else {
+            alert("Bạn chưa được cấp quyền để thực hiện chức năng này")
         }
     };
 
@@ -258,31 +373,36 @@ function ProductManagement() {
 
     // modal update
     const handleOpenModalUpdate = (id) => {
-        setOpenModalUpdate(true);
-        let filterProduct =
-            listProducts.length > 0 &&
-            listProducts.filter((item) => item.id === id);
+        if (permissionUpdate) {
+            setOpenModalUpdate(true);
+            let filterProduct =
+                listProducts.length > 0 &&
+                listProducts.filter((item) => item.id === id);
 
-        if (filterProduct) {
-            filterProduct = filterProduct.map((product) => {
-                const sanitizedUser = {};
-                for (const key in product) {
-                    if (product[key] === null || product[key] === undefined) {
-                        sanitizedUser[key] = '';
-                    } else {
-                        sanitizedUser[key] = product[key];
+            if (filterProduct) {
+                filterProduct = filterProduct.map((product) => {
+                    const sanitizedUser = {};
+                    for (const key in product) {
+                        if (product[key] === null || product[key] === undefined) {
+                            sanitizedUser[key] = '';
+                        } else {
+                            sanitizedUser[key] = product[key];
+                        }
                     }
-                }
-                return sanitizedUser;
-            });
+                    return sanitizedUser;
+                });
+            }
+
+            console.log("filterProduct", filterProduct)
+
+            if (listProducts.length > 0) {
+                let dataProductUpdate = { ...filterProduct[0] };
+                setValuesUpdate(dataProductUpdate);
+            }
+        } else {
+            alert("Bạn chưa được cấp quyền để thực hiện chức năng này")
         }
 
-        console.log("filterProduct", filterProduct)
-
-        if (listProducts.length > 0) {
-            let dataProductUpdate = { ...filterProduct[0] };
-            setValuesUpdate(dataProductUpdate);
-        }
     };
 
     const handleCloseModalUpdate = () => {
@@ -295,8 +415,12 @@ function ProductManagement() {
     };
 
     const handleOpenModalDelete = (id) => {
-        setOpenModalDelete(true);
-        setIdProductDelete(id);
+        if (permissionDelete) {
+            setOpenModalDelete(true);
+            setIdProductDelete(id);
+        } else {
+            alert("Bạn chưa được cấp quyền để thực hiện chức năng này")
+        }
     };
 
     const handleCloseModalDelete = () => {
@@ -427,9 +551,12 @@ function ProductManagement() {
                             btnCreateTitle={"Create Product"}
                             manyFeatures={updatedManyFeatures}
                             handleModalCreate={handleOpenModalCreate}
-                        // handleModalRead={handleOpenModalRead}
-                        // handleModalEdit={handleOpenModalUpdate}
-                        // handleModalDelete={handleOpenModalDelete}
+                            // handleModalRead={handleOpenModalRead}
+                            // handleModalEdit={handleOpenModalUpdate}
+                            // handleModalDelete={handleOpenModalDelete}
+                            // permission
+                            listPermission={listPermissionOfUser}
+                            listPermissionCurrentInPage={listPermissionCurrentInPage}
                         />
                     )}
                 </div>
@@ -632,7 +759,7 @@ function ProductManagement() {
                                 return (
                                     <InputField
                                         key={index}
-                                        onChange={onChangeInputUpdate}                                        
+                                        onChange={onChangeInputUpdate}
                                         value={valuesUpdate[item.name]}
                                         clear={() => inputUpdateClear(item.name)}
                                         onClick={() => { }}

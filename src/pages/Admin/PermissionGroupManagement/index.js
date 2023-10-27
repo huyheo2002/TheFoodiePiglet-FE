@@ -5,8 +5,16 @@ import Button from "../../../components/Button";
 import Modal from "../../../components/Modal";
 import Heading from "../../../components/Heading";
 import InputField from "../../../components/FormControl/InputField";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+import * as commonServices from "../../../services/commonServices";
 
 function PermissionGroupManagement() {
+    const currentPermissionGroup = "quan-ly-nhom-quyen";
+    const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
+    const [dataUserDecoded, setDataUserDecoded] = useState(null);
+    const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
+    const [listPermissionCurrentInPage, setListPermissionCurrentInPage] = useState([]);
+
     const [listPermissionGroup, setListPermissionGroup] = useState([]);
 
     // MODAL
@@ -30,6 +38,66 @@ function PermissionGroupManagement() {
     const [dataRead, setDataRead] = useState({});
     const [valuesUpdate, setValuesUpdate] = useState({});
     const [idPermissionGroupDelete, setIdPermissionGroupDelete] = useState(-1);
+
+    // decoded and handle permission
+    const decoded = async () => {
+        const respon = await commonServices.handleDecoded(dataUser.token);
+        // console.log("respon.decoded", respon)
+        if (respon && respon.errCode === 0) {
+            setDataUserDecoded(respon.decoded);
+
+            // handle permissions
+            const dataListPermission = respon.decoded.permissions || [];
+            let splitFields =
+                dataListPermission.length > 0 &&
+                dataListPermission.map((item) => {
+                    if (item.Permission) {
+                        item.permissionName = item.Permission.name;
+                        item.permissionGroupId = item.Permission.permissionGroupId;
+
+                        delete item.Permission;
+                    }
+
+                    return item;
+                });
+
+            // show full info
+            if (splitFields.length > 0) {
+                setListPermissionOfUser(splitFields)
+            }
+        }
+    };
+
+    const handleGetAllPermissionInPage = async () => {
+        const respon = await permissionServices.getAllPermissionGroup();
+        // console.log("respon permission group", respon);
+        if (respon && respon.errCode == 0) {
+            const dataPermissionGroup = respon.permissionGroup || [];
+
+            const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
+            // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
+
+            if (filterCurrentPermissionGroup.length > 0) {
+                const responPermission = await permissionServices.getAllPermission();
+                if (responPermission && responPermission.errCode == 0) {
+                    const dataPermission = responPermission.permission || [];
+
+                    const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
+
+                    if (filterCurrentPermission.length > 0) {
+                        setListPermissionCurrentInPage(filterCurrentPermission);
+                    }
+                }
+            }
+        }
+    }
+
+    // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
+
+    useEffect(() => {
+        decoded();
+        handleGetAllPermissionInPage();
+    }, [])
 
     const handleGetAllPermissionGroup = async () => {
         const respon = await permissionServices.getAllPermissionGroup();
@@ -236,6 +304,9 @@ function PermissionGroupManagement() {
                             handleModalRead={handleOpenModalRead}
                             handleModalEdit={handleOpenModalUpdate}
                             handleModalDelete={handleOpenModalDelete}
+                            // permission
+                            listPermission={listPermissionOfUser}
+                            listPermissionCurrentInPage={listPermissionCurrentInPage}
                         />
                     )}
                 </div>
@@ -336,7 +407,7 @@ function PermissionGroupManagement() {
                             <p className="text-xl font-semibold capitalize mb-3">
                                 Are you sure delete this permission group
                             </p>
-                            
+
                             {/* input id clone */}
                             <InputField
                                 type="text"

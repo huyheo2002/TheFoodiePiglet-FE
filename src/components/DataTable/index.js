@@ -25,6 +25,8 @@ function DataTable({
   handleModalCreate,
   btnCreateTitle,
   btnBack,
+  listPermission,
+  listPermissionCurrentInPage,
 }) {
   const navigate = useNavigate();
   const { toggleDataTable, setToggleDataTable } = useContext(GlobalContext);
@@ -33,6 +35,47 @@ function DataTable({
   const { t } = useTranslation(["table"]);
   const [toggleFullScreenImage, setToggleFullScreenImage] = useState(false);
   const [linkImage, setLinkImage] = useState(null);
+  const [permissionCreate, setPermissionCreate] = useState(false);
+  const [permissionRead, setPermissionRead] = useState(false);
+  const [permissionUpdate, setPermissionUpdate] = useState(false);
+  const [permissionDelete, setPermissionDelete] = useState(false);
+
+  // handle permission
+  const handleOpenFeatures = () => {
+    if (listPermissionCurrentInPage && listPermissionCurrentInPage.length > 0) {
+      console.log("listPermissionCurrentInPage dataTable", listPermissionCurrentInPage);
+
+      listPermissionCurrentInPage.map((item) => {
+        // check views
+        let strKeyword = item.keyword || "";
+        let convertToArray = strKeyword.split("-");
+        let getKeyword = convertToArray.length > 0 && convertToArray[0];
+
+        const filterPermission = listPermission.length > 0 && listPermission.filter((itemFilter) => itemFilter.permissionId === item.id);
+        if (getKeyword === "view") {
+          if (filterPermission.length > 0) {
+            setPermissionRead(true);
+          }
+        } else if (getKeyword === "create") {
+          if (filterPermission.length > 0) {
+            setPermissionCreate(true);
+          }
+        } else if (getKeyword === "update") {
+          if (filterPermission.length > 0) {
+            setPermissionUpdate(true);
+          }
+        } else if (getKeyword === "delete") {
+          if (filterPermission.length > 0) {
+            setPermissionDelete(true);
+          }
+        }
+      });
+    }
+  }
+
+  useEffect(() => {
+    handleOpenFeatures();
+  }, [listPermissionCurrentInPage]);
 
   // pages
   const [postPerPage, setPostPerPage] = useState(5);
@@ -68,18 +111,36 @@ function DataTable({
     setToggleFullScreenImage(false);
     setLinkImage(null);
   }
+  
+  // console.log("permissionCreate", permissionCreate)
+  // console.log("permissionUpdate", permissionUpdate)
+  // console.log("permissionDelete", permissionDelete)
+  // console.log("permissionRead", permissionRead)
 
   return (
     <Fragment>
       <div className="flex justify-end my-2">
         {btnBack && <Button variant={"primary"} onClick={() => navigate(-1)}>Back</Button>}
-        <Button
-          variant={"primary"}
-          onClick={handleModalCreate && handleModalCreate}
-          iconLeft={<PlusIcon className={"!w-6 !h-6"} />}
-        >
-          {btnCreateTitle ?? "Create User"}
-        </Button>
+        {listPermission && listPermissionCurrentInPage && permissionCreate ?
+          <Button
+            variant={"primary"}
+            onClick={handleModalCreate && handleModalCreate}
+            iconLeft={<PlusIcon className={"!w-6 !h-6"} />}
+          >
+            {btnCreateTitle ?? "Create User"}
+          </Button>
+          :
+          <Button
+            variant={"viewMore"}
+            // onClick={handleModalCreate && handleModalCreate}
+            onClick={() => {
+              alert("Bạn chưa được cấp quyền để thực hiện chức năng này");
+            }}
+            iconLeft={<PlusIcon className={"!w-6 !h-6"} />}
+          >            
+            {btnCreateTitle ?? "Create User"}
+          </Button>
+        }
       </div>
       <table className="w-full border border-gray-200 select-none">
         <thead className="rounded-t-lg">
@@ -166,30 +227,68 @@ function DataTable({
                   >
                     {!manyFeatures ? (
                       <div className="flex justify-around">
-                        <BookOpenIcon
-                          className="!w-6 !h-6 text-green-400 hover:text-green-600 transition-all cursor-pointer"
-                          onClick={() => {
-                            if (handleModalRead) {
-                              handleModalRead(item.id);
-                            }
-                          }}
-                        />
-                        <PencilIcon
-                          className="!w-6 !h-6 text-yellow-400 hover:text-yellow-600 transition-all cursor-pointer"
-                          onClick={() => {
-                            if (handleModalEdit) {
-                              handleModalEdit(item.id);
-                            }
-                          }}
-                        />
-                        <TrashIcon
-                          className="!w-6 !h-6 text-red-400 hover:text-red-600 transition-all cursor-pointer"
-                          onClick={() => {
-                            if (handleModalDelete) {
-                              handleModalDelete(item.id);
-                            }
-                          }}
-                        />
+                        {listPermission && listPermissionCurrentInPage && permissionRead ?
+                          <BookOpenIcon
+                            className="!w-6 !h-6 text-green-400 hover:text-green-600 transition-all cursor-pointer"
+                            onClick={() => {
+                              if (handleModalRead) {
+                                handleModalRead(item.id);
+                              }
+                            }}
+                          />
+                          :
+                          <BookOpenIcon
+                            className="!w-6 !h-6 text-gray-400 hover:text-gray-600 transition-all cursor-default"
+                            onClick={() => {
+                              alert("Bạn chưa được cấp quyền để thực hiện chức năng này");
+                              // if (handleModalRead) {
+                              //   handleModalRead(item.id);
+                              // }
+                            }}
+                          />
+                        }
+
+                        {listPermission && listPermissionCurrentInPage && permissionUpdate ?
+                          <PencilIcon
+                            className="!w-6 !h-6 text-yellow-400 hover:text-yellow-600 transition-all cursor-pointer"
+                            onClick={() => {
+                              if (handleModalEdit) {
+                                handleModalEdit(item.id);
+                              }
+                            }}
+                          />
+                          :
+                          <PencilIcon
+                            className="!w-6 !h-6 text-gray-400 hover:text-gray-600 transition-all cursor-pointer"
+                            onClick={() => {
+                              alert("Bạn chưa được cấp quyền để thực hiện chức năng này");
+                              // if (handleModalEdit) {
+                              //   handleModalEdit(item.id);
+                              // }
+                            }}
+                          />
+                        }
+
+                        {listPermission && listPermissionCurrentInPage && permissionDelete ?
+                          <TrashIcon
+                            className="!w-6 !h-6 text-red-400 hover:text-red-600 transition-all cursor-pointer"
+                            onClick={() => {
+                              if (handleModalDelete) {
+                                handleModalDelete(item.id);
+                              }
+                            }}
+                          />
+                          :
+                          <TrashIcon
+                            className="!w-6 !h-6 text-gray-400 hover:text-gray-600 transition-all cursor-pointer"
+                            onClick={() => {
+                              alert("Bạn chưa được cấp quyền để thực hiện chức năng này");
+                              // if (handleModalDelete) {
+                              //   handleModalDelete(item.id);
+                              // }
+                            }}
+                          />
+                        }
                       </div>
                     ) : (
                       <div className="flex justify-around relative">
