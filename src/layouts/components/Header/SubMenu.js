@@ -32,6 +32,7 @@ function SubMenu({ data, className, dataUserLogin }) {
     }
   }, [user])
 
+  // console.log("dataUserLogin", dataUserLogin);
   return (
     <ul
       className={clsx(
@@ -55,7 +56,7 @@ function SubMenu({ data, className, dataUserLogin }) {
           return (
             <li
               className={clsx("min-w-[10rem] h-full leading-[4rem] relative hover:bg-[#3b3a3a] transition-all duration-300 cursor-pointer", {
-                "!hidden": item.keyword === "manager" && dataUserLogin.user.roleName === "User",
+                "!hidden": item.keyword === "manager" && dataUserLogin.user.roleId === 4,
               })}
               key={index}
               onClick={() => {

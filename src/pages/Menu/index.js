@@ -19,6 +19,7 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import { handleAddToCartRedux } from "../../redux/actions/cartAction";
 import GlobalContext from "../../contexts/globalContext";
 import * as commonServices from "../../services/commonServices";
+import slider from "../../assets/images/Foods/appetizers-bg2.jpg"
 
 
 function Menu() {
@@ -269,7 +270,7 @@ function Menu() {
           <main className="w-full ml-[325px] min-h-[250px] text-white px-3 py-4">
             {/* slider */}
             <div className="w-full h-[425px]">
-              <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkFKzN5NieP2YQ97ARPRLiLR5F5myOHS3YqQ&usqp=CAU"
+              <Image src={slider}
                 className={"w-full h-full"}
               />
             </div>

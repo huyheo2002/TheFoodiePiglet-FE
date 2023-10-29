@@ -48,15 +48,15 @@ const NAVBAR_ITEM = [
     subNav: [
       {
         keyword: "introduce",
-        to: "/",
+        to: "/introduce",
       },
       {
         keyword: "store",
-        to: "/",
+        to: "/store",
       },
       {
         keyword: "about-us",
-        to: "/",
+        to: "/about-us",
       },
     ],
   },
@@ -137,10 +137,10 @@ function Header() {
     decoded();
   }, [])
 
-  console.log("dataUserDecoded", dataUserDecoded);
+  // console.log("dataUserDecoded", dataUserDecoded);
 
   return (
-    <header className="w-full h-16 shadow-bs-black-b-0.35 bg-rgba-black-0.75 flex justify-between px-8 fixed z-50 top-0 left-0 right-0">
+    <header className="w-full h-16 shadow-bs-black-b-0.35 bg-rgba-black-0.75 flex justify-between px-8 fixed z-[9999999999] top-0 left-0 right-0">
       {/* left */}
       <div className="max-h-16 flex">
         {/* logo */}

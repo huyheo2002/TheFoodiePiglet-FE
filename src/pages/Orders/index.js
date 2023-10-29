@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useContext, useEffect, useMemo, useState } from "react";
 import InputField from "../../components/FormControl/InputField";
 import Button from "../../components/Button";
 import { getAllTables } from "../../services/tableServices";
@@ -8,8 +8,12 @@ import * as tableServices from "../../services/tableServices";
 import Modal from "../../components/Modal";
 import DatePicker from "../../components/FormControl/datePicker";
 import TimePicker from "../../components/FormControl/timePicker";
+import Congrat from "../../components/Congrat";
+import WindowScrollTop from "../../utils/windowScroll";
+import GlobalContext from "../../contexts/globalContext";
 
 function Orders() {
+  const { showCongrat, setShowCongrat } = useContext(GlobalContext)
   const { t } = useTranslation(["order"]);
   const [values, setValues] = useState({});
   const [chooseIdTable, setChooseIdTable] = useState(null);
@@ -18,6 +22,7 @@ function Orders() {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTimeStart, setSelectedTimeStart] = useState("");
   const [selectedTimeEnd, setSelectedTimeEnd] = useState("");
+  const [openModalOrderSuccess, setOpenModalOrderSuccess] = useState(false);
 
   // handle get current date
   // const minDate = "2023-10-03"
@@ -159,7 +164,7 @@ function Orders() {
     data.set("dateStart", getNewDateStart)
     data.set("dateEnd", getNewDateEnd)
 
-    
+
     // console.log("data entry:", Object.fromEntries(data.entries()));
 
     try {
@@ -172,7 +177,7 @@ function Orders() {
         setSelectedTimeEnd("");
         setSelectedDate("");
         setChooseIdTable(null);
-      } else if(respon && respon.errCode === 1) {
+      } else if (respon && respon.errCode === 1) {
         setOpenModalOrdersFail(true);
       }
     } catch (error) {
@@ -182,6 +187,13 @@ function Orders() {
 
   const handleCloseModalOrders = () => {
     setOpenModalOrders(false);
+
+    // open modal success
+    setOpenModalOrderSuccess(true);
+  }
+
+  const handleCloseModalOrderSuccess = () => {
+    setOpenModalOrderSuccess(false);
   }
 
   const handleCloseModalOrdersFail = () => {
@@ -397,7 +409,7 @@ function Orders() {
               key={index}
               className={"!w-2/5 mx-8"}
               onChange={onChangeInput}
-              clear={() => inputClear(item.name)}              
+              clear={() => inputClear(item.name)}
               value={chooseIdTable ? chooseIdTable : ""}
               onClick={() => { }}
               {...item}
@@ -505,6 +517,36 @@ function Orders() {
           </div>
         </Modal>
       }
+
+      {/* handleCloseModalOrderSuccess */}
+      <Modal open={openModalOrderSuccess} custom close={handleCloseModalOrderSuccess}>
+        {showCongrat && <Congrat />}
+        <div className="flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-md">
+            <div className="flex items-center space-x-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <p className="text-lg font-semibold text-green-600">Đặt bàn thành công</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-36 h-36 mb-4 my-3 text-green-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+            </svg>            
+            <div className="mt-4">
+              <p className="text-gray-700 text-center">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.
+                <br />
+                Bàn của bạn đang được xử lý. Vui lòng đợi trong ít phút và kiểm tra email của bạn.
+              </p>
+            </div>
+            <div className="mt-6 flex justify-start">
+              <Button variant={"primary"} onClick={() => {
+                handleCloseModalOrderSuccess();
+                WindowScrollTop();
+              }}>Thoát</Button>
+            </div>
+          </div>
+        </div>
+      </Modal>
 
     </Fragment>
   );

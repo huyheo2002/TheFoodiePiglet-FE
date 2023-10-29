@@ -13,7 +13,7 @@ import { getAllorOneCategoryOfProduct } from "../../services/categoryServices";
 import Modal from "../../components/Modal";
 import InputRadio from "../../components/FormControl/inputRadio";
 import Button from "../../components/Button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import WindowScrollTop from "../../utils/windowScroll";
 import { useDispatch, useSelector } from "react-redux";
 import useLocalStorage from "../../hooks/useLocalStorage";
@@ -21,6 +21,52 @@ import { handleAddToCartRedux } from "../../redux/actions/cartAction";
 import getRandomListItem from "../../utils/getRandomItem";
 import GlobalContext from "../../contexts/globalContext";
 import * as commonServices from "../../services/commonServices";
+import slider1 from "../../assets/images/Base/homeSlider-1.jpeg";
+import slider2 from "../../assets/images/Base/homeSlider-2.jpeg";
+import slider3 from "../../assets/images/Base/homeSlider-3.jpeg";
+import slider4 from "../../assets/images/Base/homeSlider-4.jpeg";
+import slider5 from "../../assets/images/Base/homeSlider-5.jpeg";
+import slider6 from "../../assets/images/Base/homeSlider-6.jpeg";
+
+
+const DATA_SLIDER = [
+  {
+    image: slider1,
+    title: "Background 1",
+    subTitle: "Slogan 3",
+    interval: 1500,
+  },
+  {
+    image: slider2,
+    title: "Background 2",
+    subTitle: "Slogan 3",
+    interval: 1500,
+  },
+  {
+    image: slider3,
+    title: "Background 3",
+    subTitle: "Slogan 3",
+    interval: 1500,
+  },
+  {
+    image: slider4,
+    title: "Background 4",
+    subTitle: "Slogan 3",
+    interval: 1500,
+  },
+  {
+    image: slider5,
+    title: "Background 5",
+    subTitle: "Slogan 3",
+    interval: 1500,
+  },
+  {
+    image: slider6,
+    title: "Background 6",
+    subTitle: "Slogan 3",
+    interval: 1500,
+  },
+];
 
 
 function Home() {
@@ -48,10 +94,10 @@ function Home() {
 
   const [dataUserDecoded, setDataUserDecoded] = useState(null);
   const decoded = async () => {
-    if(valueUserLocal) {
+    if (valueUserLocal) {
       const respon = await commonServices.handleDecoded(valueUserLocal.token);
       // console.log("respon.decoded", respon)
-      if(respon && respon.errCode === 0) {
+      if (respon && respon.errCode === 0) {
         setDataUserDecoded(respon.decoded);
       }
     }
@@ -65,7 +111,7 @@ function Home() {
     { value: "S", label: "S" },
     { value: "M", label: "M" },
     { value: "L", label: "L" },
-  ];  
+  ];
 
   const fetchListProductsCompact = async () => {
     let respon = await productServices.getAllProductCompact() ?? null;
@@ -249,7 +295,7 @@ function Home() {
   return (
     <div className="mt-8 relative">
       {/* slideshow */}
-      <SlideShow />
+      <SlideShow data={DATA_SLIDER}/>
       {/* product specialities */}
       <Heading line iconRight={<HotMealIcon className={"text-[1.5rem] -translate-y-1 text-primary-hover"} />}>
         {t("heading.special")}
@@ -276,13 +322,15 @@ function Home() {
         {typeOfProduct.length > 0 &&
           typeOfProduct.map((item, index) => {
             return (
-              <div
+              <Link
                 key={index}
+                to={"/menu"}
+                onClick={() => WindowScrollTop()}
                 // "w-full h-64 relative cursor-pointer overflow-hidden group
                 //   before:content-[''] before:bg-[rgba(0,0,0,0.4)] before:absolute before:inset-0 before:z-20
                 //   hover:before:bg-[rgba(255,255,255,0.05)] hover:after:transition-all hover:after:duration-300                  
                 // "
-                className={clsx("w-full h-64 relative overflow-hidden select-none",
+                className={clsx("w-full h-64 relative overflow-hidden select-none block",
                   "before:content-[''] before:bg-[rgba(0,0,0,0.4)] before:absolute before:inset-0 before:z-20",
                   {
                     "group hover:before:bg-[rgba(255,255,255,0.05)] hover:after:transition-all hover:after:duration-300 cursor-pointer": item.id !== typeOfProduct[typeOfProduct.length - 1].id
@@ -319,7 +367,7 @@ function Home() {
                 <div className={clsx("absolute inset-0 z-20 border-4 border-transparent border-solid", {
                   "group-hover:border-white transition-all duration-300": item.id !== typeOfProduct[typeOfProduct.length - 1].id
                 })}></div>
-              </div>
+              </Link>
             );
           })
         }

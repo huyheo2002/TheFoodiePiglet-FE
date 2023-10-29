@@ -13,51 +13,7 @@ import "swiper/css/scrollbar";
 import SwiperButton from "./SwiperButton";
 import clsx from "clsx";
 
-const FAKE_DATA = [
-  {
-    image: "https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    title: "Background 1",
-    subTitle: "Slogan 3",
-    interval: 1500,
-  },
-  {
-    image:
-      "https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    title: "Background 2",
-    subTitle: "Slogan 3",
-    interval: 1500,
-  },
-  {
-    image:
-      "https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    title: "Background 3",
-    subTitle: "Slogan 3",
-    interval: 1500,
-  },
-  {
-    image:
-      "https://images.pexels.com/photos/7655151/pexels-photo-7655151.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    title: "Background 4",
-    subTitle: "Slogan 3",
-    interval: 1500,
-  },
-  {
-    image:
-      "https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    title: "Background 5",
-    subTitle: "Slogan 3",
-    interval: 1500,
-  },
-  {
-    image:
-      "https://images.pexels.com/photos/8308886/pexels-photo-8308886.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    title: "Background 6",
-    subTitle: "Slogan 3",
-    interval: 1500,
-  },
-];
-
-function SlideShow({ className }) {
+function SlideShow({ className, data }) {
   const pagination = {
     clickable: true,
     renderBullet: function (index, className) {
@@ -105,7 +61,7 @@ function SlideShow({ className }) {
         // onSwiper={(swiper) => console.log(swiper)}
         // onSlideChange={() => console.log("slide change")}
       >
-        {FAKE_DATA.map((item, index) => {
+        {data.length > 0 && data.map((item, index) => {
           return (
             <SwiperSlide key={index}>
               <div

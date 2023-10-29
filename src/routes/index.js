@@ -15,6 +15,9 @@ import Orders from "../pages/Orders";
 import News from "../pages/News";
 import ProductDetail from "../pages/ProductDetail";
 import Profile from "../pages/Profile";
+import Introduce from "../pages/Introduce";
+import Store from "../pages/Store";
+import AboutUs from "../pages/AboutUs";
 
 // pages system
 import DashBoard from "../pages/Admin/Dashboard";
@@ -40,7 +43,12 @@ const publicRoutes = [
   { path: "/news", component: News, layout: DefaultLayout },
   { path: "/order", component: Orders, layout: DefaultLayout },
   { path: "/product-detail/:prodId", component: ProductDetail, layout: DefaultLayout },
+  { path: "/introduce", component: Introduce, layout: DefaultLayout },
+  { path: "/introduce", component: Introduce, layout: DefaultLayout },
+  { path: "/store", component: Store, layout: DefaultLayout },
+  { path: "/about-us", component: AboutUs, layout: DefaultLayout },
 
+  
   // not other routes match
   { path: "/not-found", component: Error, layout: null },
   { path: "*", component: Error, layout: null },

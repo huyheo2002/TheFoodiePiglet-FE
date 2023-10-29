@@ -91,7 +91,7 @@ function Footer() {
               </a>
             </li>
             <li className="py-1">
-              <a className="text-[#999] hover:text-white cursor-pointer text-sm capitalize">
+              <a className="text-[#999] hover:text-white cursor-pointer text-sm">
                 {t("subContent.email")}: huy12@support.com
               </a>
             </li>

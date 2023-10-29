@@ -7,6 +7,7 @@ import NotificationCard from "../../../components/NotificationCard";
 import * as cartServices from "../../../services/cartServices";
 import { useState } from "react";
 import GlobalContext from "../../../contexts/globalContext";
+import WindowScrollTop from "../../../utils/windowScroll";
 
 function Menu({ data, userLogin }) {
   const { t, i18n } = useTranslation(["header"]);
@@ -16,7 +17,7 @@ function Menu({ data, userLogin }) {
 
   // console.log("reloadCart in menu", reloadCart);  
 
-  console.log("userLogin", userLogin);
+  // console.log("userLogin", userLogin);
 
   return (
     <ul className="flex items-center h-full px-6">
@@ -27,7 +28,9 @@ function Menu({ data, userLogin }) {
           //   console.log("userLogin", userLogin);
           // }
           return (
-            <li className="h-full leading-[4rem] relative group" key={index}>
+            <li className="h-full leading-[4rem] relative group" key={index}
+              onClick={() => WindowScrollTop()}
+            >
               {item.href && (
                 <Fragment>
                   {userLogin && item.keyword === "login" ? (
