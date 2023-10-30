@@ -229,7 +229,12 @@ function PaymentManagement() {
           }
 
           if (item.paymentDate) {
-            item.paymentDate = item.paymentDate;
+            // Chuyển chuỗi thành đối tượng Date
+            const dateObj = new Date(item.paymentDate);
+
+            // Lấy ra ngày dướng dạng yyyy-mm-dd
+            const formattedDate = dateObj.toISOString().split('T')[0];
+            item.paymentDate = formattedDate;
           } else {
             item.paymentDate = "Chưa thanh toán";
           }
@@ -243,6 +248,8 @@ function PaymentManagement() {
       }
     }
   }
+
+  console.log("listPaymentsCompact", listPaymentsCompact);
 
   useEffect(() => {
     fetchListPayments();
@@ -320,6 +327,7 @@ function PaymentManagement() {
       setListPurchasedItems(purchasedItems)
     }
 
+    console.log("filterPayment read", filterPayment);
     if (filterPayment.length > 0) {
       setDataRead(filterPayment[0]);
     }
@@ -500,12 +508,18 @@ function PaymentManagement() {
                     />
                   );
                 } else {
-                  // return <DatePicker
-                  //   key={index}
-                  //   value={dataRead[item.name]}
-                  //   onChange={() => {}}
-                  //   {...item}
-                  // />
+                  // Tạo một đối tượng Date từ chuỗi thời gian
+                  const dateObj = new Date(dataRead[item.name]);
+
+                  // Chuyển đổi đối tượng Date thành chuỗi dưới định dạng yyyy-mm-dd
+                  const formattedDate = dateObj.toISOString().split('T')[0];
+
+                  return <DatePicker
+                    key={index}
+                    value={formattedDate}
+                    onChange={() => { }}
+                    {...item}
+                  />
                 }
               }
 

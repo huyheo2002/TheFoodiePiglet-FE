@@ -333,35 +333,35 @@ function ProductManagement() {
     // modal read 
     const handleOpenModalRead = (id) => {
         // console.log("id modal read", id);
-        if (permissionRead) {
-            setOpenModalRead(true);
-            let filterProduct =
-                listProducts.length > 0 &&
-                listProducts.filter((item) => item.id === id);
+        setOpenModalRead(true);
+        let filterProduct =
+            listProducts.length > 0 &&
+            listProducts.filter((item) => item.id === id);
 
-            if (filterProduct) {
-                filterProduct = filterProduct.map((product) => {
-                    const sanitizedUser = {};
-                    for (const key in product) {
-                        if (product.Variants && product.Variants.length > 0 && key == "Variants") {
-                            sanitizedUser["price"] = product.Variants[0].price;
-                        }
-                        if (product[key] === null || product[key] === undefined) {
-                            sanitizedUser[key] = '';
-                        } else {
-                            sanitizedUser[key] = product[key];
-                        }
+        if (filterProduct) {
+            filterProduct = filterProduct.map((product) => {
+                const sanitizedUser = {};
+                for (const key in product) {
+                    if (product.Variants && product.Variants.length > 0 && key == "Variants") {
+                        sanitizedUser["price"] = product.Variants[0].price;
                     }
-                    return sanitizedUser;
-                });
-            }
-
-            if (filterProduct.length > 0) {
-                setDataRead(filterProduct[0]);
-            }
-        } else {
-            alert("Bạn chưa được cấp quyền để thực hiện chức năng này")
+                    if (product[key] === null || product[key] === undefined) {
+                        sanitizedUser[key] = '';
+                    } else {
+                        sanitizedUser[key] = product[key];
+                    }
+                }
+                return sanitizedUser;
+            });
         }
+
+        if (filterProduct.length > 0) {
+            setDataRead(filterProduct[0]);
+        }
+        // if (permissionRead) {
+        // } else {
+        //     alert("Bạn chưa được cấp quyền để thực hiện chức năng này")
+        // }
     };
 
     const handleCloseModalRead = () => {
@@ -373,35 +373,35 @@ function ProductManagement() {
 
     // modal update
     const handleOpenModalUpdate = (id) => {
-        if (permissionUpdate) {
-            setOpenModalUpdate(true);
-            let filterProduct =
-                listProducts.length > 0 &&
-                listProducts.filter((item) => item.id === id);
+        setOpenModalUpdate(true);
+        let filterProduct =
+            listProducts.length > 0 &&
+            listProducts.filter((item) => item.id === id);
 
-            if (filterProduct) {
-                filterProduct = filterProduct.map((product) => {
-                    const sanitizedUser = {};
-                    for (const key in product) {
-                        if (product[key] === null || product[key] === undefined) {
-                            sanitizedUser[key] = '';
-                        } else {
-                            sanitizedUser[key] = product[key];
-                        }
+        if (filterProduct) {
+            filterProduct = filterProduct.map((product) => {
+                const sanitizedUser = {};
+                for (const key in product) {
+                    if (product[key] === null || product[key] === undefined) {
+                        sanitizedUser[key] = '';
+                    } else {
+                        sanitizedUser[key] = product[key];
                     }
-                    return sanitizedUser;
-                });
-            }
-
-            console.log("filterProduct", filterProduct)
-
-            if (listProducts.length > 0) {
-                let dataProductUpdate = { ...filterProduct[0] };
-                setValuesUpdate(dataProductUpdate);
-            }
-        } else {
-            alert("Bạn chưa được cấp quyền để thực hiện chức năng này")
+                }
+                return sanitizedUser;
+            });
         }
+
+        console.log("filterProduct", filterProduct)
+
+        if (listProducts.length > 0) {
+            let dataProductUpdate = { ...filterProduct[0] };
+            setValuesUpdate(dataProductUpdate);
+        }
+        // if (permissionUpdate) {
+        // } else {
+        //     alert("Bạn chưa được cấp quyền để thực hiện chức năng này")
+        // }
 
     };
 
@@ -415,12 +415,12 @@ function ProductManagement() {
     };
 
     const handleOpenModalDelete = (id) => {
-        if (permissionDelete) {
-            setOpenModalDelete(true);
-            setIdProductDelete(id);
-        } else {
-            alert("Bạn chưa được cấp quyền để thực hiện chức năng này")
-        }
+        setOpenModalDelete(true);
+        setIdProductDelete(id);
+        // if (permissionDelete) {
+        // } else {
+        //     alert("Bạn chưa được cấp quyền để thực hiện chức năng này")
+        // }
     };
 
     const handleCloseModalDelete = () => {
