@@ -15,6 +15,7 @@ import {
   AiOutlinePlus,
   AiOutlineMinus,
   AiTwotoneHome,
+  AiFillFileExcel,
 } from "react-icons/ai";
 import {
   FaAngleRight,
@@ -30,6 +31,7 @@ import {
   FaUsers,
   FaUserCog,
   FaUserShield,
+  FaFileImport,
 } from "react-icons/fa";
 import { ImEarth } from "react-icons/im";
 import {
@@ -597,7 +599,31 @@ export const DoublePrevIcon = ({ className, onClick }) => {
   );
 };
 
+export const ExcelIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
 
+  return (
+    <AiFillFileExcel
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const ImportFileIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaFileImport
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
 
 
 

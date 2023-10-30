@@ -2,11 +2,13 @@ import clsx from "clsx";
 import {
   BookOpenIcon,
   DotHorizontalIcon,
+  ExcelIcon,
+  ImportFileIcon,
   PencilIcon,
   PlusIcon,
   TrashIcon,
 } from "../Icons";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import GlobalContext from "../../contexts/globalContext";
 import Pagination from "../Pagination";
 import WindowScrollTop from "../../utils/windowScroll";
@@ -15,6 +17,7 @@ import Button from "../Button";
 import Image from "../Image";
 import Modal from "../Modal";
 import { useNavigate } from "react-router-dom";
+import { CSVLink } from "react-csv";
 
 function DataTable({
   data,
@@ -39,6 +42,9 @@ function DataTable({
   const [permissionRead, setPermissionRead] = useState(false);
   const [permissionUpdate, setPermissionUpdate] = useState(false);
   const [permissionDelete, setPermissionDelete] = useState(false);
+
+  // csv
+  const [transformedData, setTransformedData] = useState([]);
 
   // handle permission
   const handleOpenFeatures = () => {
@@ -111,24 +117,79 @@ function DataTable({
     setToggleFullScreenImage(false);
     setLinkImage(null);
   }
-  
+
   // console.log("permissionCreate", permissionCreate)
   // console.log("permissionUpdate", permissionUpdate)
   // console.log("permissionDelete", permissionDelete)
   // console.log("permissionRead", permissionRead)
+
+
+  // console.log("data from dataTable", data);
+
+  // convert to data csv
+  const transformData = (data) => {
+    const newArray = [];
+  
+    if (data.length === 0) {
+      return newArray;
+    }
+  
+    const keys = Object.keys(data[0]);
+    newArray.push(keys);
+  
+    data.forEach((item) => {
+      const newItem = [];
+      keys.forEach((key) => {
+        if (Array.isArray(item[key])) {
+          newItem.push(item[key].join("; "));
+        } else {
+          newItem.push(item[key]);
+        }
+      });
+      newArray.push(newItem);
+    });
+  
+    return newArray;
+  };
+
+  useEffect(() => {
+    let newDataTransformedData = transformData(data)    
+    setTransformedData(newDataTransformedData)
+  }, [data])
 
   return (
     <Fragment>
       <div className="flex justify-end my-2">
         {btnBack && <Button variant={"primary"} onClick={() => navigate(-1)}>Back</Button>}
         {listPermission && listPermissionCurrentInPage && permissionCreate ?
-          <Button
-            variant={"primary"}
-            onClick={handleModalCreate && handleModalCreate}
-            iconLeft={<PlusIcon className={"!w-6 !h-6"} />}
-          >
-            {btnCreateTitle ?? "Create User"}
-          </Button>
+          <Fragment>
+            {/* <input type="file" id="import" hidden onChange={handleFileSelect} />
+            <label htmlFor="import">
+              <Button
+                variant={"excel"}
+                onClick={handleImportClick}
+                iconLeft={<ImportFileIcon className={"!w-6 !h-6"} />}
+              >
+                Import
+              </Button>
+            </label> */}
+
+            <Button
+              variant={"excel"}
+              onClick={() => { }}
+              iconLeft={<ExcelIcon className={"!w-6 !h-6"} />}
+            >
+              <CSVLink data={transformedData} filename={"data.csv"}>Export to CSV</CSVLink>
+            </Button>
+
+            <Button
+              variant={"primary"}
+              onClick={handleModalCreate && handleModalCreate}
+              iconLeft={<PlusIcon className={"!w-6 !h-6"} />}
+            >
+              {btnCreateTitle ?? "Create User"}
+            </Button>
+          </Fragment>
           :
           <Button
             variant={"viewMore"}
@@ -137,7 +198,7 @@ function DataTable({
               alert("Bạn chưa được cấp quyền để thực hiện chức năng này");
             }}
             iconLeft={<PlusIcon className={"!w-6 !h-6"} />}
-          >            
+          >
             {btnCreateTitle ?? "Create User"}
           </Button>
         }

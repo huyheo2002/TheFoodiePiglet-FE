@@ -22,7 +22,8 @@ function Button({ to, href, children, onClick, iconLeft, iconRight, variant }) {
       "bg-gradient-to-b from-[#58372b] to-[#8e6c60] border-[#58372b] shadow-black-b-0.75 hover:-translate-y-1 hover:shadow-[#8e6c60]": variant === "viewMore",
       "bg-gradient-to-b from-[#EF4765] to-[#FF9A5A] border-[#EF4765] shadow-black-b-0.75 hover:-translate-y-1 hover:shadow-[#FF9A5A]": variant === "baseOrange",
       "bg-red-500 shadow-black-b-0.75 hover:-translate-y-1 hover:bg-red-600 hover:shadow-black-b-0.35": variant === "delete",
-      "bg-green-500 shadow-black-b-0.75 hover:-translate-y-1 hover:bg-green-600 hover:shadow-black-b-0.35": variant === "success", 
+      "bg-green-500 shadow-black-b-0.75 hover:-translate-y-1 hover:bg-green-600 hover:shadow-black-b-0.35": variant === "success",
+      "bg-[#1E5631] shadow-black-b-0.75 hover:-translate-y-1 hover:bg-[#16794E] hover:shadow-black-b-0.35": variant === "excel", 
     }
   );
 
@@ -32,7 +33,7 @@ function Button({ to, href, children, onClick, iconLeft, iconRight, variant }) {
     "text-white font-bold text-sm": variant === "baseOrange",
     "text-white font-bold text-sm": variant === "delete",
     "text-white font-bold text-sm": variant === "success",
-
+    "text-white font-bold text-sm": variant === "excel",
   })
 
   return (
