@@ -8,7 +8,7 @@ import logoIos from "../../assets/images/Base/logo-ios.png";
 import InputField from "../../components/FormControl/InputField";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,6 +17,7 @@ import {
 } from "../../redux/actions/userAction";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { LoadingIcon } from "../../components/Icons";
+import * as commonServices from "../../services/commonServices";
 
 function Login() {
   const { t } = useTranslation(["auth"]);
@@ -32,7 +33,7 @@ function Login() {
   const inputs = [
     {
       id: 1,
-      name: t("login.input.nameUsername"),
+      name: "username",
       type: "text",
       placeholder: t("login.input.labelUsername"),
       label: t("login.input.labelUsername"),
@@ -42,7 +43,7 @@ function Login() {
     },
     {
       id: 2,
-      name: t("login.input.namePassword"),
+      name: "password",
       type: "password",
       placeholder: t("login.input.labelPassword"),
       label: t("login.input.labelPassword"),
@@ -53,12 +54,12 @@ function Login() {
   ];
 
   const user = useSelector((state) => state.user);
-  console.log("state user login in login Pages", user)
+  // console.log("state user login in login Pages", user)
   const isLoading = useSelector((state) => state.user.isLoading);
   const dataUserRedux = useSelector((state) => state.user.user);
   const isError = useSelector((state) => state.user.isError);
   // console.log("isError", isError);
-  console.log("dataUserRedux", dataUserRedux)
+  // console.log("dataUserRedux", dataUserRedux)
   const [checkError, setCheckError] = useState(false);
 
   const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
@@ -69,13 +70,17 @@ function Login() {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const inputClear = (getKey) => {
+    setValues({ ...values, [getKey]: "" });
+  };
+
   const lockFeatures = useSelector((state) => state.user.isLockFeatures);
   // console.log("lockFeatures home", lockFeatures);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    dispatch(handleLoginRedux(values.username, values.password));         
+
+    dispatch(handleLoginRedux(values.username, values.password));
   };
 
   const handleBackHome = () => {
@@ -84,14 +89,27 @@ function Login() {
   };
 
   useEffect(() => {
-    if (isError) {
-      setCheckError(true);
-    }
-    
-    if (dataUserRedux && dataUserRedux.auth === true) {         
-      setValueLocal(dataUserRedux);
-      navigate("/");
-    }
+    const fetchData = async () => {
+      if (isError) {
+        setCheckError(true);
+      }
+  
+      if (dataUserRedux && dataUserRedux.token && dataUserRedux.auth === true) {
+        setValueLocal(dataUserRedux);
+  
+        const respon = await commonServices.handleDecoded(dataUserRedux.token);
+        // console.log("respon.decoded", respon);
+        if (respon && respon.errCode === 0) {
+          if(respon.decoded.user.roleName === "User") {
+            navigate("/");            
+          } else {
+            navigate("/system");
+          }
+        }
+      }
+    };
+  
+    fetchData();
   }, [dataUserRedux])
 
   // LOGIN GOOGLE
@@ -109,7 +127,7 @@ function Login() {
         >
           <div className="w-full h-full">
             <Heading variant={"modal"}>
-              {t("login.heading")}
+              {t("login.heading.login")}
             </Heading>
             {/* form control */}
             <div className="px-4 py-2">
@@ -122,6 +140,7 @@ function Login() {
                     onClick={() => {
                       setCheckError(false);
                     }}
+                    clear={() => inputClear(item.name)}
                     {...item}
                   />
                 );
@@ -160,9 +179,11 @@ function Login() {
               <a className="text-primary font-normal text-base capitalize cursor-pointer hover:text-primary-hover transition-all">
                 {t("login.other.support")}
               </a>
-              <a className="text-primary font-normal text-base capitalize cursor-pointer hover:text-primary-hover transition-all">
+              <Link className="text-primary font-normal text-base capitalize cursor-pointer hover:text-primary-hover transition-all"
+                to={"/register"}
+              >
                 {t("login.other.register")}
-              </a>
+              </Link>
             </div>
             {/* separate */}
             <div
@@ -194,7 +215,7 @@ function Login() {
               />
             </div>
           </div>
-        </form>        
+        </form>
       </div>
     </div>
   );

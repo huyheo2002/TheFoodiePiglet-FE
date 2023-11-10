@@ -75,12 +75,12 @@ function InputField({ ...props }) {
           )}
 
           {/* password */}
-          {typeInp === "password" && props.name === "password" ? (
+          {typeInp === "password" && props.type === "password" ? (
             <EyeClosedIcon
               className="cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all ml-3"
               onClick={() => setTypeInp("text")}
             />
-          ) : typeInp !== "password" && props.name === "password" ? (
+          ) : typeInp !== "password" && props.type === "password" ? (
             <EyeOpenIcon
               className="cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all ml-3"
               onClick={() => setTypeInp("password")}

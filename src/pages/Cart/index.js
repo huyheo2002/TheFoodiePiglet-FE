@@ -347,8 +347,8 @@ function Cart() {
   }, [paymentOnlineSuccess])
 
   // console.log("listItemInCart", listItemInCart)
-  console.log("values", values)
-  console.log("values note", values?.note)
+  // console.log("values", values)
+  // console.log("values note", values?.note)
 
   return (
     <div className="flex flex-col items-center justify-center container overflow-hidden">

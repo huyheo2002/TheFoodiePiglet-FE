@@ -1,5 +1,4 @@
-import * as userServices from "../../services/userServices";
-import decodeJwt from "../../utils/decodeJwt";
+import * as authServices from "../../services/authServices";
 
 export const FETCH_USER_LOGIN = "FETCH_USER_LOGIN";
 export const FETCH_USER_ERROR = "FETCH_USER_ERROR";
@@ -14,7 +13,7 @@ export const handleLoginRedux = (username, password) => {
     dispatch({ type: FETCH_USER_LOGIN });
 
     try {
-      const res = await userServices.handleLogin(username, password);
+      const res = await authServices.handleLogin(username, password);
       console.log("respon login redux", res);
       if (res && res.errCode === 0) {
 
@@ -61,7 +60,7 @@ export const handleLoginGoogleRedux = (userId) => {
     })
 
     try {
-      const res = await userServices.handleLoginGoogle(userId);
+      const res = await authServices.handleLoginGoogle(userId);
       console.log("respon redux google", res);
       if (res && res.errCode === 0) {
         // let decoded = decodeJwt(res.accessToken);

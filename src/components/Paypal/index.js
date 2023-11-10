@@ -48,11 +48,20 @@ const ButtonWrapper = ({ currency, showSpinner, totalPrice, payload }) => {
                             const dataSend = { ...payload, paymentMethod: "Thanh toán online", paymentStatus: "Đã thanh toán"}
                             // console.log("dataSend paypal", dataSend);
 
-                            const responPayment = await paymentServices.handleCreateNewOrder(dataSend);
-                            if (responPayment && responPayment.errCode === 0) {
-                                setPaymentOnlineSuccess(true);
-                                setShowCongrat(true);
-                                // console.log("paypal api success")
+                            if(payload.id) {
+                                const responPayment = await paymentServices.handleUpdateOrder(dataSend);
+                                if (responPayment && responPayment.errCode === 0) {
+                                    setPaymentOnlineSuccess(true);
+                                    setShowCongrat(true);
+                                    // console.log("paypal api success")
+                                }
+                            } else {
+                                const responPayment = await paymentServices.handleCreateNewOrder(dataSend);
+                                if (responPayment && responPayment.errCode === 0) {
+                                    setPaymentOnlineSuccess(true);
+                                    setShowCongrat(true);
+                                    // console.log("paypal api success")
+                                }
                             }
                         } else {
                             console.log("respon pay online err", respon)

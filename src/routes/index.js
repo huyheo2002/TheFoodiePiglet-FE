@@ -18,6 +18,7 @@ import Profile from "../pages/Profile";
 import Introduce from "../pages/Introduce";
 import Store from "../pages/Store";
 import AboutUs from "../pages/AboutUs";
+import Register from "../pages/Register";
 
 // pages system
 import DashBoard from "../pages/Admin/Dashboard";
@@ -30,11 +31,13 @@ import PermissionManagement from "../pages/Admin/PermissionManagement";
 import RoleManagement from "../pages/Admin/RoleManagement";
 import NewsManagement from "../pages/Admin/NewsManagement";
 import RerserveTableManagement from "../pages/Admin/ReserveTableManagement";
+import ProfileSystem from "../pages/Admin/ProfileSystem";
 
 // k đăng nhập sd đc
 const publicRoutes = [
   { path: "/", component: Home, layout: DefaultLayout },
   { path: "/login", component: Login, layout: null },
+  { path: "/register", component: Register, layout: null },
   { path: "/menu", component: Menu, layout: FullScreenLayout },
   { path: "/login-success/:userId", component: LoginSuccess, layout: null },
   // { path: "/test", component: Test, layout: null },
@@ -68,7 +71,7 @@ const privateRoutes = [
   { path: "/system/role", component: RoleManagement, layout: AdminLayout },  
   { path: "/system/news", component: NewsManagement, layout: AdminLayout },  
   { path: "/system/reserve-table", component: RerserveTableManagement, layout: AdminLayout },  
-
+  { path: "/system/profile", component: ProfileSystem, layout: AdminLayout },  
 
   // role user 4
   { path: "/profile", component: Profile, layout: DefaultLayout },

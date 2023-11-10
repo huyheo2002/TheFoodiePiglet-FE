@@ -20,10 +20,14 @@ import html2canvas from "html2canvas";
 import FormatDateTime from "../../utils/formatDateTime";
 import * as commonServices from "../../services/commonServices";
 import GlobalContext from "../../contexts/globalContext";
-
+import Paypal from "../../components/Paypal";
+import TextareaField from "../../components/FormControl/textAreaField";
+import Congrat from "../../components/Congrat";
+import imgShipper from "../../assets/images/Base/shipper_01.png";
+import * as authServices from "../../services/authServices";
 
 function Profile() {
-    const { reloadCart, setReloadCart } = useContext(GlobalContext);
+    const { reloadCart, setReloadCart, paymentOnlineSuccess, setPaymentOnlineSuccess, showCongrat } = useContext(GlobalContext);
     const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
     const [dataUserDecoded, setDataUserDecoded] = useState(null);
 
@@ -148,12 +152,94 @@ function Profile() {
     const [openModalChangeInfoOrder, setOpenModalChangeInfoOrder] = useState(false);
     const [openModalChangeInfoOrderSuccess, setOpenModalChangeInfoOrderSuccess] = useState(false);
 
+    // payment online 
+    const [openModalPaymentOnline, setOpenModalPaymentOnline] = useState(false);
+    const [values, setValues] = useState({
+        totalPrice: "",
+        deliveryAddress: "",
+        contactInfo: "",
+        note: "",
+        purchasedItems: "",
+    });
+    const [idUpdatePayment, setIdUpdatePayment] = useState(-1);
+
+    const inputsPaymentOnline = [
+        {
+            id: 1,
+            name: "totalPrice",
+            type: "text",
+            placeholder: "You can't press :v",
+            label: "Total Price",
+            required: true,
+        },
+        {
+            id: 2,
+            name: "deliveryAddress",
+            type: "text",
+            placeholder: "Enter your Delivery Address",
+            label: "Delivery Address",
+            required: true,
+        },
+        {
+            id: 3,
+            name: "contactInfo",
+            type: "text",
+            placeholder: "Enter your contact infomation",
+            label: "Contact",
+            required: true,
+        },
+        {
+            id: 4,
+            name: "note",
+            type: "text",
+            placeholder: "You can add notes here",
+            label: "Note",
+        }
+    ];
+
+    // handle change password 
+    const [openModalChangePassword, setOpenModalChangePassword] = useState(false);
+    const [valuesChangePassword, setValuesChangePassword] = useState({});
+
+    const inputsChangePassword = [
+        {
+            id: 1,
+            name: "oldPassword",
+            type: "password",
+            placeholder: "Enter your password",
+            label: "Old Pasword",
+            errorMessage: "Invalid password please check again",
+            pattern: "[A-Za-z0-9]{3,}",
+            required: true,
+        },
+        {
+            id: 2,
+            name: "newPassword",
+            type: "password",
+            placeholder: "Enter your password",
+            label: "New Pasword",
+            errorMessage: "Invalid password please check again",
+            pattern: "[A-Za-z0-9]{3,}",
+            required: true,
+        },
+        {
+            id: 3,
+            name: "confirmPassword",
+            type: "password",
+            placeholder: "Enter your password",
+            label: "Confirm New Password",
+            errorMessage: "Invalid password please check again",
+            pattern: "[A-Za-z0-9]{3,}",
+            required: true,
+        },
+    ];
+
     const decoded = async () => {
         if (valueLocal) {
             const respon = await commonServices.handleDecoded(valueLocal.token);
             // console.log("respon.decoded", respon)
             if (respon && respon.errCode === 0) {
-                console.log("respon.decoded.user", respon.decoded.user);
+                // console.log("respon.decoded.user", respon.decoded.user);
                 setRoleName(respon.decoded.user.roleName);
                 setDataUserDecoded(respon.decoded);
 
@@ -165,7 +251,7 @@ function Profile() {
                 }
             }
         }
-    };
+    };    
 
     useEffect(() => {
         decoded();
@@ -226,11 +312,12 @@ function Profile() {
             });
         }
 
-        if (listUsersDetail.length > 0) {
+        if (filterUser.length > 0) {
             setDataRead(filterUser[0]);
         }
     };
 
+    // console.log("dataread", dataRead);
     const handleCloseModalRead = () => {
         setOpenModalRead(false);
 
@@ -312,23 +399,6 @@ function Profile() {
         setValuesUpdate({ ...valuesUpdate, [getKey]: "" });
     };
 
-    // handle order
-    // const fetchListPayment = async () => {
-    //     const respon = await paymentServices.getAllPaymentOfUser(dataUserDecoded && dataUserDecoded.user.id);
-    //     // console.log("respon payment", respon);
-    //     if (respon && respon.errCode === 0) {
-    //         setListOrder(respon.payments);
-    //     }
-    // }
-
-    // console.log("listOrder", listOrder)
-    // useEffect(() => {
-    //     decoded().then(() => {
-    //         fetchListPayment();
-    //     })
-
-    // }, [refreshPayment])
-
     // export to png
     const handleExportClick = () => {
         // Gọi hàm xuất ảnh từ component cha
@@ -352,7 +422,6 @@ function Profile() {
 
     const handleOpenModalOrderDetail = (dataItem) => {
         // console.log("dataItem", dataItem);
-
         const dateOrder = FormatDateTime(dataItem.createdAt);
         let datePayment = null;
         if (dataItem.paymentDate) {
@@ -367,6 +436,8 @@ function Profile() {
         setOpenModalOrdersDetail(true)
         setDataOrderDetail(dataItem);
     }
+
+    // console.log("data Order detail", dataOrderDetail)
 
     const handleCloseModalOrderDetail = () => {
         setOpenModalOrdersDetail(false);
@@ -473,8 +544,106 @@ function Profile() {
     }
 
     // console.log("dataOrderDetail", dataOrderDetail)
-    console.log("listOrder", listOrder)
+    // console.log("listOrder", listOrder)
+    // payment online
+    const handleOpenModalPaymentOnline = (dataItem) => {
+        const dateOrder = FormatDateTime(dataItem.createdAt);
+        let datePayment = null;
+        if (dataItem.paymentDate) {
+            datePayment = FormatDateTime(dataItem.paymentDate);
+            dataItem.paymentDate = datePayment;
+        }
+        dataItem.createdAt = dateOrder;
+        const purchasedItems = handleListPurchasedItems(dataItem.purchasedItems)
+        setListPurchasedItems(purchasedItems)
 
+        setOpenModalPaymentOnline(true)
+        setDataOrderDetail(dataItem);
+        setIdUpdatePayment(dataItem?.id);
+        setValues({
+            totalPrice: dataItem?.totalPrice,
+            deliveryAddress: dataItem?.deliveryAddress,
+            contactInfo: dataItem?.contactInfo,
+            note: dataItem?.note,
+            purchasedItems: dataItem?.purchasedItems
+        })
+    }
+
+    const handleCloseModalPaymentOnline = () => {
+        setOpenModalPaymentOnline(false);
+        setValues({
+            totalPrice: "",
+            deliveryAddress: "",
+            contactInfo: "",
+            note: "",
+            purchasedItems: "",
+        })
+        setRefreshPayment(!refreshPayment);
+    }
+
+    const handleCloseModalPaymentOnlineSuccess = () => {
+        setPaymentOnlineSuccess(false);
+    }
+
+    useEffect(() => {
+        if (paymentOnlineSuccess) {
+            // console.log("zo 123");
+            handleCloseModalPaymentOnline();
+        }
+    }, [paymentOnlineSuccess])
+
+    // handle order  
+    const onChangeInputPaymentOnline = (e) => {
+        setValues({ ...values, [e.target.name]: e.target.value });
+    };
+
+    const handleClearInputPaymentOnline = (getKey) => {
+        setValues({ ...values, [getKey]: "" });
+    };
+
+    const handleGetCurrentContact = () => {
+        if (dataUserDecoded && values) {
+            setValues({ ...values, contactInfo: `${dataUserDecoded.user.email}-${dataUserDecoded.user.phone}` })
+        } else {
+            return null;
+        }
+    }
+
+    // handle change password 
+    const onChangeInputChangePassword = (e) => {
+        setValuesChangePassword({ ...valuesChangePassword, [e.target.name]: e.target.value });
+    };
+
+    const inputChangePasswordClear = (getKey) => {
+        setValuesChangePassword({ ...valuesChangePassword, [getKey]: "" });
+    };
+
+    const handleCloseModalChangePassword = () => {
+        setOpenModalChangePassword(false);
+        setValuesChangePassword({});
+    }
+
+    const onhandleSubmitChangePassword = async (e) => {
+        e.preventDefault();
+
+        const data = new FormData(e.target);
+        data.set("id", dataUserDecoded.user.id)
+
+        try {
+            const respon = await authServices.handleChangePassword(data);
+
+            if (respon && respon.errCode === 0) {
+                handleCloseModalChangePassword();
+                alert("Đổi mật khẩu thành công");
+            } else if (respon && respon.errCode !== 0) {
+                alert(respon.message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    // console.log("dataUserDecoded", dataUserDecoded);
     return (
         <Fragment>
             <div className="min-h-screen bg-transparent py-4">
@@ -483,7 +652,7 @@ function Profile() {
                         <div className="w-full">
                             <div className="flex items-center space-x-5">
                                 <div className="h-40 w-40 rounded-full flex flex-shrink-0 justify-center items-center text-white text-2xl font-mono overflow-hidden border-2 border-rgba-white-0.1">
-                                    <Image className={"w-full h-full"} src={dataUserDecoded && dataUserDecoded.user.avatar !== null ? `${process.env.REACT_APP_BACKEND_URL}/public/avatar/${dataUserDecoded.user.avatar}` : ""} fallback={ava} />
+                                    <Image className={"w-full h-full"} src={dataUserDecoded ? dataUserDecoded.user.avatar !== null ? dataUserDecoded.user.avatar : " " : " "} fallback={ava} />
                                 </div>
                                 <div className="block pl-2 font-semibold text-xl self-center text-gray-700">
                                     <h2 className="leading-relaxed text-white font-semibold text-2xl">{dataUserDecoded && dataUserDecoded.user.name}</h2>
@@ -497,7 +666,9 @@ function Profile() {
                                 <Button variant={"primary"}
                                     onClick={() => handleOpenModalRead(dataUserDecoded.user.id)}
                                 >Thông tin chi tiết</Button>
-                                <Button variant={"primary"}>Quên mật khẩu</Button>
+                                <Button variant={"primary"}
+                                    onClick={() => setOpenModalChangePassword(true)}
+                                >Đổi mật khẩu</Button>
                             </div>
                         </div>
                     </div>
@@ -520,7 +691,7 @@ function Profile() {
                         })}>
                             {listOrder.length > 0 ?
                                 listOrder.map((item, index) => {
-                                    console.log("itemitemitem", item)
+                                    // console.log("itemitemitem", item)
                                     // handle date
                                     const dateObject = new Date(item.createdAt); // Chuyển đổi thành đối tượng ngày
                                     const day = dateObject.getDate();
@@ -544,20 +715,22 @@ function Profile() {
                                             <p className="text-gray-600">
                                                 Trạng thái thanh toán:
                                                 <span className={clsx("ml-2", {
-                                                    "text-gray-500 text-lg font-semibold": item.paymentStatus === "Chưa thanh toán",                                                    
+                                                    "text-gray-500 text-lg font-semibold": item.paymentStatus === "Chưa thanh toán",
                                                     "text-green-500 text-lg font-semibold": item.paymentStatus === "Đã thanh toán",
                                                 })}>{item.paymentStatus}</span>
                                             </p>
                                             <p className="text-gray-600 mt-2">Ngày đặt hàng: {formattedDate ? formattedDate : item.createdAt}</p>
-                                            <p className="text-gray-600">Tổng tiền: {item.totalPrice}$</p>                                            
-                                                <div className="flex mt-3">
-                                                    <Button variant={"primary"}
-                                                        onClick={() => {
-                                                            handleOpenModalOrderDetail(item);
-                                                        }}
-                                                    >Xem chi tiết</Button>
-                                                    {item.paymentStatus !== "Đã thanh toán" && <Button variant={"primary"}>Thanh toán online</Button>}                                                    
-                                                </div>                                            
+                                            <p className="text-gray-600">Tổng tiền: {item.totalPrice}$</p>
+                                            <div className="flex mt-3">
+                                                <Button variant={"primary"}
+                                                    onClick={() => {
+                                                        handleOpenModalOrderDetail(item);
+                                                    }}
+                                                >Xem chi tiết</Button>
+                                                {item.paymentStatus !== "Đã thanh toán" && <Button variant={"primary"}
+                                                    onClick={() => handleOpenModalPaymentOnline(item)}
+                                                >Thanh toán online</Button>}
+                                            </div>
                                         </div>
                                     )
                                 })
@@ -927,6 +1100,173 @@ function Profile() {
                     </div>
                 </Modal>
             }
+
+            {/* modal payment online */}
+            {/* payment online */}
+            <Modal open={openModalPaymentOnline} close={handleCloseModalPaymentOnline}>
+                <form autoComplete="off" onSubmit={() => { }}>
+                    <Heading variant={"primary"}>Thanh toán online</Heading>
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-8 mb-4" role="alert">
+                        <strong className="font-bold mr-3">Chú ý!</strong>
+                        <span className="block sm:inline">Hãy nhập đầy đủ các dữ liệu trước khi thanh toán</span>
+                    </div>
+                    <div className="flex flex-wrap justify-between">
+                        {inputsPaymentOnline.map((item, index) => {
+                            if (item.name === "note") {
+                                return <TextareaField
+                                    key={index}
+                                    className={"!w-full mx-8"}
+                                    value={values[item.name]}
+                                    onChange={onChangeInputPaymentOnline}
+                                    onClick={() => { }}
+                                    {...item}
+                                />
+                            }
+
+                            // totalPrice
+                            if (item.name === "totalPrice") {
+                                return <InputField
+                                    key={index}
+                                    className={"!w-2/5 mx-8"}
+                                    onChange={onChangeInputPaymentOnline}
+                                    value={values[item.name]}
+                                    onClick={() => { }}
+                                    clear={() => handleClearInputPaymentOnline(item.name)}
+                                    onlyRead={"true"}
+                                    {...item}
+                                />
+                            }
+                            // console.log("values[item.name]", values[item.name])
+                            if (item.name === "contactInfo") {
+                                return <InputField
+                                    key={index}
+                                    className={"!w-full mx-8"}
+                                    value={values[item.name]}
+                                    onChange={onChangeInputPaymentOnline}
+                                    onClick={() => { }}
+                                    autoFill={handleGetCurrentContact}
+                                    clear={() => handleClearInputPaymentOnline(item.name)}
+                                    {...item}
+                                />
+                            }
+
+                            return <InputField
+                                key={index}
+                                className={"!w-2/5 mx-8"}
+                                value={values[item.name]}
+                                onChange={onChangeInputPaymentOnline}
+                                onClick={() => { }}
+                                clear={() => handleClearInputPaymentOnline(item.name)}
+                                {...item}
+                            />
+                        })}
+
+                        {/* table purchasedItems */}
+                        <div className="mt-6 mx-8 w-full">
+                            <h3 className="text-lg font-semibold mb-2">Chi tiết sản phẩm</h3>
+                            <table className="w-full border-collapse">
+                                <thead>
+                                    <tr>
+                                        <th className="p-2 border">Tên món ăn</th>
+                                        <th className="p-2 border">Số lượng</th>
+                                        <th className="p-2 border">Kích cỡ</th>
+                                        <th className="p-2 border">Giá</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {listPurchasedItems.length > 0 && listPurchasedItems.map((item, index) => {
+                                        return <tr key={index}>
+                                            <td className="p-2 border">{item.name}</td>
+                                            <td className="p-2 border">{item.quantity}</td>
+                                            <td className="p-2 border">{item.size}</td>
+                                            <td className="p-2 border">{`${item.price}$`}</td>
+                                        </tr>
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {values.deliveryAddress !== "" && values.contactInfo !== "" &&
+                        <div className="mt-7">
+                            <Paypal
+                                totalPrice={values && values.totalPrice}
+                                payload={{
+                                    id: idUpdatePayment,
+                                    contactInfo: values?.contactInfo,
+                                    deliveryAddress: values?.deliveryAddress,
+                                    note: values && values?.note,
+                                    purchasedItems: values && values?.purchasedItems,
+                                    userId: dataUserDecoded ? dataUserDecoded.user.id : null,
+                                    totalPrice: values && values.totalPrice,
+                                    paymentDate: new Date(),
+                                }}
+                            />
+                        </div>
+                    }
+                </form>
+            </Modal>
+
+            <Modal open={paymentOnlineSuccess} custom close={handleCloseModalPaymentOnlineSuccess}>
+                {showCongrat && <Congrat />}
+                <div className="flex items-center justify-center">
+                    <div className="bg-white p-8 rounded-lg shadow-md">
+                        <div className="flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <p className="text-lg font-semibold text-green-600">Thanh toán thành công</p>
+                        </div>
+                        <Image src={imgShipper} className={"mx-auto mb-4 w-52 my-3"} />
+                        <div className="mt-4">
+                            <p className="text-gray-700 text-center">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.
+                                <br />
+                                Đơn hàng của bạn đang được xử lý. Vui lòng đợi trong ít phút.
+                            </p>
+                        </div>
+                        <div className="mt-6 flex justify-start">
+                            <Button variant={"primary"} to={"/profile"}
+                                onClick={() => {
+                                    handleCloseModalPaymentOnlineSuccess();
+                                    WindowScrollTop()
+                                }}
+                            >Xem đơn hàng của bạn</Button>
+                            <Button variant={"primary"} onClick={() => {
+                                handleCloseModalPaymentOnlineSuccess();
+                                WindowScrollTop();
+                            }}>Thoát</Button>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* change password */}
+            <Modal open={openModalChangePassword} close={handleCloseModalChangePassword}>
+                <form autoComplete="off" onSubmit={onhandleSubmitChangePassword}>
+                    <Heading variant={"primary"}>Change Password</Heading>
+                    <div className="">
+                        {inputsChangePassword.map((item, index) => {
+                            return (
+                                <InputField
+                                    key={index}
+                                    onChange={onChangeInputChangePassword}
+                                    value={valuesChangePassword[item.name]}
+                                    clear={() => inputChangePasswordClear(item.name)}
+                                    onClick={() => { }}
+                                    {...item}
+                                />
+                            );
+                        })}
+                    </div>
+                    {/* footer */}
+                    <div className="flex justify-end">
+                        <Button variant={"primary"}>Submit</Button>
+                        <Button variant={"primary"} onClick={handleCloseModalChangePassword}>
+                            Cancel
+                        </Button>
+                    </div>
+                </form>
+            </Modal>
         </Fragment>
     );
 }

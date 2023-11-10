@@ -8,13 +8,14 @@ import {
   MemuIcon,
   EarthIcon,
 } from "../../../../components/Icons";
+import { handleLogoutRedux } from "../../../../redux/actions/userAction";
 import {
   handleCloseSidebar,
   handleOpenSidebar,
 } from "../../../../redux/actions/adminAction";
 import { useEffect, useState } from "react";
 import useLocalStorage from "../../../../hooks/useLocalStorage";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as commonServices from "../../../../services/commonServices";
 import { useTranslation } from "react-i18next";
 
@@ -57,9 +58,13 @@ function Header() {
     }
   };
 
-  const changeLanguages = (lng = "vi" || "en" ) => {
+  const changeLanguages = (lng = "vi" || "en") => {
     i18n.changeLanguage(lng);
   };
+
+  const handleLogout = () => {
+    dispatch(handleLogoutRedux());
+  }
 
   return (
     <div
@@ -88,7 +93,7 @@ function Header() {
               let convertToArray = item.split("-");
               if (convertToArray) {
                 getStr = convertToArray[convertToArray.length - 1];
-              }        
+              }
 
               return (
                 <div key={index} className="w-full h-10 leading-10 relative select-none group hover:bg-[#e6f2fe] transition-all duration-300 rounded-lg px-4 inline-flex items-center text-[#4a4a4a] text-sm font-medium tracking-wider capitalize hover:text-[#548be6]"
@@ -102,7 +107,24 @@ function Header() {
         </div>
         <MessageIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" />
         <BellIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" />
-        <UserIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" />
+        <div className="mx-2 relative group h-full flex justify-center items-center">
+          <UserIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" />
+          {/* <EarthIcon className="!w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" /> */}
+          <div className="bg-white hidden shadow-black-rb-0.35 flex-col min-w-[14rem] z-50 absolute top-full right-0 rounded-b-lg overflow-hidden group-hover:flex">
+            <Link className="w-full h-10 leading-10 relative select-none group hover:bg-[#e6f2fe] transition-all duration-300 rounded-lg px-4 inline-flex items-center text-[#4a4a4a] text-sm font-medium tracking-wider capitalize hover:text-[#548be6]"
+              onClick={() => {}}
+              to="/system/profile"
+            >
+              {t("nav-subItem.profile")}
+            </Link>
+            <Link className="w-full h-10 leading-10 relative select-none group hover:bg-[#e6f2fe] transition-all duration-300 rounded-lg px-4 inline-flex items-center text-[#4a4a4a] text-sm font-medium tracking-wider capitalize hover:text-[#548be6]"
+              onClick={() => handleLogout()}
+              to={"/login"}
+            >
+              {t("nav-subItem.logout")}
+            </Link>            
+          </div>
+        </div>
       </div>
     </div>
   );
