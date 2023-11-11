@@ -1,15 +1,53 @@
 import Image from "../Image";
 import avatar from "../../assets/images/Test/oie_cgCjMMBawAJ3.jpg";
 import clsx from "clsx";
+import * as userServices from "../../services/userServices";
+import { useEffect, useState } from "react";
 
-function NotificationCard({ page }) {
+function NotificationCard({ data, page, onClick }) {
+  const [listUser, setListUser] = useState([]);
+
+  const handleGetInfoUser = async () => {
+    const respon = await userServices.getAllUsers("all");
+    if (respon && respon.errCode === 0) {
+      setListUser(respon.users);
+    }
+  }
+
+  useEffect(() => {
+    handleGetInfoUser();
+  }, [])
+
+  // console.log("listUser", listUser);
+
+  const filterUser = listUser.length > 0 && data && listUser.filter(item => item.id === data.userId) || [];
+  // console.log("filterUser", filterUser);
+
+  let formattedTime = "";
+
+  if (data && data.createdAt) {
+    let dateObject = new Date(data.createdAt);
+
+    // Lấy thông tin giờ, phút, ngày, tháng, năm
+    let hours = dateObject.getUTCHours();
+    let minutes = dateObject.getUTCMinutes();
+    let day = dateObject.getUTCDate();
+    let month = dateObject.getUTCMonth() + 1; // Tháng bắt đầu từ 0
+    let year = dateObject.getUTCFullYear();
+
+    // Định dạng lại chuỗi theo định dạng horse/minutes - DD/MM/YYYY
+    formattedTime = hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ' - ' + day.toString().padStart(2, '0') + '/' + month.toString().padStart(2, '0') + '/' + year;
+  }
+
   return (
-    <div className={clsx("flex select-none my-3 px-2 py-1 rounded-md hover:bg-[#e6f2fe]", {
+    <div className={clsx("flex select-none px-2 py-3 rounded-md hover:bg-[#e6f2fe]", {
       "!my-0 py-3 rounded-none hover:!bg-[#3b3a3a]": page === "user"
-    })}>
+    })}
+      onClick={onClick ? onClick : () => {}}
+    >
       {/* avatar */}
       {page !== "user" &&
-        <Image src={avatar} className="w-12 h-12 rounded-full" />
+        <Image src={filterUser.length > 0 ? filterUser[0].avatar !== null ? filterUser[0].avatar : "" : ""} className="w-12 h-12 rounded-full" />
       }
       <div className={clsx("w-[calc(100%-48px)] pl-3", {
         "w-full px-3": page === "user"
@@ -20,18 +58,13 @@ function NotificationCard({ page }) {
           <span className={clsx("inline-block font-semibold text-base text-black capitalize pr-1 leading-4", {
             "text-primary pr-2": page === "user"
           })}>
-            title
+            {data && data.title}
           </span>
-          is simply dummy text of the printing and typesetting industry. Lorem
-          Ipsum has been the industry's standard dummy text ever since the
-          1500s, when an unknown printer took a galley of type and scrambled it
-          to make a type specimen book. It has survived not only five centuries,
-          but also the leap into electronic typesetting, remaining essentially
-          unchanged
+          {data && data.message}
         </p>
         <span className={clsx("font-medium text-sm text-gray-700 mt-1 block", {
           "text-primary-hover": page === "user"
-        })}>25 seconds ago</span>
+        })}>{formattedTime}</span>
       </div>
     </div>
   );

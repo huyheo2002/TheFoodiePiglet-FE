@@ -8,7 +8,7 @@ import GlobalContext from "../../contexts/globalContext";
 // only header
 const AdminLayout = ({ children }) => {
   const toggleSidebar = useSelector(states => states.admin.toggleSidebar)
-  const { toggleDataTable ,setToggleDataTable } = useContext(GlobalContext);
+  const { toggleDataTable, setToggleDataTable } = useContext(GlobalContext);
   return (
     <div className="w-full relative"
       onClick={() => {

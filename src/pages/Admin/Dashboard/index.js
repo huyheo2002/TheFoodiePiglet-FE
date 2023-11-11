@@ -8,71 +8,7 @@ import GlobalContext from "../../../contexts/globalContext";
 import * as userServices from "../../../services/userServices";
 import clsx from "clsx";
 
-function DashBoard() {
-  const manyFeatures = [
-    {
-      name: "read",
-      icon: <BookOpenIcon />,
-    },
-    {
-      name: "edit",
-      icon: <BookOpenIcon />,
-    },
-    {
-      name: "delete",
-      icon: <BookOpenIcon />,
-    }    
-  ];
-
-  const handleTest = () => {
-    // console.log("hello world");
-  };
-
-  const updatedManyFeatures = manyFeatures.map((feature) => {
-    const updatedFeature = { ...feature, onClick: handleTest };
-    return updatedFeature;
-  });
-
-  const [listUsers, setListUsers] = useState([]);
-
-  const handleGetAllUsers = async () => {
-    const res = await userServices.getAllUsers("all");
-    // console.log("res", res);
-    if (res && res.errCode === 0 && res.users) {
-      const dataListUsers = res.users || [];
-      let splitFields =
-        dataListUsers.length > 0 &&
-        dataListUsers.map((item) => {
-          // handle role users
-          // console.log("item role", item.roleId)
-          if (item.Role) {
-            item.roleName = item.Role.name;
-
-            delete item.roleId;
-            delete item.Role;
-          }
-
-          delete item.address;
-          delete item.createdAt;
-          delete item.updatedAt;
-          delete item.gender;
-          delete item.id;
-          delete item.phone;
-          delete item.avatar;
-
-          return item;
-        });
-
-      // show full info
-      if (splitFields.length > 0) {
-        setListUsers(splitFields);
-      }
-    }
-  };
-
-  useEffect(() => {
-    handleGetAllUsers();
-  }, []);
+function DashBoard() {  
 
   return (
     <div className="pl-3 w-[calc(100%-1rem)]">
@@ -87,12 +23,8 @@ function DashBoard() {
           </div>
           <div className="w-full bg-white mt-3 px-3 py-4 rounded-lg">
             <h2 className="mb-3 text-xl font-semibold capitalize">Table</h2>
-            <div className={clsx("w-[75vw-1rem] overflow-x-scroll scrollbar",
-              "lg:overflow-x-hidden",
-            )}>
-              {listUsers.length > 0 && (
-                <DataTable data={listUsers} manyFeatures={updatedManyFeatures} />
-              )}
+            <div className={clsx("w-[75vw-1rem] overflow-x-scroll scrollbar")}>
+              hello
             </div>
           </div>
         </div>
@@ -108,7 +40,6 @@ function DashBoard() {
               <NotificationCard />
             </div>
           </div>
-          {/* <div>hello</div> */}
         </div>
       </div>
     </div>

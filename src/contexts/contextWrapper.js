@@ -17,7 +17,7 @@ function ContextWrapper(props) {
     // payment
     const [paymentOnlineSuccess, setPaymentOnlineSuccess] = useState(false);
     const [showCongrat, setShowCongrat] = useState(false);
-
+    const [reloadNotify, setReloadNotify] = useState(false);
     
     // value local
     const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
@@ -69,6 +69,8 @@ function ContextWrapper(props) {
                 setPaymentOnlineSuccess,
                 showCongrat,
                 setShowCongrat,
+                reloadNotify,
+                setReloadNotify,
 
             }}
         >

@@ -32,6 +32,7 @@ import RoleManagement from "../pages/Admin/RoleManagement";
 import NewsManagement from "../pages/Admin/NewsManagement";
 import RerserveTableManagement from "../pages/Admin/ReserveTableManagement";
 import ProfileSystem from "../pages/Admin/ProfileSystem";
+import NotifyDetail from "../pages/Admin/NotifyDetail";
 
 // k đăng nhập sd đc
 const publicRoutes = [
@@ -60,7 +61,6 @@ const publicRoutes = [
 // đăng nhập ms sd đc
 const privateRoutes = [
   // system
-  // role admin 1
   { path: "/system", component: DashBoard, layout: AdminLayout },
   { path: "/system/users", component: UserManagement, layout: AdminLayout },
   { path: "/system/product", component: ProductManagement, layout: AdminLayout },  
@@ -72,11 +72,10 @@ const privateRoutes = [
   { path: "/system/news", component: NewsManagement, layout: AdminLayout },  
   { path: "/system/reserve-table", component: RerserveTableManagement, layout: AdminLayout },  
   { path: "/system/profile", component: ProfileSystem, layout: AdminLayout },  
-
-  // role user 4
-  { path: "/profile", component: Profile, layout: DefaultLayout },
-
+  { path: "/system/notify-detail", component: NotifyDetail, layout: AdminLayout },
+  
   // client
+  { path: "/profile", component: Profile, layout: DefaultLayout },
   { path: "/cart", component: Cart, layout: DefaultLayout },
 ];
 

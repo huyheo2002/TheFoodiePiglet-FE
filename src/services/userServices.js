@@ -21,12 +21,13 @@ export const handleUpdateUser = (data) => {
   return axios.put("/api/edit-user", data);
 };
 
-export const handleDeleteUser = (userId) => {
+export const handleDeleteUser = (userId, originatorId) => {
   // console.log("dataa id", userId);
 
   return axios.delete("/api/delete-user", {
     data: {
       id: userId,
+      originatorId: originatorId
     },
   });
 };

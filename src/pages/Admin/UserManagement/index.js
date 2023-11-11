@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import DataTable from "../../../components/DataTable";
 import * as userServices from "../../../services/userServices";
 import Modal from "../../../components/Modal";
@@ -11,9 +11,11 @@ import * as roleServices from "../../../services/roleServices";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import * as commonServices from "../../../services/commonServices";
 import * as permissionServices from "../../../services/permissionServices";
+import GlobalContext from "../../../contexts/globalContext";
 
 function UserManagement() {
   const currentPermissionGroup = "quan-ly-nguoi-dung";
+  const { reloadNotify, setReloadNotify } = useContext(GlobalContext);
   const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
   const [dataUserDecoded, setDataUserDecoded] = useState(null);
   const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
@@ -406,8 +408,9 @@ function UserManagement() {
     e.preventDefault();
     const data = new FormData(e.target);
 
-    // console.log("data:", data);
-    // console.log("data entry:", Object.fromEntries(data.entries()));
+    if (dataUserDecoded) {
+      data.set("originatorId", dataUserDecoded.user.id)
+    }    
 
     try {
       const respon = await userServices.handleCreateUser(data);
@@ -417,6 +420,7 @@ function UserManagement() {
         handleCloseModalCreate();
         handleGetAllUsers();
         handleGetAllUsersCompact();
+        setReloadNotify(!reloadNotify);
       } else if (respon.errCode === 1) {
         alert(respon.message);
       }
@@ -433,6 +437,10 @@ function UserManagement() {
       data.set("id", valuesUpdate.id)
     }
 
+    if (dataUserDecoded) {
+      data.set("originatorId", dataUserDecoded.user.id)
+    } 
+
     console.log("data entry:", Object.fromEntries(data.entries()));
     try {
       const respon = await userServices.handleUpdateUser(data);
@@ -441,6 +449,7 @@ function UserManagement() {
         handleCloseModalUpdate();
         handleGetAllUsers();
         handleGetAllUsersCompact();
+        setReloadNotify(!reloadNotify);
       } else if (respon.errCode === 1) {
         alert(respon.message);
       }
@@ -453,11 +462,12 @@ function UserManagement() {
     e.preventDefault();
 
     try {
-      const respon = await userServices.handleDeleteUser(idUserDelete);
+      const respon = await userServices.handleDeleteUser(idUserDelete, dataUserDecoded ? dataUserDecoded.user.id : null);
       if (respon && respon.errCode === 0) {
         handleCloseModalDelete();
         handleGetAllUsers();
         handleGetAllUsersCompact();
+        setReloadNotify(!reloadNotify);
       } else if (respon.errCode === 1) {
         alert(respon.message);
       }

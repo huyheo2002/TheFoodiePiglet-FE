@@ -25,6 +25,10 @@ const GlobalContext = React.createContext({
     // congrat
     showCongrat: false,
     setShowCongrat: () => {},
+
+    // reload notify
+    reloadNotify: false,
+    setReloadNotify: () => {},
 });
 
 export default GlobalContext;
