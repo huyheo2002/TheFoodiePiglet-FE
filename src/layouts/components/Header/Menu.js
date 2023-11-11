@@ -179,6 +179,7 @@ function Menu({ data, userLogin }) {
               {/* custom dropdown (submenu custom :v) */}
               {item.customDropdown &&
                 <div className="group-hover:flex bg-[#272626] flex-col min-w-[14rem] z-50 absolute top-full hidden rounded-b-lg overflow-y-scroll scrollbar-primary max-h-[400px]">
+                  {/* <NotificationCard page={"user"} />
                   <NotificationCard page={"user"} />
                   <NotificationCard page={"user"} />
                   <NotificationCard page={"user"} />
@@ -186,8 +187,7 @@ function Menu({ data, userLogin }) {
                   <NotificationCard page={"user"} />
                   <NotificationCard page={"user"} />
                   <NotificationCard page={"user"} />
-                  <NotificationCard page={"user"} />
-                  <NotificationCard page={"user"} />
+                  <NotificationCard page={"user"} /> */}
                 </div>
               }
             </li>
