@@ -40,9 +40,61 @@ function DashBoard() {
             <StatisticelCard />
           </div>
           <div className="w-full bg-white mt-3 px-3 py-4 rounded-lg">
-            <h2 className="mb-3 text-xl font-semibold capitalize">Table</h2>
-            <div className={clsx("w-[75vw-1rem] overflow-x-scroll scrollbar")}>
-              hello
+            <h2 className="mb-3 text-xl font-semibold capitalize">Section 1</h2>
+            <div className={clsx("w-[75vw-1rem]")}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Section 1: Orders */}
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Orders Management</h2>
+                  <p className="text-gray-600">
+                    View and manage incoming orders. Keep track of customer details, order status, and more.
+                  </p>
+                  {/* Add additional components for order management */}
+                </div>
+
+                {/* Section 2: Menu */}
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Menu Management</h2>
+                  <p className="text-gray-600">
+                    Update and modify the restaurant menu. Add new items, edit prices, and categorize dishes.
+                  </p>
+                  {/* Add additional components for menu management */}
+                </div>
+
+                {/* Section 3: Analytics */}
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Analytics</h2>
+                  <p className="text-gray-600">
+                    Gain insights into restaurant performance. Analyze sales, customer trends, and popular dishes.
+                  </p>
+                  {/* Add additional components for analytics */}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full bg-white mt-3 px-3 py-4 rounded-lg">
+            <h2 className="mb-3 text-xl font-semibold capitalize">Section 2</h2>
+            <div className={clsx("w-[75vw-1rem]")}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Section 4: User Management */}
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">User Management</h2>
+                  <p className="text-gray-600">
+                    Manage restaurant staff accounts. Assign roles, reset passwords, and monitor account activity.
+                  </p>
+                  {/* Add additional components for user management */}
+                </div>
+
+                {/* Section 5: Overview Statistics */}
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Overview Statistics</h2>
+                  <p className="text-gray-600">
+                    View high-level statistics for the restaurant. Track overall performance and customer satisfaction.
+                  </p>
+                  {/* Add additional components for overview statistics */}
+                </div>
+              </div>
             </div>
           </div>
         </div>

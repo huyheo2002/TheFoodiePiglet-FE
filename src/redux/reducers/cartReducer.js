@@ -1,4 +1,4 @@
-import { CHECK_LOGIN, ADD_TO_CART, REMOVE_ITEM_IN_CART, REFRESH_CART, ADD_TO_CART_ERROR, REMOVE_ERROR } from "../actions/cartAction";
+import { CHECK_LOGIN, ADD_TO_CART, REMOVE_ITEM_IN_CART, REFRESH_CART } from "../actions/cartAction";
 
 const INITIAL_STATE = {
     product: {

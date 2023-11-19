@@ -2,7 +2,7 @@ import clsx from "clsx";
 import logo from "../../../../assets/images/Base/logo-transparent.png";
 import Image from "../../../../components/Image";
 import Menu from "./Menu";
-import { BoxFillIcon, DashboardIcon, HomeIcon, MoneyBillWaveIcon, NewsIcon, TableRestaurantIcon, UserCogIcon, UserIcon, UserShieldIcon, UsersIcon } from "../../../../components/Icons";
+import { BoxFillIcon, DashboardIcon, HomeIcon, MessengerIcon, MoneyBillWaveIcon, NewsIcon, TableRestaurantIcon, UserCogIcon, UserIcon, UserShieldIcon, UsersIcon } from "../../../../components/Icons";
 import { useSelector } from "react-redux";
 
 const SIDEBAR_DATA = [
@@ -84,6 +84,12 @@ const SIDEBAR_DATA = [
         name: "reserveTable",
         icon: <TableRestaurantIcon className="!w-6 !h-6" />,
       },
+      {
+        idItem: 10,
+        to: "/system/chat-app",
+        name: "chatApp",
+        icon: <MessengerIcon className="!w-6 !h-6" />,
+      },
     ],
   },
   {
@@ -91,7 +97,7 @@ const SIDEBAR_DATA = [
     title: "homePage",
     items: [
       {
-        idItem: 10,
+        idItem: 11,
         to: "/",
         name: "homepages",
         icon: <HomeIcon className="!w-6 !h-6" />,

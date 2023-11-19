@@ -33,6 +33,7 @@ import NewsManagement from "../pages/Admin/NewsManagement";
 import RerserveTableManagement from "../pages/Admin/ReserveTableManagement";
 import ProfileSystem from "../pages/Admin/ProfileSystem";
 import NotifyDetail from "../pages/Admin/NotifyDetail";
+import Chat from "../pages/Admin/Chat";
 
 // k đăng nhập sd đc
 const publicRoutes = [
@@ -73,6 +74,7 @@ const privateRoutes = [
   { path: "/system/reserve-table", component: RerserveTableManagement, layout: AdminLayout },  
   { path: "/system/profile", component: ProfileSystem, layout: AdminLayout },  
   { path: "/system/notify-detail", component: NotifyDetail, layout: AdminLayout },
+  { path: "/system/chat-app", component: Chat, layout: AdminLayout },
   
   // client
   { path: "/profile", component: Profile, layout: DefaultLayout },

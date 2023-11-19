@@ -16,6 +16,7 @@ import {
   AiOutlineMinus,
   AiTwotoneHome,
   AiFillFileExcel,
+  AiFillPhone,
 } from "react-icons/ai";
 import {
   FaAngleRight,
@@ -32,6 +33,11 @@ import {
   FaUserCog,
   FaUserShield,
   FaFileImport,
+  FaSpinner,
+  FaFacebookMessenger,
+  FaCrown,
+  FaUserPlus,
+  FaUserSlash,
 } from "react-icons/fa";
 import { ImEarth } from "react-icons/im";
 import {
@@ -41,6 +47,10 @@ import {
   BsCurrencyDollar,
   BsFillArrowDownCircleFill,
   BsFillBox2Fill,
+  BsSearch,
+  BsFillCameraVideoFill,
+  BsSendFill,
+  BsFillEmojiWinkFill
 } from "react-icons/bs";
 import { GiHotMeal, GiCheckedShield } from "react-icons/gi";
 import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
@@ -49,7 +59,8 @@ import { HiReceiptRefund } from "react-icons/hi";
 import { TiTick } from "react-icons/ti";
 import { GrContactInfo } from "react-icons/gr";
 import { MdDashboard, MdTableRestaurant } from "react-icons/md";
-import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from "react-icons/tb";
+import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled, TbExchange } from "react-icons/tb";
+import { IoIosLogOut } from "react-icons/io";
 
 
 export const BellIcon = ({ className, onClick }) => {
@@ -625,11 +636,159 @@ export const ImportFileIcon = ({ className, onClick }) => {
   );
 };
 
+export const SearchIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <BsSearch
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
 
 
+export const SpinnerIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
 
+  return (
+    <FaSpinner
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
 
+export const PhoneIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
 
+  return (
+    <AiFillPhone
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
 
+export const CameraVideoIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
 
+  return (
+    <BsFillCameraVideoFill
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
 
+export const SendIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <BsSendFill
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const EmojiWinkIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <BsFillEmojiWinkFill
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const MessengerIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaFacebookMessenger
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const CrownIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaCrown
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const LogOutIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <IoIosLogOut
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const UserPlusIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaUserPlus
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const UserSlashIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <FaUserSlash
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};
+
+export const ChangeIcon = ({ className, onClick }) => {
+  const props = {
+    onClick,
+  };
+
+  return (
+    <TbExchange
+      className={clsx(("w-6 h-6", className))}
+      {...props}
+    />
+  );
+};

@@ -29,6 +29,18 @@ const GlobalContext = React.createContext({
     // reload notify
     reloadNotify: false,
     setReloadNotify: () => {},
+
+    // id chat room
+    idChatRoom: null,
+    setIdChatRoom: () => {},
+
+    // image chatRoom
+    imageChatRoom: null,
+    setImageChatRoom: () => {},
+
+    // reload sidebarchat
+    reloadSidebarChat: false,
+    setReloadSidebarChat: () => {},
 });
 
 export default GlobalContext;

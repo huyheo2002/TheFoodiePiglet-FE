@@ -129,7 +129,12 @@ function Header() {
             })}
           </div>
         </div>
-        <MessageIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" />
+        <div className="mx-2 relative group h-full flex justify-center items-center">
+          <MessageIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" />
+          <div className="select-none cursor-pointer absolute bottom-0 right-0 z-50 -translate-x-1/4 -translate-y-1/4 border-2 border-solid border-[#548be6] rounded-full w-6 h-6 font-medium text-sm flex justify-center items-center bg-[#e6f2fe] text-[#548be6]">
+            15          
+          </div>
+        </div>
         <div className="mx-2 relative group h-full flex justify-center items-center">
           <BellIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" 
             onClick={() => navigate("/system/notify-detail")}

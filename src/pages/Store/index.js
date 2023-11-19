@@ -17,6 +17,7 @@ function Store() {
                     <div className="embed-responsive aspect-ratio-16/9 w-full h-[450px]">
                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3152.9606834806636!2d144.9632703156747!3d-37.814169842594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642f15b61d8eb%3A0x7e2fb2e4b97f13ff!2sMelbourne%20Museum!5e0!3m2!1sen!2sau!4v1648835690409!5m2!1sen!2sau" allowfullscreen
                             className="w-full h-full"
+                            title="google map"
                         ></iframe>
                     </div>
                 </div>

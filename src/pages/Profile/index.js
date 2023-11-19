@@ -3,7 +3,6 @@ import ItemCompact from "../../components/ItemCompact";
 import Heading from "../../components/Heading";
 import Image from "../../components/Image";
 import ava from "../../assets/images/logo-pig-smile.png";
-import * as roleServices from "../../services/roleServices";
 import * as userServices from "../../services/userServices";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { Fragment, useContext, useEffect, useState } from "react";
@@ -27,7 +26,7 @@ import imgShipper from "../../assets/images/Base/shipper_01.png";
 import * as authServices from "../../services/authServices";
 
 function Profile() {
-    const { reloadCart, setReloadCart, paymentOnlineSuccess, setPaymentOnlineSuccess, showCongrat } = useContext(GlobalContext);
+    const { paymentOnlineSuccess, setPaymentOnlineSuccess, showCongrat } = useContext(GlobalContext);
     const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
     const [dataUserDecoded, setDataUserDecoded] = useState(null);
 

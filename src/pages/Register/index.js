@@ -3,7 +3,7 @@ import Button from "../../components/Button";
 import InputField from "../../components/FormControl/InputField";
 import Heading from "../../components/Heading";
 import { useDispatch } from "react-redux";
-import { handleLoginRedux, handleNoLoginRedux } from "../../redux/actions/userAction";
+import { handleNoLoginRedux } from "../../redux/actions/userAction";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import * as userServices from "../../services/userServices";
@@ -64,14 +64,14 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = new FormData(e.target);
-        if(values.password !== values.confirmPassword) {
+        if (values.password !== values.confirmPassword) {
             alert("Mật khẩu không trùng khớp vui lòng nhập lại");
             setValues({
                 username: "",
                 password: "",
                 confirmPassword: "",
             });
-            return;            
+            return;
         }
 
         try {
