@@ -128,7 +128,7 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
                     // Lấy phần tử đầu tiên (có thời gian createdAt lớn nhất)
                     const latestMessage = sortedMessages[0];
 
-                    console.log("latestMessage", latestMessage);
+                    // console.log("latestMessage", latestMessage);
                     setMessageLastest(latestMessage);
                 }
             }
@@ -136,7 +136,6 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
         }
     }    
 
-    console.log("dataUserDecoded", dataUserDecoded);
     return (
         <div className={clsx("flex items-center w-full px-2 py-1 cursor-pointer hover:bg-gray-100 rounded-md overflow-hidden", {
             "bg-[#e6f2fe] hover:!bg-[#e6f2fe]": idTest === active

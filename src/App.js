@@ -57,7 +57,7 @@ function App() {
             })}
 
             {privateRoutes.map((route, index) => {
-              if(dataUserDecoded) {
+              if(dataUser) {
                 let Layout = DefaultLayout;
                 const Page = route.component;
 

@@ -16,6 +16,9 @@ import * as userServices from "../../services/userServices";
 import clsx from "clsx";
 import InputField from "../FormControl/InputField";
 import fallbackImage from "../../assets/images/Base/Image_fallback.png";
+import io from "socket.io-client";
+
+const socket = io(process.env.REACT_APP_BACKEND_URL || "http://localhost:8080");
 
 function ChatWindow() {
     const { setIdChatRoom, idChatRoom, imageChatRoom, setImageChatRoom, reloadSidebarChat, setReloadSidebarChat } = useContext(GlobalContext);
@@ -60,6 +63,7 @@ function ChatWindow() {
 
     // message 
     const [listMessage, setListMessage] = useState([]);
+    const [sendMessageFlag, setSendMessageFlag] = useState(false);
 
     // handle    
     const handleFindChatRoomWithID = async (id) => {
@@ -375,39 +379,98 @@ function ChatWindow() {
     }
 
     // handle print Text :V
-    const handleSendLetter = async () => {
-        const data = new FormData();
-        data.set("roomId", dataChatRoom && dataChatRoom.id);
-        data.set("userId", dataUserDecoded && dataUserDecoded.user.id);
-        data.set("content", text);
+    // API http request
+    // const handleSendLetter = async () => {
+    //     const data = new FormData();
+    //     data.set("roomId", dataChatRoom && dataChatRoom.id);
+    //     data.set("userId", dataUserDecoded && dataUserDecoded.user.id);
+    //     data.set("content", text);
+
+    //     try {
+    //         const respon = await chatServices.handleCreateMessage(data);
+
+    //         if (respon && respon.errCode === 0) {
+    //             setShowEmoji(false);
+    //             setText("");
+    //             handleGetAllMessage();
+    //             setReloadSidebarChat(!reloadSidebarChat);
+    //         }
+
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    // socket.on("connect", () => {
+    //     console.log("Connected to the server!");
+    // });
+
+    // socket.on("disconnect", () => {
+    //     console.log("Disconnected from the server!");
+    // });
+
+    // socket
+    const handleSendLetter = () => {
+        const data = {
+            roomId: dataChatRoom && dataChatRoom.id,
+            userId: dataUserDecoded && dataUserDecoded.user.id,
+            content: text,
+        };
 
         try {
-            const respon = await chatServices.handleCreateMessage(data);
+            // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
+            socket.emit("newMessage", data);
 
-            if (respon && respon.errCode === 0) {
+            // Reset trạng thái và làm mới dữ liệu nếu cần
+            setShowEmoji(false);
+            setText("");
+            handleGetAllMessage();
+            setReloadSidebarChat(!reloadSidebarChat);
+
+            // Cập nhật giá trị của biến để kích hoạt useEffect
+            // setSendMessageFlag(!sendMessageFlag);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        socket.on("newMessage", (message) => {
+            // Xử lý tin nhắn mới nhận được từ server (nếu cần)
+            console.log("New message received:", message);
+            if (message && message.errCode === 0) {
                 setShowEmoji(false);
                 setText("");
                 handleGetAllMessage();
                 setReloadSidebarChat(!reloadSidebarChat);
             }
+        });
 
-        } catch (error) {
-            console.log(error)
-        }
-    }
+        return () => {
+            // Ngắt kết nối khi component unmount
+            socket.disconnect();
+        };
+    }, []);
 
     const handleGetAllMessage = async () => {
         const respon = await chatServices.getAllMessage();
         if (respon && respon.errCode === 0) {
             let messages = respon.messages;
+            // console.log("idChatRoom", idChatRoom);
+            // console.log("list messages", messages);
             const findMessagesInRoom = idChatRoom && messages.length > 0 && messages.filter(item => item.roomId === idChatRoom) || [];
             if (findMessagesInRoom.length > 0) {
                 setListMessage(findMessagesInRoom);
+            } else {
+                if (listMessage.length > 0) {
+                    setListMessage([]);
+                }
             }
         }
     }
 
     useEffect(() => {
+        // console.log("reload message");
         handleGetAllMessage();
     }, [idChatRoom])
 
@@ -556,9 +619,14 @@ function ChatWindow() {
                                             canRecall = false;
                                         }
 
+                                        // get avatar
+                                        const server = process.env.REACT_APP_BACKEND_URL;
+                                        const image = `/public/avatar/${item.User.avatar}`;
+                                        const getAvatar = server.concat(image);
+
                                         if (dataUserDecoded && item.userId === dataUserDecoded.user.id) {
                                             return (
-                                                <div className="flex items-center justify-end group" key={index}>
+                                                <div className="flex items-end justify-end group" key={index}>
                                                     <span className="mr-2 hidden group-hover:flex">
                                                         {canRecall &&
                                                             <ChangeIcon className={"mr-1 !w-6 !h-6 p-1 rounded-full text-gray-400 cursor-pointer hover:text-gray-500 hover:bg-gray-200"}
@@ -569,18 +637,32 @@ function ChatWindow() {
                                                             onClick={() => handleDeleteMessage(item.id)}
                                                         />
                                                     </span>
-                                                    <div className="bg-blue-500 text-white p-3 rounded-lg max-w-xs" title={getTime}>
-                                                        <p>{item.content}</p>
+                                                    <div className="flex flex-col items-end">
+                                                        <p className="text-[#65676B] text-sm font-normal">{item.User.name || item.User.username}</p>
+                                                        <div className="bg-blue-500 text-white p-3 rounded-lg max-w-xs" title={getTime}>
+                                                            <p>{item.content}</p>
+                                                        </div>
                                                     </div>
+                                                    <span title={item.User.name || item.User.username}>
+                                                        <Image src={item.User.avatar ? getAvatar : ""} className={"!w-14 !h-14 ml-2 border border-gray-300 rounded-full"} />
+                                                    </span>
                                                 </div>
                                             )
                                         }
 
                                         return (
-                                            <div className="flex items-center justify-start group" key={index}>
-                                                <div className="bg-gray-100 p-3 rounded-lg max-w-xs" title={getTime}>
-                                                    <p>{item.content}</p>
+                                            <div className="flex items-end justify-start group" key={index}>
+                                                <span title={item.User.name || item.User.username}>
+                                                    <Image src={item.User.avatar ? getAvatar : ""} className={"!w-14 !h-14 mr-2 border border-gray-300 rounded-full"} />
+                                                </span>
+
+                                                <div className="flex flex-col items-start">
+                                                    <p className="text-[#65676B] text-sm font-normal">{item.User.name || item.User.username}</p>
+                                                    <div className="bg-gray-100 p-3 rounded-lg max-w-xs" title={getTime}>
+                                                        <p>{item.content}</p>
+                                                    </div>
                                                 </div>
+
                                                 {dataUserDecoded && item.userId === dataUserDecoded.user.id &&
                                                     <span className="ml-2 hidden group-hover:flex">
                                                         {canRecall &&
