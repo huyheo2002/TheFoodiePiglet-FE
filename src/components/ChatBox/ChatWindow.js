@@ -434,24 +434,6 @@ function ChatWindow() {
         }
     };
 
-    useEffect(() => {
-        socket.on("newMessage", (message) => {
-            // Xử lý tin nhắn mới nhận được từ server (nếu cần)
-            console.log("New message received:", message);
-            if (message && message.errCode === 0) {
-                setShowEmoji(false);
-                setText("");
-                handleGetAllMessage();
-                setReloadSidebarChat(!reloadSidebarChat);
-            }
-        });
-
-        return () => {
-            // Ngắt kết nối khi component unmount
-            socket.disconnect();
-        };
-    }, []);
-
     const handleGetAllMessage = async () => {
         const respon = await chatServices.getAllMessage();
         if (respon && respon.errCode === 0) {
@@ -495,6 +477,7 @@ function ChatWindow() {
         }
     }
 
+    // API
     const handleRecallMessage = async (id) => {
         const data = new FormData();
         data.set("id", id);
@@ -525,6 +508,76 @@ function ChatWindow() {
             console.log(error)
         }
     }
+
+    // socket 
+    const handleRecallMessageSocket = (id) => {       
+        console.log("handleRecallMessageSocket id", id);     
+        try {
+            // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
+            socket.emit("recallMessage", id);
+
+            // Reset trạng thái và làm mới dữ liệu nếu cần
+            handleGetAllMessage();
+            setReloadSidebarChat(!reloadSidebarChat);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleDeleteMessageSocket = (id) => {
+        console.log("handleRecallMessageSocket id", id);     
+        try {
+            // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
+            socket.emit("deleteMessage", id);
+
+            // Reset trạng thái và làm mới dữ liệu nếu cần
+            handleGetAllMessage();
+            setReloadSidebarChat(!reloadSidebarChat);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        // send letter
+        socket.on("newMessage", (message) => {
+            // Xử lý tin nhắn mới nhận được từ server (nếu cần)
+            console.log("New message received:", message);
+            if (message && message.errCode === 0) {
+                setShowEmoji(false);
+                setText("");
+                handleGetAllMessage();
+                setReloadSidebarChat(!reloadSidebarChat);
+            }
+        });
+
+        // recall message
+        socket.on("recallMessage", (message) => {
+            // Xử lý tin nhắn mới nhận được từ server (nếu cần)
+            console.log("Recall message received:", message);
+            if (message && message.errCode === 0) {
+                handleGetAllMessage();
+                setReloadSidebarChat(!reloadSidebarChat);
+            }
+        });
+
+        // delete message 
+        socket.on("deleteMessage", (message) => {
+            // Xử lý tin nhắn mới nhận được từ server (nếu cần)
+            console.log("Delete message received:", message);
+            if (message && message.errCode === 0) {
+                handleGetAllMessage();
+                setReloadSidebarChat(!reloadSidebarChat);
+            }
+        });
+
+        return () => {
+            // Ngắt kết nối khi component unmount
+            socket.disconnect();
+        };
+    }, []);
 
     return (
         <Fragment>
@@ -630,11 +683,11 @@ function ChatWindow() {
                                                     <span className="mr-2 hidden group-hover:flex">
                                                         {canRecall &&
                                                             <ChangeIcon className={"mr-1 !w-6 !h-6 p-1 rounded-full text-gray-400 cursor-pointer hover:text-gray-500 hover:bg-gray-200"}
-                                                                onClick={() => handleRecallMessage(item.id)}
+                                                                onClick={() => handleRecallMessageSocket(item.id)}
                                                             />
                                                         }
                                                         <TrashIcon className={"!w-6 !h-6 p-1 rounded-full text-gray-400 cursor-pointer hover:text-gray-500 hover:bg-gray-200"}
-                                                            onClick={() => handleDeleteMessage(item.id)}
+                                                            onClick={() => handleDeleteMessageSocket(item.id)}
                                                         />
                                                     </span>
                                                     <div className="flex flex-col items-end">
@@ -667,11 +720,11 @@ function ChatWindow() {
                                                     <span className="ml-2 hidden group-hover:flex">
                                                         {canRecall &&
                                                             <ChangeIcon className={"mr-1 !w-6 !h-6 p-1 rounded-full text-gray-400 cursor-pointer hover:text-gray-500 hover:bg-gray-200"}
-                                                                onClick={() => handleRecallMessage(item.id)}
+                                                                onClick={() => handleRecallMessageSocket(item.id)}
                                                             />
                                                         }
                                                         <TrashIcon className={"!w-6 !h-6 p-1 rounded-full text-gray-400 cursor-pointer hover:text-gray-500 hover:bg-gray-200"}
-                                                            onClick={() => handleDeleteMessage(item.id)}
+                                                            onClick={() => handleDeleteMessageSocket(item.id)}
                                                         />
                                                     </span>
                                                 }
