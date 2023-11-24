@@ -49,7 +49,7 @@ function ContextWrapper(props) {
 
     useEffect(() => {
         fetchListUser();
-    }, [])
+    }, [valueUserLocal])
 
     return (
         <GlobalContext.Provider

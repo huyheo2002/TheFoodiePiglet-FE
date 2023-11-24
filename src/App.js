@@ -5,34 +5,62 @@ import { publicRoutes, privateRoutes } from "./routes";
 import DefaultLayout from "./layouts/DefaultLayout";
 import "./i18n";
 import ContextWrapper from "./contexts/contextWrapper";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import useLocalStorage from "./hooks/useLocalStorage";
 import * as commonServices from "./services/commonServices";
 
 function App() {
   // const dataUserRedux = useSelector((state) => state.user.user);
   // console.log("dataUserRedux app", dataUserRedux)
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-  // console.log("dataUser app", dataUser);
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
+  // const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
+  // // console.log("dataUser app", dataUser);
+  // const [dataUserDecoded, setDataUserDecoded] = useState(null);
 
-  const decoded = async () => {
-    const respon = await commonServices.handleDecoded(dataUser.token);
-    // console.log("respon.decoded", respon)
-    if(respon && respon.errCode === 0) {
-      setDataUserDecoded(respon.decoded);
-    }
-  };
+  // const decoded = async () => {
+  //   if (dataUser) {
+  //     const respon = await commonServices.handleDecoded(dataUser.token);
+  //     // console.log("respon.decoded", respon)
+  //     if (respon && respon.errCode === 0) {
+  //       setDataUserDecoded(respon.decoded);
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    decoded();
-  }, [])
-  
+  // useEffect(() => {
+  //   decoded();
+  // }, [dataUser])
+
+  // console.log("dataUser app.js", dataUser);
   return (
     <ContextWrapper>
       <Router>
-        <div className="app">          
+        <div className="app">
           <Routes>
+            {privateRoutes.map((route, index) => {
+              // if (dataUserDecoded) {
+                let Layout = DefaultLayout;
+                const Page = route.component;
+
+                if (route.layout) {
+                  Layout = route.layout;
+                } else if (route.layout === null) {
+                  Layout = Fragment;
+                }
+
+                return (
+                  <Route
+                    path={route.path}
+                    key={index}
+                    element={
+                      <Layout>
+                        <Page />
+                      </Layout>
+                    }
+                  />
+                );
+              // }
+            })}
+
             {publicRoutes.map((route, index) => {
               let Layout = DefaultLayout;
               const Page = route.component;
@@ -55,31 +83,6 @@ function App() {
                 />
               );
             })}
-
-            {privateRoutes.map((route, index) => {
-              if(dataUser) {
-                let Layout = DefaultLayout;
-                const Page = route.component;
-
-                if (route.layout) {
-                  Layout = route.layout;
-                } else if (route.layout === null) {
-                  Layout = Fragment;
-                }
-              
-                return (
-                  <Route
-                    path={route.path}
-                    key={index}
-                    element={
-                      <Layout>
-                        <Page />
-                      </Layout>
-                    }
-                  />
-                );
-              }             
-            })}            
           </Routes>
         </div>
       </Router>

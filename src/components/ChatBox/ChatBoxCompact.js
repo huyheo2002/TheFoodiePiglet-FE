@@ -2,6 +2,7 @@ import Image from "../Image";
 import clsx from "clsx";
 import * as chatServices from "../../services/chatServices";
 import * as commonServices from "../../services/commonServices";
+import * as userServices from "../../services/userServices";
 import { useContext, useEffect, useState } from "react";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import avaGroup from "../../assets/images/GroupChat/ava4.jpg";
@@ -12,9 +13,10 @@ import { BellIcon } from "../Icons";
 function ChatBoxCompact({ idTest, active, onClick, data }) {
     const { setIdChatRoom, idChatRoom, imageChatRoom, setImageChatRoom, reloadSidebarChat } = useContext(GlobalContext);
     const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-    const [showImageGroup, setShowImageGroup] = useState(null);    
+    const [showImageGroup, setShowImageGroup] = useState(null);
     const [messageLastest, setMessageLastest] = useState(null);
     const [dataUserDecoded, setDataUserDecoded] = useState(null);
+    const [nameRoom, setNameRoom] = useState(null);
 
     // console.log("data", data.ChatRoom.name);
     const handleDecoded = async () => {
@@ -23,7 +25,7 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
             if (respon && respon.errCode === 0) {
                 // console.log("data decoded in chatbox", respon.decoded);
                 setDataUserDecoded(respon.decoded);
-                return respon.decoded.user.id;
+                return respon.decoded.user;
             }
         }
     };
@@ -82,8 +84,10 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
     }
 
     useEffect(() => {
-        handleDecoded().then((userId) => {
-            handleGetAllRoomParticipant(userId);
+        handleDecoded().then((infoUser) => {
+            // console.log("infoUser", infoUser);
+            handleGetNameRoom(`${infoUser.name} (${infoUser.roleName})`)
+            handleGetAllRoomParticipant(infoUser.id);
         })
         handleGetAllMessageInRoom();
     }, [reloadSidebarChat])
@@ -107,7 +111,7 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
         } else {
             return 'Vừa xong';
         }
-    }    
+    }
 
     const handleGetAllMessageInRoom = async () => {
         const respon = await chatServices.getAllMessage();
@@ -134,7 +138,25 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
             }
             // console.log("respon", respon)
         }
-    }    
+    }
+
+    const handleGetNameRoom = async (nameGroup) => {
+        if (nameGroup === data.ChatRoom.name) {
+            const responFindUser = await userServices.getAllUsers(data.ChatRoom.roomCreatorId);
+            // console.log("data.userId", data.userId);
+            // console.log("data", data);
+            // console.log("responFindUser", responFindUser);
+
+            if (responFindUser && responFindUser.errCode === 0) {
+                // console.log("`${responFindUser.users.name} (${responFindUser.users.username})`", `${responFindUser.users.name} (${responFindUser.users.username})`)
+                setNameRoom(`${responFindUser.users.name} (${responFindUser.users.username})`)
+            }
+        } else {
+            setNameRoom(data.ChatRoom.name)
+        }
+    }
+
+    // console.log("data chat compact", data);
 
     return (
         <div className={clsx("flex items-center w-full px-2 py-1 cursor-pointer hover:bg-gray-100 rounded-md overflow-hidden", {
@@ -148,11 +170,11 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
             <Image src={showImageGroup && showImageGroup} className={"w-14 h-14 rounded-full"} />
             <div className="flex flex-col ml-2 w-[75%] overflow-hidden">
                 <div className="flex justify-between items-start">
-                    <h3 className="text-base text-black font-semibold">{data ? data.ChatRoom.name : ""}</h3>
+                    <h3 className="text-base text-black font-semibold">{nameRoom && nameRoom}</h3>
                     <span className={clsx("text-sm text-[#65676b] font-normal ml-2 whitespace-nowrap", {
-                        "text-green-500" : dataUserDecoded && messageLastest && dataUserDecoded.user.id !== messageLastest.userId
+                        "text-green-500": dataUserDecoded && messageLastest && dataUserDecoded.user.id !== messageLastest.userId
                     })}>
-                        <BellIcon/>
+                        <BellIcon />
                     </span>
                 </div>
                 <div className="flex justify-between items-center">

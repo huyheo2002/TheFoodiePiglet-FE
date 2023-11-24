@@ -1,14 +1,42 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Sidebar from "../components/Admin/Sidebar";
 import Header from "../components/Admin/Header";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
 import GlobalContext from "../../contexts/globalContext";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import { useNavigate } from "react-router-dom";
+import * as commonServices from "../../services/commonServices";
 
 // only header
 const AdminLayout = ({ children }) => {
+  const navigate = useNavigate();
   const toggleSidebar = useSelector(states => states.admin.toggleSidebar)
   const { toggleDataTable, setToggleDataTable } = useContext(GlobalContext);
+  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
+
+  const decoded = async () => {
+    if (dataUser) {
+      const respon = await commonServices.handleDecoded(dataUser.token);
+      // console.log("respon.decoded", respon)
+      if (respon && respon.errCode === 0) {
+        return respon.decoded;
+      }
+    }
+  };
+  
+  useEffect(() => {
+    if (!dataUser) {
+      navigate("/");
+    } else {
+      decoded().then((infoUser) => {
+        if(infoUser.user.roleName === "User") {
+          navigate("/");
+        }
+      });
+    }
+  }, [])
+
   return (
     <div className="w-full relative"
       onClick={() => {

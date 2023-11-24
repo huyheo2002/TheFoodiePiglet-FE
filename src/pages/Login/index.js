@@ -98,7 +98,7 @@ function Login() {
         setValueLocal(dataUserRedux);
   
         const respon = await commonServices.handleDecoded(dataUserRedux.token);
-        // console.log("respon.decoded", respon);
+        console.log("respon.decoded login", respon);
         if (respon && respon.errCode === 0) {
           if(respon.decoded.user.roleName === "User") {
             navigate("/");            

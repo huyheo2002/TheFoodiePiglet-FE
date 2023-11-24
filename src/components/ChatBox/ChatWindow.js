@@ -40,7 +40,6 @@ function ChatWindow() {
     // remove member 
     const [openModalRemoveMember, setOpenModalRemoveMember] = useState(false);
 
-
     // change group name
     const inputChangeGroupName = [
         {
@@ -63,7 +62,6 @@ function ChatWindow() {
 
     // message 
     const [listMessage, setListMessage] = useState([]);
-    const [sendMessageFlag, setSendMessageFlag] = useState(false);
 
     // handle    
     const handleFindChatRoomWithID = async (id) => {
@@ -510,8 +508,8 @@ function ChatWindow() {
     }
 
     // socket 
-    const handleRecallMessageSocket = (id) => {       
-        console.log("handleRecallMessageSocket id", id);     
+    const handleRecallMessageSocket = (id) => {
+        console.log("handleRecallMessageSocket id", id);
         try {
             // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
             socket.emit("recallMessage", id);
@@ -526,7 +524,7 @@ function ChatWindow() {
     }
 
     const handleDeleteMessageSocket = (id) => {
-        console.log("handleRecallMessageSocket id", id);     
+        console.log("handleRecallMessageSocket id", id);
         try {
             // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
             socket.emit("deleteMessage", id);
@@ -541,11 +539,13 @@ function ChatWindow() {
     }
 
     useEffect(() => {
+        console.log("run useEffect socket")
         // send letter
         socket.on("newMessage", (message) => {
             // Xử lý tin nhắn mới nhận được từ server (nếu cần)
             console.log("New message received:", message);
             if (message && message.errCode === 0) {
+                console.log("re load send letter");
                 setShowEmoji(false);
                 setText("");
                 handleGetAllMessage();
@@ -573,11 +573,14 @@ function ChatWindow() {
             }
         });
 
-        return () => {
-            // Ngắt kết nối khi component unmount
-            socket.disconnect();
-        };
-    }, []);
+        // return () => {
+        //     // Ngắt kết nối khi component unmount
+        //     socket.disconnect();
+        // };
+    }, [handleSendLetter, handleRecallMessageSocket, handleDeleteMessageSocket]);
+
+    // console.log("dataChatRoom",dataChatRoom);
+    // console.log("dataUserDecoded",dataUserDecoded);
 
     return (
         <Fragment>
@@ -587,7 +590,7 @@ function ChatWindow() {
                         <div className="flex justify-between items-center border-b-2 border-solid border-gray-400 pb-2">
                             <div className="flex items-center">
                                 <Image src={imageChatRoom || ""} className={"w-14 h-14 rounded-full border border-solid border-gray-200"} fallback={imageChatRoom} />
-                                <h3 className="text-lg font-semibold text-black ml-3">{dataChatRoom && dataChatRoom.name}</h3>
+                                <h3 className="text-lg font-semibold text-black ml-3">{dataUserDecoded && dataChatRoom && dataUserDecoded.user.id !== dataChatRoom.roomCreatorId ? `${dataChatRoom.User.name} (${dataChatRoom.User.username})`: dataChatRoom.name}</h3>
                             </div>
 
                             <div className="flex items-center">

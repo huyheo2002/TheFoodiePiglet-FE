@@ -52,11 +52,6 @@ const publicRoutes = [
   { path: "/introduce", component: Introduce, layout: DefaultLayout },
   { path: "/store", component: Store, layout: DefaultLayout },
   { path: "/about-us", component: AboutUs, layout: DefaultLayout },
-
-  
-  // not other routes match
-  { path: "/not-found", component: Error, layout: null },
-  { path: "*", component: Error, layout: null },
 ];
 
 // đăng nhập ms sd đc
@@ -79,6 +74,10 @@ const privateRoutes = [
   // client
   { path: "/profile", component: Profile, layout: DefaultLayout },
   { path: "/cart", component: Cart, layout: DefaultLayout },
+
+  // not other routes match
+  { path: "/not-found", component: Error, layout: null },
+  { path: "*", component: Error, layout: null },
 ];
 
 export { publicRoutes, privateRoutes };
