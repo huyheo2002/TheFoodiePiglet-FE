@@ -16,3 +16,13 @@ export const handleLoginGoogle = (userId) => {
 export const handleChangePassword = (data) => {
     return axios.put("/api/change-password", data);
 };
+
+export const handleFotgotPassword = (data) => {
+    const res = axios.post(`/api-forgot-password`, data);
+    return res;
+};
+
+export const handleResetPassword = (data) => {
+    const res = axios.post(`/api-reset-password`, data);
+    return res;
+};

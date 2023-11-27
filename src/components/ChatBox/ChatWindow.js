@@ -18,7 +18,7 @@ import InputField from "../FormControl/InputField";
 import fallbackImage from "../../assets/images/Base/Image_fallback.png";
 import io from "socket.io-client";
 
-const socket = io(process.env.REACT_APP_BACKEND_URL || "http://localhost:8080");
+const socket = io(process.env.REACT_APP_BACKEND_URL) ?? null;
 
 function ChatWindow() {
     const { setIdChatRoom, idChatRoom, imageChatRoom, setImageChatRoom, reloadSidebarChat, setReloadSidebarChat } = useContext(GlobalContext);
@@ -397,15 +397,7 @@ function ChatWindow() {
     //     } catch (error) {
     //         console.log(error)
     //     }
-    // }
-
-    // socket.on("connect", () => {
-    //     console.log("Connected to the server!");
-    // });
-
-    // socket.on("disconnect", () => {
-    //     console.log("Disconnected from the server!");
-    // });
+    // }    
 
     // socket
     const handleSendLetter = () => {
@@ -476,36 +468,36 @@ function ChatWindow() {
     }
 
     // API
-    const handleRecallMessage = async (id) => {
-        const data = new FormData();
-        data.set("id", id);
+    // const handleRecallMessage = async (id) => {
+    //     const data = new FormData();
+    //     data.set("id", id);
 
-        try {
-            const respon = await chatServices.handleRecallMessage(data);
-            if (respon && respon.errCode === 0) {
-                handleGetAllMessage();
-                setReloadSidebarChat(!reloadSidebarChat);
-                // alert("thu hồi tin nhắn thành công");
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    //     try {
+    //         const respon = await chatServices.handleRecallMessage(data);
+    //         if (respon && respon.errCode === 0) {
+    //             handleGetAllMessage();
+    //             setReloadSidebarChat(!reloadSidebarChat);
+    //             // alert("thu hồi tin nhắn thành công");
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
-    const handleDeleteMessage = async (id) => {
-        const data = new FormData();
-        data.set("id", id);
+    // const handleDeleteMessage = async (id) => {
+    //     const data = new FormData();
+    //     data.set("id", id);
 
-        try {
-            const respon = await chatServices.handleDeleteMessage(data);
-            if (respon && respon.errCode === 0) {
-                handleGetAllMessage();
-                // alert("thu hồi tin nhắn thành công");
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    //     try {
+    //         const respon = await chatServices.handleDeleteMessage(data);
+    //         if (respon && respon.errCode === 0) {
+    //             handleGetAllMessage();
+    //             // alert("thu hồi tin nhắn thành công");
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
     // socket 
     const handleRecallMessageSocket = (id) => {

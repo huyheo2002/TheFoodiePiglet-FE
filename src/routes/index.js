@@ -19,6 +19,7 @@ import Introduce from "../pages/Introduce";
 import Store from "../pages/Store";
 import AboutUs from "../pages/AboutUs";
 import Register from "../pages/Register";
+import ResetPassword from "../pages/Login/ResetPassword";
 
 // pages system
 import DashBoard from "../pages/Admin/Dashboard";
@@ -42,6 +43,7 @@ const publicRoutes = [
   { path: "/register", component: Register, layout: null },
   { path: "/menu", component: Menu, layout: FullScreenLayout },
   { path: "/login-success/:userId", component: LoginSuccess, layout: null },
+  { path: "/reset-password/:token", component: ResetPassword, layout: null },
   // { path: "/test", component: Test, layout: null },
 
   { path: "/test", component: Test, layout: null },

@@ -8,8 +8,16 @@ import ContextWrapper from "./contexts/contextWrapper";
 // import { useSelector } from "react-redux";
 import useLocalStorage from "./hooks/useLocalStorage";
 import * as commonServices from "./services/commonServices";
+import io from "socket.io-client";
+
+// const socket = io(process.env?.REACT_APP_BACKEND_URL);
 
 function App() {
+  // test connect socket
+  // socket.on("connect", () => {
+  //   console.log("Connected to the server!");
+  // });
+  
   // const dataUserRedux = useSelector((state) => state.user.user);
   // console.log("dataUserRedux app", dataUserRedux)
   // const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
@@ -30,7 +38,13 @@ function App() {
   //   decoded();
   // }, [dataUser])
 
-  // console.log("dataUser app.js", dataUser);
+  // console.log("dataUser app.js", dataUser);  
+
+  // socket.on("disconnect", () => {
+  //   console.log("Disconnected from the server!");
+  // });
+
+
   return (
     <ContextWrapper>
       <Router>
@@ -38,26 +52,26 @@ function App() {
           <Routes>
             {privateRoutes.map((route, index) => {
               // if (dataUserDecoded) {
-                let Layout = DefaultLayout;
-                const Page = route.component;
+              let Layout = DefaultLayout;
+              const Page = route.component;
 
-                if (route.layout) {
-                  Layout = route.layout;
-                } else if (route.layout === null) {
-                  Layout = Fragment;
-                }
+              if (route.layout) {
+                Layout = route.layout;
+              } else if (route.layout === null) {
+                Layout = Fragment;
+              }
 
-                return (
-                  <Route
-                    path={route.path}
-                    key={index}
-                    element={
-                      <Layout>
-                        <Page />
-                      </Layout>
-                    }
-                  />
-                );
+              return (
+                <Route
+                  path={route.path}
+                  key={index}
+                  element={
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  }
+                />
+              );
               // }
             })}
 
