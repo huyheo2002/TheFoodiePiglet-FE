@@ -378,51 +378,51 @@ function ChatWindow() {
 
     // handle print Text :V
     // API http request
-    // const handleSendLetter = async () => {
-    //     const data = new FormData();
-    //     data.set("roomId", dataChatRoom && dataChatRoom.id);
-    //     data.set("userId", dataUserDecoded && dataUserDecoded.user.id);
-    //     data.set("content", text);
-
-    //     try {
-    //         const respon = await chatServices.handleCreateMessage(data);
-
-    //         if (respon && respon.errCode === 0) {
-    //             setShowEmoji(false);
-    //             setText("");
-    //             handleGetAllMessage();
-    //             setReloadSidebarChat(!reloadSidebarChat);
-    //         }
-
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }    
-
-    // socket
-    const handleSendLetter = () => {
-        const data = {
-            roomId: dataChatRoom && dataChatRoom.id,
-            userId: dataUserDecoded && dataUserDecoded.user.id,
-            content: text,
-        };
+    const handleSendLetter = async () => {
+        const data = new FormData();
+        data.set("roomId", dataChatRoom && dataChatRoom.id);
+        data.set("userId", dataUserDecoded && dataUserDecoded.user.id);
+        data.set("content", text);
 
         try {
-            // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
-            socket.emit("newMessage", data);
+            const respon = await chatServices.handleCreateMessage(data);
 
-            // Reset trạng thái và làm mới dữ liệu nếu cần
-            setShowEmoji(false);
-            setText("");
-            handleGetAllMessage();
-            setReloadSidebarChat(!reloadSidebarChat);
+            if (respon && respon.errCode === 0) {
+                setShowEmoji(false);
+                setText("");
+                handleGetAllMessage();
+                setReloadSidebarChat(!reloadSidebarChat);
+            }
 
-            // Cập nhật giá trị của biến để kích hoạt useEffect
-            // setSendMessageFlag(!sendMessageFlag);
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
-    };
+    }    
+
+    // socket
+    // const handleSendLetter = () => {
+    //     const data = {
+    //         roomId: dataChatRoom && dataChatRoom.id,
+    //         userId: dataUserDecoded && dataUserDecoded.user.id,
+    //         content: text,
+    //     };
+
+    //     try {
+    //         // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
+    //         socket.emit("newMessage", data);
+
+    //         // Reset trạng thái và làm mới dữ liệu nếu cần
+    //         setShowEmoji(false);
+    //         setText("");
+    //         handleGetAllMessage();
+    //         setReloadSidebarChat(!reloadSidebarChat);
+
+    //         // Cập nhật giá trị của biến để kích hoạt useEffect
+    //         // setSendMessageFlag(!sendMessageFlag);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     const handleGetAllMessage = async () => {
         const respon = await chatServices.getAllMessage();
@@ -468,108 +468,108 @@ function ChatWindow() {
     }
 
     // API
-    // const handleRecallMessage = async (id) => {
-    //     const data = new FormData();
-    //     data.set("id", id);
+    const handleRecallMessage = async (id) => {
+        const data = new FormData();
+        data.set("id", id);
 
-    //     try {
-    //         const respon = await chatServices.handleRecallMessage(data);
-    //         if (respon && respon.errCode === 0) {
-    //             handleGetAllMessage();
-    //             setReloadSidebarChat(!reloadSidebarChat);
-    //             // alert("thu hồi tin nhắn thành công");
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+        try {
+            const respon = await chatServices.handleRecallMessage(data);
+            if (respon && respon.errCode === 0) {
+                handleGetAllMessage();
+                setReloadSidebarChat(!reloadSidebarChat);
+                // alert("thu hồi tin nhắn thành công");
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-    // const handleDeleteMessage = async (id) => {
-    //     const data = new FormData();
-    //     data.set("id", id);
+    const handleDeleteMessage = async (id) => {
+        const data = new FormData();
+        data.set("id", id);
 
-    //     try {
-    //         const respon = await chatServices.handleDeleteMessage(data);
-    //         if (respon && respon.errCode === 0) {
-    //             handleGetAllMessage();
-    //             // alert("thu hồi tin nhắn thành công");
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+        try {
+            const respon = await chatServices.handleDeleteMessage(data);
+            if (respon && respon.errCode === 0) {
+                handleGetAllMessage();
+                // alert("thu hồi tin nhắn thành công");
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     // socket 
-    const handleRecallMessageSocket = (id) => {
-        console.log("handleRecallMessageSocket id", id);
-        try {
-            // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
-            socket.emit("recallMessage", id);
+    // const handleRecallMessageSocket = (id) => {
+    //     console.log("handleRecallMessageSocket id", id);
+    //     try {
+    //         // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
+    //         socket.emit("recallMessage", id);
 
-            // Reset trạng thái và làm mới dữ liệu nếu cần
-            handleGetAllMessage();
-            setReloadSidebarChat(!reloadSidebarChat);
+    //         // Reset trạng thái và làm mới dữ liệu nếu cần
+    //         handleGetAllMessage();
+    //         setReloadSidebarChat(!reloadSidebarChat);
 
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
-    const handleDeleteMessageSocket = (id) => {
-        console.log("handleRecallMessageSocket id", id);
-        try {
-            // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
-            socket.emit("deleteMessage", id);
+    // const handleDeleteMessageSocket = (id) => {
+    //     console.log("handleRecallMessageSocket id", id);
+    //     try {
+    //         // Gửi tin nhắn mới qua Socket.IO thay vì sử dụng API
+    //         socket.emit("deleteMessage", id);
 
-            // Reset trạng thái và làm mới dữ liệu nếu cần
-            handleGetAllMessage();
-            setReloadSidebarChat(!reloadSidebarChat);
+    //         // Reset trạng thái và làm mới dữ liệu nếu cần
+    //         handleGetAllMessage();
+    //         setReloadSidebarChat(!reloadSidebarChat);
 
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
-    useEffect(() => {
-        console.log("run useEffect socket")
-        // send letter
-        socket.on("newMessage", (message) => {
-            // Xử lý tin nhắn mới nhận được từ server (nếu cần)
-            console.log("New message received:", message);
-            if (message && message.errCode === 0) {
-                console.log("re load send letter");
-                setShowEmoji(false);
-                setText("");
-                handleGetAllMessage();
-                setReloadSidebarChat(!reloadSidebarChat);
-            }
-        });
+    // useEffect(() => {
+    //     console.log("run useEffect socket")
+    //     // send letter
+    //     socket.on("newMessage", (message) => {
+    //         // Xử lý tin nhắn mới nhận được từ server (nếu cần)
+    //         console.log("New message received:", message);
+    //         if (message && message.errCode === 0) {
+    //             console.log("re load send letter");
+    //             setShowEmoji(false);
+    //             setText("");
+    //             handleGetAllMessage();
+    //             setReloadSidebarChat(!reloadSidebarChat);
+    //         }
+    //     });
 
-        // recall message
-        socket.on("recallMessage", (message) => {
-            // Xử lý tin nhắn mới nhận được từ server (nếu cần)
-            console.log("Recall message received:", message);
-            if (message && message.errCode === 0) {
-                handleGetAllMessage();
-                setReloadSidebarChat(!reloadSidebarChat);
-            }
-        });
+    //     // recall message
+    //     socket.on("recallMessage", (message) => {
+    //         // Xử lý tin nhắn mới nhận được từ server (nếu cần)
+    //         console.log("Recall message received:", message);
+    //         if (message && message.errCode === 0) {
+    //             handleGetAllMessage();
+    //             setReloadSidebarChat(!reloadSidebarChat);
+    //         }
+    //     });
 
-        // delete message 
-        socket.on("deleteMessage", (message) => {
-            // Xử lý tin nhắn mới nhận được từ server (nếu cần)
-            console.log("Delete message received:", message);
-            if (message && message.errCode === 0) {
-                handleGetAllMessage();
-                setReloadSidebarChat(!reloadSidebarChat);
-            }
-        });
+    //     // delete message 
+    //     socket.on("deleteMessage", (message) => {
+    //         // Xử lý tin nhắn mới nhận được từ server (nếu cần)
+    //         console.log("Delete message received:", message);
+    //         if (message && message.errCode === 0) {
+    //             handleGetAllMessage();
+    //             setReloadSidebarChat(!reloadSidebarChat);
+    //         }
+    //     });
 
-        // return () => {
-        //     // Ngắt kết nối khi component unmount
-        //     socket.disconnect();
-        // };
-    }, [handleSendLetter, handleRecallMessageSocket, handleDeleteMessageSocket]);
+    //     // return () => {
+    //     //     // Ngắt kết nối khi component unmount
+    //     //     socket.disconnect();
+    //     // };
+    // }, [handleSendLetter, handleRecallMessageSocket, handleDeleteMessageSocket]);
 
     // console.log("dataChatRoom",dataChatRoom);
     // console.log("dataUserDecoded",dataUserDecoded);
@@ -678,11 +678,11 @@ function ChatWindow() {
                                                     <span className="mr-2 hidden group-hover:flex">
                                                         {canRecall &&
                                                             <ChangeIcon className={"mr-1 !w-6 !h-6 p-1 rounded-full text-gray-400 cursor-pointer hover:text-gray-500 hover:bg-gray-200"}
-                                                                onClick={() => handleRecallMessageSocket(item.id)}
+                                                                onClick={() => handleRecallMessage(item.id)}
                                                             />
                                                         }
                                                         <TrashIcon className={"!w-6 !h-6 p-1 rounded-full text-gray-400 cursor-pointer hover:text-gray-500 hover:bg-gray-200"}
-                                                            onClick={() => handleDeleteMessageSocket(item.id)}
+                                                            onClick={() => handleDeleteMessage(item.id)}
                                                         />
                                                     </span>
                                                     <div className="flex flex-col items-end">
@@ -715,11 +715,11 @@ function ChatWindow() {
                                                     <span className="ml-2 hidden group-hover:flex">
                                                         {canRecall &&
                                                             <ChangeIcon className={"mr-1 !w-6 !h-6 p-1 rounded-full text-gray-400 cursor-pointer hover:text-gray-500 hover:bg-gray-200"}
-                                                                onClick={() => handleRecallMessageSocket(item.id)}
+                                                                onClick={() => handleRecallMessage(item.id)}
                                                             />
                                                         }
                                                         <TrashIcon className={"!w-6 !h-6 p-1 rounded-full text-gray-400 cursor-pointer hover:text-gray-500 hover:bg-gray-200"}
-                                                            onClick={() => handleDeleteMessageSocket(item.id)}
+                                                            onClick={() => handleDeleteMessage(item.id)}
                                                         />
                                                     </span>
                                                 }
