@@ -1,11 +1,13 @@
 import clsx from "clsx";
-import { BellIcon, DoubleNextIcon, DoublePrevIcon, NextIcon, PrevIcon } from "../Icons";
+import { DoubleNextIcon, DoublePrevIcon, NextIcon, PrevIcon } from "../Icons";
 import { useEffect, useState } from "react";
 
 function Pagination({ postsPerPage, totalPosts, paginate }) {
   const [currentPage, setCurrentPage] = useState(1);
   const pageNumbers = [];
-  const [btnNextDisable, setBtnNextDisable] = useState(totalPosts <= 5 ? true : false);
+  const [btnNextDisable, setBtnNextDisable] = useState(
+    totalPosts <= 5 ? true : false
+  );
   const [btnPrevDisable, setBtnPrevDisable] = useState(true);
 
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
@@ -68,17 +70,13 @@ function Pagination({ postsPerPage, totalPosts, paginate }) {
 
   useEffect(() => {
     if (pageNumbers.length > 10) {
-      handleUpdatePagesCompact(currentPage)
+      handleUpdatePagesCompact(currentPage);
     }
-  }, [currentPage])
+  }, [currentPage]);
 
-  // console.log("pageNumbersCompact", pageNumbersCompact);
-  // console.log("pageNumbers", pageNumbers)
-  // console.log("pageNumbers.length", pageNumbers.length)
   return (
     <div className="flex items-center w-full flex-wrap mt-3 select-none">
-      {/* page 1 */}
-      {pageNumbers.length > 10 && 
+      {pageNumbers.length > 10 && (
         <span
           className={clsx(
             "h-8 w-8 mx-2 my-2 bg-sky-400 rounded-sm hover:bg-sky-700 transition-all duration-300 flex justify-center items-center cursor-pointer",
@@ -95,8 +93,8 @@ function Pagination({ postsPerPage, totalPosts, paginate }) {
           }}
         >
           <DoublePrevIcon className="text-white !h-6 !w-6" />
-        </span>      
-      }
+        </span>
+      )}
 
       <span
         className={clsx(
@@ -111,70 +109,69 @@ function Pagination({ postsPerPage, totalPosts, paginate }) {
       </span>
       {pageNumbers.length > 10
         ? pageNumbersCompact.map((number, index) => {
-          return (
-            <span
-              key={index}
-              className={clsx(
-                "bg-sky-400 rounded-sm h-8 w-8 p-1 mx-2 my-2 text-white flex justify-center items-center cursor-pointer hover:bg-sky-700 transition-all duration-300 text-sm",
-                {
-                  "!bg-sky-700": currentPage === number,
-                }
-              )}
-              onClick={() => {
-                paginate(number);
-                setCurrentPage(number);
-                // handleUpdatePagesCompact(number);
-                if (pageNumbers.length > 0 && pageNumbers[0] === number) {
-                  setBtnPrevDisable(true);
-                  setBtnNextDisable(false);
-                } else if (
-                  pageNumbers.length > 0 &&
-                  pageNumbers[pageNumbers.length - 1] === number
-                ) {
-                  setBtnNextDisable(true);
-                  setBtnPrevDisable(false);
-                } else {
-                  setBtnNextDisable(false);
-                  setBtnPrevDisable(false);
-                }
-              }}
-            >
-              {number}
-            </span>
-          );
-        })
+            return (
+              <span
+                key={index}
+                className={clsx(
+                  "bg-sky-400 rounded-sm h-8 w-8 p-1 mx-2 my-2 text-white flex justify-center items-center cursor-pointer hover:bg-sky-700 transition-all duration-300 text-sm",
+                  {
+                    "!bg-sky-700": currentPage === number,
+                  }
+                )}
+                onClick={() => {
+                  paginate(number);
+                  setCurrentPage(number);
+                  if (pageNumbers.length > 0 && pageNumbers[0] === number) {
+                    setBtnPrevDisable(true);
+                    setBtnNextDisable(false);
+                  } else if (
+                    pageNumbers.length > 0 &&
+                    pageNumbers[pageNumbers.length - 1] === number
+                  ) {
+                    setBtnNextDisable(true);
+                    setBtnPrevDisable(false);
+                  } else {
+                    setBtnNextDisable(false);
+                    setBtnPrevDisable(false);
+                  }
+                }}
+              >
+                {number}
+              </span>
+            );
+          })
         : pageNumbers.map((number, index) => {
-          return (
-            <span
-              key={index}
-              className={clsx(
-                "bg-sky-400 rounded-sm h-8 w-8 p-1 mx-2 my-2 text-white flex justify-center items-center cursor-pointer hover:bg-sky-700 transition-all duration-300 text-sm",
-                {
-                  "!bg-sky-700": currentPage === number,
-                }
-              )}
-              onClick={() => {
-                paginate(number);
-                setCurrentPage(number);
-                if (pageNumbers.length > 0 && pageNumbers[0] === number) {
-                  setBtnPrevDisable(true);
-                  setBtnNextDisable(false);
-                } else if (
-                  pageNumbers.length > 0 &&
-                  pageNumbers[pageNumbers.length - 1] === number
-                ) {
-                  setBtnNextDisable(true);
-                  setBtnPrevDisable(false);
-                } else {
-                  setBtnNextDisable(false);
-                  setBtnPrevDisable(false);
-                }
-              }}
-            >
-              {number}
-            </span>
-          );
-        })}
+            return (
+              <span
+                key={index}
+                className={clsx(
+                  "bg-sky-400 rounded-sm h-8 w-8 p-1 mx-2 my-2 text-white flex justify-center items-center cursor-pointer hover:bg-sky-700 transition-all duration-300 text-sm",
+                  {
+                    "!bg-sky-700": currentPage === number,
+                  }
+                )}
+                onClick={() => {
+                  paginate(number);
+                  setCurrentPage(number);
+                  if (pageNumbers.length > 0 && pageNumbers[0] === number) {
+                    setBtnPrevDisable(true);
+                    setBtnNextDisable(false);
+                  } else if (
+                    pageNumbers.length > 0 &&
+                    pageNumbers[pageNumbers.length - 1] === number
+                  ) {
+                    setBtnNextDisable(true);
+                    setBtnPrevDisable(false);
+                  } else {
+                    setBtnNextDisable(false);
+                    setBtnPrevDisable(false);
+                  }
+                }}
+              >
+                {number}
+              </span>
+            );
+          })}
       <span
         className={clsx(
           "h-8 w-8 mx-2 my-2 bg-sky-400 rounded-sm hover:bg-sky-700 transition-all duration-300 flex justify-center items-center cursor-pointer",
@@ -187,8 +184,7 @@ function Pagination({ postsPerPage, totalPosts, paginate }) {
         <NextIcon className="text-white !h-6 !w-6" />
       </span>
 
-      {/* page end */}
-      {pageNumbers.length > 10 && 
+      {pageNumbers.length > 10 && (
         <span
           className={clsx(
             "h-8 w-8 mx-2 my-2 bg-sky-400 rounded-sm hover:bg-sky-700 transition-all duration-300 flex justify-center items-center cursor-pointer",
@@ -205,8 +201,8 @@ function Pagination({ postsPerPage, totalPosts, paginate }) {
           }}
         >
           <DoubleNextIcon className="text-white !h-6 !w-6" />
-        </span>      
-      }
+        </span>
+      )}
     </div>
   );
 }

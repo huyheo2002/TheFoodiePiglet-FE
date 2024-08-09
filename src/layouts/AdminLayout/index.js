@@ -8,54 +8,56 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
 import * as commonServices from "../../services/commonServices";
 
-// only header
 const AdminLayout = ({ children }) => {
   const navigate = useNavigate();
-  const toggleSidebar = useSelector(states => states.admin.toggleSidebar)
+  const toggleSidebar = useSelector((states) => states.admin.toggleSidebar);
   const { toggleDataTable, setToggleDataTable } = useContext(GlobalContext);
   const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
 
   const decoded = async () => {
     if (dataUser) {
       const respon = await commonServices.handleDecoded(dataUser.token);
-      // console.log("respon.decoded", respon)
       if (respon && respon.errCode === 0) {
         return respon.decoded;
       }
     }
   };
-  
+
   useEffect(() => {
     if (!dataUser) {
       navigate("/");
     } else {
       decoded().then((infoUser) => {
-        if(infoUser.user.roleName === "User") {
+        if (infoUser.user.roleName === "User") {
           navigate("/");
         }
       });
     }
-  }, [])
+  }, []);
 
   return (
-    <div className="w-full relative"
+    <div
+      className="w-full relative"
       onClick={() => {
-        if(toggleDataTable) {
+        if (toggleDataTable) {
           setToggleDataTable(false);
-          // console.log("duma layout", toggleDataTable)        
         }
       }}
     >
       <div className="relative flex">
-        <div className={clsx("fixed inset-y-0 w-[300px] left-0 z-50 bg-white", {
-          "!w-0": toggleSidebar === false
-        })}>
-          <Sidebar/>
+        <div
+          className={clsx("fixed inset-y-0 w-[300px] left-0 z-50 bg-white", {
+            "!w-0": toggleSidebar === false,
+          })}
+        >
+          <Sidebar />
         </div>
-        <div className={clsx("w-full ml-[300px] relative", {
-          "!ml-0": toggleSidebar === false
-        })}>
-          <Header/>
+        <div
+          className={clsx("w-full ml-[300px] relative", {
+            "!ml-0": toggleSidebar === false,
+          })}
+        >
+          <Header />
           <div className="mt-24">{children}</div>
         </div>
       </div>

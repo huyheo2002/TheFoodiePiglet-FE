@@ -25,16 +25,16 @@ function InputFile({ ...props }) {
         "pointer-events-none": onlyRead,
       })}
     >
-      <label htmlFor={id}
+      <label
+        htmlFor={id}
         className="capitalize block text-base font-medium text-black tracking-wider pb-1"
-      >{label}</label>
+      >
+        {label}
+      </label>
       <label
         htmlFor={id}
         className={clsx(
-          "bg-[#00b4d7] inline-block px-5 py-3 uppercase text-base font-medium text-white cursor-pointer rounded-xl shadow-black-b-0.35 transition-all",
-          {
-            // hidden: onlyRead,
-          }
+          "bg-[#00b4d7] inline-block px-5 py-3 uppercase text-base font-medium text-white cursor-pointer rounded-xl shadow-black-b-0.35 transition-all"
         )}
       >
         Choose a image
@@ -53,11 +53,7 @@ function InputFile({ ...props }) {
           />
           <div className={clsx("w-1/2 h-fit my-3")}>
             <Image
-              alt={"hello"}
-              // src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeiDrB2s3_CnalkKnSpmf14nSXSJeQxYUhxQ&usqp=CAU"
-              // src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg4ktM8KVJlJT5FtqVk4cPTZjfxzH9_aaLvg&usqp=CAU"
-              // src="https://i0.wp.com/www.alittlebithuman.com/wp-content/uploads/2022/04/maxresdefault-1.jpg?fit=1280%2C720&ssl=1"
-              // src="https://www.stylevore.com/wp-content/uploads/2020/01/0aecae65e9c73f438c2c77120067ce29.jpg"
+              alt={imagePreview ?? ""}
               src={
                 imagePreview ??
                 "https://us.123rf.com/450wm/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg?ver=6"
@@ -69,7 +65,7 @@ function InputFile({ ...props }) {
         <Fragment>
           <div className={clsx("w-1/2 h-fit my-3")}>
             <Image
-              alt={"hello"}
+              alt={imagePreview ?? ""}
               src={
                 imagePreview ??
                 "https://us.123rf.com/450wm/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg?ver=6"

@@ -67,7 +67,7 @@ export const dataUser = [
     address: "Japan",
     phone: "210.067.6132",
     website: "elvis.io",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 8,
@@ -77,7 +77,7 @@ export const dataUser = [
     address: "Japan",
     phone: "586.493.6943 x140",
     website: "jacynthe.com",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 9,
@@ -127,7 +127,7 @@ export const dataUser = [
     address: "Japan",
     phone: "210.067.6132",
     website: "elvis.io",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 8,
@@ -137,7 +137,7 @@ export const dataUser = [
     address: "Japan",
     phone: "586.493.6943 x140",
     website: "jacynthe.com",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 9,
@@ -187,7 +187,7 @@ export const dataUser = [
     address: "Japan",
     phone: "210.067.6132",
     website: "elvis.io",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 8,
@@ -197,7 +197,7 @@ export const dataUser = [
     address: "Japan",
     phone: "586.493.6943 x140",
     website: "jacynthe.com",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 9,
@@ -247,7 +247,7 @@ export const dataUser = [
     address: "Japan",
     phone: "210.067.6132",
     website: "elvis.io",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 8,
@@ -257,7 +257,7 @@ export const dataUser = [
     address: "Japan",
     phone: "586.493.6943 x140",
     website: "jacynthe.com",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 9,
@@ -307,7 +307,7 @@ export const dataUser = [
     address: "Japan",
     phone: "210.067.6132",
     website: "elvis.io",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 8,
@@ -317,7 +317,7 @@ export const dataUser = [
     address: "Japan",
     phone: "586.493.6943 x140",
     website: "jacynthe.com",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 9,
@@ -367,7 +367,7 @@ export const dataUser = [
     address: "Japan",
     phone: "210.067.6132",
     website: "elvis.io",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 8,
@@ -377,7 +377,7 @@ export const dataUser = [
     address: "Japan",
     phone: "586.493.6943 x140",
     website: "jacynthe.com",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 9,
@@ -427,7 +427,7 @@ export const dataUser = [
     address: "Japan",
     phone: "210.067.6132",
     website: "elvis.io",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 8,
@@ -437,7 +437,7 @@ export const dataUser = [
     address: "Japan",
     phone: "586.493.6943 x140",
     website: "jacynthe.com",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 9,
@@ -487,7 +487,7 @@ export const dataUser = [
     address: "Japan",
     phone: "210.067.6132",
     website: "elvis.io",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 8,
@@ -497,7 +497,7 @@ export const dataUser = [
     address: "Japan",
     phone: "586.493.6943 x140",
     website: "jacynthe.com",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 9,
@@ -547,7 +547,7 @@ export const dataUser = [
     address: "Japan",
     phone: "210.067.6132",
     website: "elvis.io",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 8,
@@ -557,7 +557,7 @@ export const dataUser = [
     address: "Japan",
     phone: "586.493.6943 x140",
     website: "jacynthe.com",
-    company: "LG"
+    company: "LG",
   },
   {
     id: 9,

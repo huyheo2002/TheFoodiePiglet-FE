@@ -40,8 +40,10 @@ function Heading({
     "text-[2rem] font-semibold px-4 text-primary-hover relative inline-flex items-center justify-center gap-3",
     {
       "!capitalize font-semibold px-0 !text-2xl": variant === "modal",
-      "after:bg-primary-hover after:contents-[''] after:w-[325px] after:h-[2px] after:absolute after:z-10 after:top-1/2 after:right-full": line,
-      "before:bg-primary-hover before:contents-[''] before:w-[325px] before:h-[2px] before:absolute before:z-10 before:top-1/2 before:left-full": line,
+      "after:bg-primary-hover after:contents-[''] after:w-[325px] after:h-[2px] after:absolute after:z-10 after:top-1/2 after:right-full":
+        line,
+      "before:bg-primary-hover before:contents-[''] before:w-[325px] before:h-[2px] before:absolute before:z-10 before:top-1/2 before:left-full":
+        line,
     }
   );
 
@@ -52,7 +54,6 @@ function Heading({
         {children}
         {iconRight && iconRight}
       </span>
-      {/* <p className="after:right-full"></p> */}
     </Comp>
   );
 }

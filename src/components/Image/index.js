@@ -18,15 +18,16 @@ function Image({
   };
 
   return (
-    <div className={clsx("group overflow-hidden flex items-center", {
+    <div
+      className={clsx("group overflow-hidden flex items-center", {
         [className]: className,
-        "bg-white": fallback !== ""        
-    })}
+        "bg-white": fallback !== "",
+      })}
       onClick={onClick}
     >
       <img
         className={clsx("w-full h-full object-fill", {
-            "group-hover:scale-110 transition-all duration-300": effectScale
+          "group-hover:scale-110 transition-all duration-300": effectScale,
         })}
         src={fallback || src}
         alt={alt}

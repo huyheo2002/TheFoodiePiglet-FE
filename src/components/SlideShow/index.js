@@ -61,24 +61,25 @@ function SlideShow({ className, data }) {
         // onSwiper={(swiper) => console.log(swiper)}
         // onSlideChange={() => console.log("slide change")}
       >
-        {data.length > 0 && data.map((item, index) => {
-          return (
-            <SwiperSlide key={index}>
-              <div
-                className={clsx(
-                  "w-full h-[600px] relative rounded-xl overflow-hidden select-none",
-                  className                  
-                )}
-              >
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full absolute inset-0"
-                />
-              </div>
-            </SwiperSlide>
-          );
-        })}
+        {data.length > 0 &&
+          data.map((item, index) => {
+            return (
+              <SwiperSlide key={index}>
+                <div
+                  className={clsx(
+                    "w-full h-[600px] relative rounded-xl overflow-hidden select-none",
+                    className
+                  )}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full absolute inset-0"
+                  />
+                </div>
+              </SwiperSlide>
+            );
+          })}
         <SwiperButton
           type="next"
           classNameWrapper="absolute top-1/2 right-1 font-[70px] z-50 translate-y-[-50%] cursor-pointer p-2 bg-white rounded-full hover:bg-[#ccc] transition-all duration-300 group"

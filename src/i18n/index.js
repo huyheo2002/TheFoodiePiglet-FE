@@ -12,7 +12,6 @@ import ADMIN_EN from "../locales/en/admin.json";
 import DATATABLE_EN from "../locales/en/dataTable.json";
 import ORDER_EN from "../locales/en/order.json";
 
-
 // Vi (Vietnamese)
 import HEADER_VI from "../locales/vi/header.json";
 import HOME_VI from "../locales/vi/home.json";
@@ -45,7 +44,6 @@ const resources = {
     admin: ADMIN_VI,
     table: DATATABLE_VI,
     order: ORDER_VI,
-
   },
 };
 
@@ -57,5 +55,5 @@ i18n.use(initReactI18next).init({
   defaultNS: "home",
   interpolation: {
     escapeValue: false,
-  },  
+  },
 });

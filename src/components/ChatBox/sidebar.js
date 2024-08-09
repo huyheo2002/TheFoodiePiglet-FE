@@ -10,126 +10,161 @@ import * as chatServices from "../../services/chatServices";
 
 import useLocalStorage from "../../hooks/useLocalStorage";
 import GlobalContext from "../../contexts/globalContext";
-
+import toast from "react-hot-toast";
 
 function Sidebar() {
-    const { setIdChatRoom, idChatRoom } = useContext(GlobalContext);
-    const [activeOption, setActiveOption] = useState(1);
-    const [chatBoxActive, setChatBoxActive] = useState(-1);
-    const [listUser, setListUser] = useState([]);
-    const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-    const [listChatroom, setListChatroom] = useState([]);
+  const { setIdChatRoom, idChatRoom } = useContext(GlobalContext);
+  const [activeOption, setActiveOption] = useState(1);
+  const [chatBoxActive, setChatBoxActive] = useState(-1);
+  const [listUser, setListUser] = useState([]);
+  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
+  const [listChatroom, setListChatroom] = useState([]);
 
-    const handleGetAllUsers = async () => {
-        const responUser = await userServices.getAllUsers("all");
-        if (responUser && responUser.errCode === 0 && responUser.users) {
-            if (dataUser) {
-                const respon = await commonServices.handleDecoded(dataUser.token);
-                if (respon && respon.errCode === 0) {
-                    const listUser = responUser.users || [];
-                    const filterListUser = listUser.length > 0 && listUser.filter(item => item.id !== respon.decoded.user.id && item.Role.name !== "User");
-                    setListUser(filterListUser)
-
-                    return respon.decoded;
-                }
-            }
-        }
-    };
-
-
-    const handleGetAllRoomParticipant = async () => {
-        const respon = await chatServices.getAllRoomParticipant();
+  const handleGetAllUsers = async () => {
+    const responUser = await userServices.getAllUsers("all");
+    if (responUser && responUser.errCode === 0 && responUser.users) {
+      if (dataUser) {
+        const respon = await commonServices.handleDecoded(dataUser.token);
         if (respon && respon.errCode === 0) {
-            // console.log("respon handleGetAllRoomParticipant", respon);
+          const listUser = responUser.users || [];
+          const filterListUser =
+            listUser.length > 0 &&
+            listUser.filter(
+              (item) =>
+                item.id !== respon.decoded.user.id && item.Role.name !== "User"
+            );
+          setListUser(filterListUser);
 
-            return respon.room;
+          return respon.decoded;
         }
+      }
+    }
+  };
 
-        return;
+  const handleGetAllRoomParticipant = async () => {
+    const respon = await chatServices.getAllRoomParticipant();
+    if (respon && respon.errCode === 0) {
+      return respon.room;
     }
 
-    const fetchData = async () => {
-        try {
-            const result = await handleGetAllUsers();
-            if (result) {
-                // console.log("result sidebar", result);
-                const id = result.user.id;
-                const listRoomParticipant = await handleGetAllRoomParticipant();
+    return;
+  };
 
-                const filterRoomParticipant = listRoomParticipant.length > 0 && listRoomParticipant.filter(item => item.userId === id);
-                // console.log("filterRoomParticipant", filterRoomParticipant);
-                if (filterRoomParticipant.length > 0) {
-                    filterRoomParticipant.sort((a, b) => new Date(b.ChatRoom.createdAt) - new Date(a.ChatRoom.createdAt));
-                    setListChatroom(filterRoomParticipant);
-                }
-                // await handleGetAllChatRoomWithID(id);
-            }
-        } catch (error) {
-            console.error('Error fetching data:', error);
+  const fetchData = async () => {
+    try {
+      const result = await handleGetAllUsers();
+      if (result) {
+        const id = result.user.id;
+        const listRoomParticipant = await handleGetAllRoomParticipant();
+
+        const filterRoomParticipant =
+          listRoomParticipant.length > 0 &&
+          listRoomParticipant.filter((item) => item.userId === id);
+        if (filterRoomParticipant.length > 0) {
+          filterRoomParticipant.sort(
+            (a, b) =>
+              new Date(b.ChatRoom.createdAt) - new Date(a.ChatRoom.createdAt)
+          );
+          setListChatroom(filterRoomParticipant);
         }
-    };
+      }
+    } catch (error) {
+      toast.error(`Error fetching data: ${error} `)
+    }
+  };
 
-    useEffect(() => {  
-        // bug nháy UI   
-        setListChatroom([]);
-        fetchData();        
-    }, [idChatRoom]);
+  useEffect(() => {
+    // bug nháy UI
+    setListChatroom([]);
+    fetchData();
+  }, [idChatRoom]);
 
-    console.log("listChatroom", listChatroom);
-    return (
-        <div className="pr-3">
-            {/* header */}
-            <div className="flex justify-between items-center">
-                <h3 className="text-black font-semibold text-xl">Chat</h3>
-                <div className="flex items-center">
-                    <DotHorizontalIcon className={"text-black bg-gray-200 rounded-full !w-8 !h-8 p-2 overflow-hidden mx-1 cursor-pointer hover:bg-gray-300 transition-all"} />
-                    <PlusIcon className={"text-black bg-gray-200 rounded-full !w-8 !h-8 p-2 overflow-hidden mx-1 cursor-pointer hover:bg-gray-300 transition-all"} />
-                </div>
-            </div>
-
-            {/* search */}
-            <div className="w-full">
-                <Search ItemSearchResult={ItemSearchResult} type={"User"} listData={listUser} />
-            </div>
-
-            <div className="w-full my-2 flex items-center">
-                <div className={clsx("px-2 py-1 bg-white rounded-lg overflow-hidden text-black text-sm font-semibold cursor-pointer mr-2 hover:bg-gray-300 transition-all", {
-                    "!bg-[#e6f2fe] !text-[#548be6]": activeOption === 1
-                })}
-                    onClick={() => {
-                        if (activeOption !== 1) {
-                            setActiveOption(1)
-                        }
-                    }}
-                >Hộp thư</div>
-                <div className={clsx("px-2 py-1 bg-white rounded-lg overflow-hidden text-black text-sm font-semibold cursor-pointer mr-2 hover:bg-gray-300 transition-all", {
-                    "!bg-[#e6f2fe] !text-[#548be6]": activeOption === 2
-                })}
-                    onClick={() => {
-                        if (activeOption !== 2) {
-                            setActiveOption(2)
-                        }
-                    }}
-                >Cộng đồng</div>
-            </div>
-
-            <div className="w-full my-2 overflow-y-scroll scrollbar h-[480px]">
-                {listChatroom.length > 0 ?
-                    listChatroom.map((item, index) => {
-                        return <ChatBoxCompact key={index} data={item} active={chatBoxActive} idTest={index} onClick={() => {
-                            setChatBoxActive(index);
-                            setIdChatRoom(item.ChatRoom.id);
-                        }} />
-                    })
-                    :
-                    <div className="bg-white p-8 rounded shadow-md max-w-sm w-full">
-                        <h1 className="text-2xl font-bold mb-4 text-center">Oops!</h1>
-                        <p className="text-gray-600 mb-4 text-center">Gần đây bạn chưa nhắn tin với người nào.</p>
-                    </div>
-                }
-            </div>
+  return (
+    <div className="pr-3">
+      <div className="flex justify-between items-center">
+        <h3 className="text-black font-semibold text-xl">Chat</h3>
+        <div className="flex items-center">
+          <DotHorizontalIcon
+            className={
+              "text-black bg-gray-200 rounded-full !w-8 !h-8 p-2 overflow-hidden mx-1 cursor-pointer hover:bg-gray-300 transition-all"
+            }
+          />
+          <PlusIcon
+            className={
+              "text-black bg-gray-200 rounded-full !w-8 !h-8 p-2 overflow-hidden mx-1 cursor-pointer hover:bg-gray-300 transition-all"
+            }
+          />
         </div>
-    );
+      </div>
+
+      <div className="w-full">
+        <Search
+          ItemSearchResult={ItemSearchResult}
+          type={"User"}
+          listData={listUser}
+        />
+      </div>
+
+      <div className="w-full my-2 flex items-center">
+        <div
+          className={clsx(
+            "px-2 py-1 bg-white rounded-lg overflow-hidden text-black text-sm font-semibold cursor-pointer mr-2 hover:bg-gray-300 transition-all",
+            {
+              "!bg-[#e6f2fe] !text-[#548be6]": activeOption === 1,
+            }
+          )}
+          onClick={() => {
+            if (activeOption !== 1) {
+              setActiveOption(1);
+            }
+          }}
+        >
+          Hộp thư
+        </div>
+        <div
+          className={clsx(
+            "px-2 py-1 bg-white rounded-lg overflow-hidden text-black text-sm font-semibold cursor-pointer mr-2 hover:bg-gray-300 transition-all",
+            {
+              "!bg-[#e6f2fe] !text-[#548be6]": activeOption === 2,
+            }
+          )}
+          onClick={() => {
+            if (activeOption !== 2) {
+              setActiveOption(2);
+            }
+          }}
+        >
+          Cộng đồng
+        </div>
+      </div>
+
+      <div className="w-full my-2 overflow-y-scroll scrollbar h-[480px]">
+        {listChatroom.length > 0 ? (
+          listChatroom.map((item, index) => {
+            return (
+              <ChatBoxCompact
+                key={index}
+                data={item}
+                active={chatBoxActive}
+                idTest={index}
+                onClick={() => {
+                  setChatBoxActive(index);
+                  setIdChatRoom(item.ChatRoom.id);
+                }}
+              />
+            );
+          })
+        ) : (
+          <div className="bg-white p-8 rounded shadow-md max-w-sm w-full">
+            <h1 className="text-2xl font-bold mb-4 text-center">Oops!</h1>
+            <p className="text-gray-600 mb-4 text-center">
+              Gần đây bạn chưa nhắn tin với người nào.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default Sidebar;

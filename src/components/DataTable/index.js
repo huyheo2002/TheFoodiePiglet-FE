@@ -18,6 +18,7 @@ import Image from "../Image";
 import Modal from "../Modal";
 import { useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
+import toast from "react-hot-toast";
 
 function DataTable({
   data,
@@ -49,15 +50,17 @@ function DataTable({
   // handle permission
   const handleOpenFeatures = () => {
     if (listPermissionCurrentInPage && listPermissionCurrentInPage.length > 0) {
-      console.log("listPermissionCurrentInPage dataTable", listPermissionCurrentInPage);
-
       listPermissionCurrentInPage.map((item) => {
         // check views
         let strKeyword = item.keyword || "";
         let convertToArray = strKeyword.split("-");
         let getKeyword = convertToArray.length > 0 && convertToArray[0];
 
-        const filterPermission = listPermission.length > 0 && listPermission.filter((itemFilter) => itemFilter.permissionId === item.id);
+        const filterPermission =
+          listPermission.length > 0 &&
+          listPermission.filter(
+            (itemFilter) => itemFilter.permissionId === item.id
+          );
         if (getKeyword === "view") {
           if (filterPermission.length > 0) {
             setPermissionRead(true);
@@ -77,7 +80,7 @@ function DataTable({
         }
       });
     }
-  }
+  };
 
   useEffect(() => {
     handleOpenFeatures();
@@ -94,8 +97,6 @@ function DataTable({
   indexOfLastPost = currentPage * postPerPage;
   indexOfFirstPost = indexOfLastPost - postPerPage;
   currentPost = data.slice(indexOfFirstPost, indexOfLastPost);
-  // console.log("currentPost", currentPost);
-  // data.slice(indexOfFirstPost, indexOfLastPost)
   const onChangePage = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -116,27 +117,19 @@ function DataTable({
   const handleCloseFullScreenImage = () => {
     setToggleFullScreenImage(false);
     setLinkImage(null);
-  }
-
-  // console.log("permissionCreate", permissionCreate)
-  // console.log("permissionUpdate", permissionUpdate)
-  // console.log("permissionDelete", permissionDelete)
-  // console.log("permissionRead", permissionRead)
-
-
-  // console.log("data from dataTable", data);
+  };
 
   // convert to data csv
   const transformData = (data) => {
     const newArray = [];
-  
+
     if (data.length === 0) {
       return newArray;
     }
-  
+
     const keys = Object.keys(data[0]);
     newArray.push(keys);
-  
+
     data.forEach((item) => {
       const newItem = [];
       keys.forEach((key) => {
@@ -148,38 +141,33 @@ function DataTable({
       });
       newArray.push(newItem);
     });
-  
+
     return newArray;
   };
 
   useEffect(() => {
-    let newDataTransformedData = transformData(data)    
-    setTransformedData(newDataTransformedData)
-  }, [data])
+    let newDataTransformedData = transformData(data);
+    setTransformedData(newDataTransformedData);
+  }, [data]);
 
   return (
     <Fragment>
       <div className="flex justify-end my-2">
-        {btnBack && <Button variant={"primary"} onClick={() => navigate(-1)}>Back</Button>}
-        {listPermission && listPermissionCurrentInPage && permissionCreate ?
+        {btnBack && (
+          <Button variant={"primary"} onClick={() => navigate(-1)}>
+            Back
+          </Button>
+        )}
+        {listPermission && listPermissionCurrentInPage && permissionCreate ? (
           <Fragment>
-            {/* <input type="file" id="import" hidden onChange={handleFileSelect} />
-            <label htmlFor="import">
-              <Button
-                variant={"excel"}
-                onClick={handleImportClick}
-                iconLeft={<ImportFileIcon className={"!w-6 !h-6"} />}
-              >
-                Import
-              </Button>
-            </label> */}
-
             <Button
               variant={"excel"}
-              onClick={() => { }}
+              onClick={() => {}}
               iconLeft={<ExcelIcon className={"!w-6 !h-6"} />}
             >
-              <CSVLink data={transformedData} filename={"data.csv"}>Export to CSV</CSVLink>
+              <CSVLink data={transformedData} filename={"data.csv"}>
+                Export to CSV
+              </CSVLink>
             </Button>
 
             <Button
@@ -190,18 +178,17 @@ function DataTable({
               {btnCreateTitle ?? "Create User"}
             </Button>
           </Fragment>
-          :
+        ) : (
           <Button
             variant={"viewMore"}
-            // onClick={handleModalCreate && handleModalCreate}
             onClick={() => {
-              alert("Bạn chưa được cấp quyền để thực hiện chức năng này");
+              toast.error("Bạn chưa được cấp quyền để thực hiện chức năng này")
             }}
             iconLeft={<PlusIcon className={"!w-6 !h-6"} />}
           >
             {btnCreateTitle ?? "Create User"}
           </Button>
-        }
+        )}
       </div>
       <table className="w-full border border-gray-200 select-none">
         <thead className="rounded-t-lg">
@@ -220,20 +207,15 @@ function DataTable({
               })}
             >
               {t(`key.action`)}
-              {/* Action */}
             </th>
           </tr>
         </thead>
         <tbody className="">
-          {/* display count post */}
           {currentPost.length > 0 &&
             currentPost.map((item, index) => {
               let getValuesItem = Object.values(item) || [];
-              // console.log("getValuesItem", getValuesItem)
               let getKeysItem = Object.keys(item) || [];
-              // console.log("item currentpost", item);
               let getIndexOfImage = getKeysItem.indexOf("image") ?? -1;
-              // console.log("getIndexOfImage", getIndexOfImage)              
               return (
                 <tr
                   className="bg-white hover:bg-[#e6f2fe] transition-all duration-300 group"
@@ -241,10 +223,8 @@ function DataTable({
                 >
                   {getValuesItem.length > 0 &&
                     getValuesItem.map((valueItem, indexValue) => {
-                      // console.log("valueItem", valueItem)
                       if (Array.isArray(valueItem)) {
-                        // console.log("valueItem", valueItem);
-                        const strValue = valueItem.join(';\n') || "";
+                        const strValue = valueItem.join(";\n") || "";
                         return (
                           <td
                             className="py-2 px-6 text-sm font-normal border-b border-gray-200 overflow-hidden max-w-[8rem] text-ellipsis whitespace-nowrap"
@@ -254,10 +234,10 @@ function DataTable({
                               className="w-full h-32 resize-none border-[1px] border-black text-base font-medium p-1 rounded-md overflow-hidden"
                               value={strValue}
                               readOnly
-                              style={{ maxHeight: '10rem', overflowY: 'auto' }}
+                              style={{ maxHeight: "10rem", overflowY: "auto" }}
                             />
                           </td>
-                        )
+                        );
                       }
 
                       return (
@@ -265,22 +245,21 @@ function DataTable({
                           className="py-4 px-6 text-sm font-normal border-b border-gray-200 group-hover:text-[#548be6] transition-all duration-300 overflow-hidden max-w-[8rem] text-ellipsis whitespace-nowrap"
                           key={indexValue}
                         >
-                          {indexValue === getIndexOfImage ?
-                            <Image className={"cursor-pointer"} src={valueItem}
+                          {indexValue === getIndexOfImage ? (
+                            <Image
+                              className={"cursor-pointer"}
+                              src={valueItem}
                               onClick={() => {
-                                setToggleFullScreenImage(true)
-                                setLinkImage(valueItem)
+                                setToggleFullScreenImage(true);
+                                setLinkImage(valueItem);
                               }}
                             />
-                            :
+                          ) : (
                             valueItem
-                          }
+                          )}
                         </td>
                       );
                     })}
-
-
-                  {/* action features */}
                   <td
                     className={clsx("border-b border-gray-200", {
                       "w-1/12": manyFeatures,
@@ -288,7 +267,9 @@ function DataTable({
                   >
                     {!manyFeatures ? (
                       <div className="flex justify-around">
-                        {listPermission && listPermissionCurrentInPage && permissionRead ?
+                        {listPermission &&
+                        listPermissionCurrentInPage &&
+                        permissionRead ? (
                           <BookOpenIcon
                             className="!w-6 !h-6 text-green-400 hover:text-green-600 transition-all cursor-pointer"
                             onClick={() => {
@@ -297,19 +278,18 @@ function DataTable({
                               }
                             }}
                           />
-                          :
+                        ) : (
                           <BookOpenIcon
                             className="!w-6 !h-6 text-gray-400 hover:text-gray-600 transition-all cursor-default"
                             onClick={() => {
-                              alert("Bạn chưa được cấp quyền để thực hiện chức năng này");
-                              // if (handleModalRead) {
-                              //   handleModalRead(item.id);
-                              // }
+                              toast.error("Bạn chưa được cấp quyền để thực hiện chức năng này")
                             }}
                           />
-                        }
+                        )}
 
-                        {listPermission && listPermissionCurrentInPage && permissionUpdate ?
+                        {listPermission &&
+                        listPermissionCurrentInPage &&
+                        permissionUpdate ? (
                           <PencilIcon
                             className="!w-6 !h-6 text-yellow-400 hover:text-yellow-600 transition-all cursor-pointer"
                             onClick={() => {
@@ -318,19 +298,18 @@ function DataTable({
                               }
                             }}
                           />
-                          :
+                        ) : (
                           <PencilIcon
                             className="!w-6 !h-6 text-gray-400 hover:text-gray-600 transition-all cursor-pointer"
                             onClick={() => {
-                              alert("Bạn chưa được cấp quyền để thực hiện chức năng này");
-                              // if (handleModalEdit) {
-                              //   handleModalEdit(item.id);
-                              // }
+                              toast.error("Bạn chưa được cấp quyền để thực hiện chức năng này")
                             }}
                           />
-                        }
+                        )}
 
-                        {listPermission && listPermissionCurrentInPage && permissionDelete ?
+                        {listPermission &&
+                        listPermissionCurrentInPage &&
+                        permissionDelete ? (
                           <TrashIcon
                             className="!w-6 !h-6 text-red-400 hover:text-red-600 transition-all cursor-pointer"
                             onClick={() => {
@@ -339,17 +318,14 @@ function DataTable({
                               }
                             }}
                           />
-                          :
+                        ) : (
                           <TrashIcon
                             className="!w-6 !h-6 text-gray-400 hover:text-gray-600 transition-all cursor-pointer"
                             onClick={() => {
-                              alert("Bạn chưa được cấp quyền để thực hiện chức năng này");
-                              // if (handleModalDelete) {
-                              //   handleModalDelete(item.id);
-                              // }
+                              toast.error("Bạn chưa được cấp quyền để thực hiện chức năng này")
                             }}
                           />
-                        }
+                        )}
                       </div>
                     ) : (
                       <div className="flex justify-around relative">
@@ -364,10 +340,7 @@ function DataTable({
                           <DotHorizontalIcon className="!w-8 !h-8 hover:text-[#548be6] transition-all duration-300" />
                         </span>
                         {toggleDataTable && currentItem === index && (
-                          <div
-                            className="absolute bg-white shadow-black-b-0.35 top-[calc(100%+12px)] right-0 -left-32 z-40 rounded-lg cursor-pointer select-none overflow-hidden"
-                          // onClick={e => e.stopPropagation()}
-                          >
+                          <div className="absolute bg-white shadow-black-b-0.35 top-[calc(100%+12px)] right-0 -left-32 z-40 rounded-lg cursor-pointer select-none overflow-hidden">
                             {manyFeatures.length > 0 &&
                               manyFeatures.map((feature, index) => {
                                 return (
@@ -399,7 +372,11 @@ function DataTable({
         paginate={onChangePage}
       />
 
-      <Modal open={toggleFullScreenImage} close={handleCloseFullScreenImage} custom>
+      <Modal
+        open={toggleFullScreenImage}
+        close={handleCloseFullScreenImage}
+        custom
+      >
         <Image src={linkImage} className={"!bg-white !p-5 !overflow-hidden"} />
       </Modal>
     </Fragment>

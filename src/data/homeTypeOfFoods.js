@@ -14,39 +14,39 @@ import bgComingSoon from "../assets/images/Foods/bg-overlay.jpg";
 // title using i18n
 
 export const homeTypeOfFoods = [
-    {
-        hover: true,
-        // background: bgAppetizers,
-        title: "appetizers",
-    },
-    {
-        hover: true,
-        // background: bgMainDishes,
-        title: "mainDishes",
-    },
-    {
-        hover: true,
-        // background: bgSeaFood,
-        title: "seaFood",
-    },
-    {
-        hover: true,
-        // background: bgComboMeal,
-        title: "comboMeals",
-    },
-    {
-        hover: true,
-        // background: bgBeverages,
-        title: "beverages",
-    },
-    {
-        hover: true,
-        // background: bgDesserts,
-        title: "desserts",
-    },
-    {
-        hover: false,
-        // background: bgComingSoon,
-        title: "comingSoon",
-    }
-]
+  {
+    hover: true,
+    // background: bgAppetizers,
+    title: "appetizers",
+  },
+  {
+    hover: true,
+    // background: bgMainDishes,
+    title: "mainDishes",
+  },
+  {
+    hover: true,
+    // background: bgSeaFood,
+    title: "seaFood",
+  },
+  {
+    hover: true,
+    // background: bgComboMeal,
+    title: "comboMeals",
+  },
+  {
+    hover: true,
+    // background: bgBeverages,
+    title: "beverages",
+  },
+  {
+    hover: true,
+    // background: bgDesserts,
+    title: "desserts",
+  },
+  {
+    hover: false,
+    // background: bgComingSoon,
+    title: "comingSoon",
+  },
+];

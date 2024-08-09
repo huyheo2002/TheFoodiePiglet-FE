@@ -128,7 +128,7 @@ function ExpandedCard({ dataItem, expanded }) {
       },
 
       yaxis: {
-        opposite: false
+        opposite: false,
       },
     },
   };

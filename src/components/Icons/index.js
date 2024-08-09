@@ -1,5 +1,4 @@
 import clsx from "clsx";
-// import { IconContext } from "react-icons";
 import {
   AiFillBell,
   AiOutlineDown,
@@ -50,18 +49,26 @@ import {
   BsSearch,
   BsFillCameraVideoFill,
   BsSendFill,
-  BsFillEmojiWinkFill
+  BsFillEmojiWinkFill,
 } from "react-icons/bs";
 import { GiHotMeal, GiCheckedShield } from "react-icons/gi";
 import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
-import { BiMenuAltLeft, BiMenu, BiDotsHorizontalRounded, BiNews } from "react-icons/bi";
+import {
+  BiMenuAltLeft,
+  BiMenu,
+  BiDotsHorizontalRounded,
+  BiNews,
+} from "react-icons/bi";
 import { HiReceiptRefund } from "react-icons/hi";
 import { TiTick } from "react-icons/ti";
 import { GrContactInfo } from "react-icons/gr";
 import { MdDashboard, MdTableRestaurant } from "react-icons/md";
-import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled, TbExchange } from "react-icons/tb";
+import {
+  TbPlayerTrackNextFilled,
+  TbPlayerTrackPrevFilled,
+  TbExchange,
+} from "react-icons/tb";
 import { IoIosLogOut } from "react-icons/io";
-
 
 export const BellIcon = ({ className, onClick }) => {
   const props = {
@@ -252,10 +259,7 @@ export const MessageIcon = ({ className, onClick }) => {
   };
 
   return (
-    <AiOutlineMessage
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
+    <AiOutlineMessage className={clsx(("w-6 h-6", className))} {...props} />
   );
 };
 
@@ -264,12 +268,7 @@ export const MemuAltLeftIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <BiMenuAltLeft
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <BiMenuAltLeft className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const MemuIcon = ({ className, onClick }) => {
@@ -277,12 +276,7 @@ export const MemuIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <BiMenu
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <BiMenu className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const CloseOutlineIcon = ({ className, onClick }) => {
@@ -290,12 +284,7 @@ export const CloseOutlineIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <AiOutlineClose
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <AiOutlineClose className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const TrashIcon = ({ className, onClick }) => {
@@ -303,12 +292,7 @@ export const TrashIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaTrash
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaTrash className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const PencilIcon = ({ className, onClick }) => {
@@ -316,12 +300,7 @@ export const PencilIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaPencilAlt
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaPencilAlt className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const BookOpenIcon = ({ className, onClick }) => {
@@ -329,12 +308,7 @@ export const BookOpenIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaBookOpen
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaBookOpen className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const DotHorizontalIcon = ({ className, onClick }) => {
@@ -355,12 +329,7 @@ export const CartIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaShoppingCart
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaShoppingCart className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const OutlinePlusIcon = ({ className, onClick }) => {
@@ -368,12 +337,7 @@ export const OutlinePlusIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <AiOutlinePlus
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <AiOutlinePlus className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const OutlineMinusIcon = ({ className, onClick }) => {
@@ -381,12 +345,7 @@ export const OutlineMinusIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <AiOutlineMinus
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <AiOutlineMinus className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const TrunkIcon = ({ className, onClick }) => {
@@ -394,12 +353,7 @@ export const TrunkIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaTruck
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaTruck className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const RefundIcon = ({ className, onClick }) => {
@@ -408,10 +362,7 @@ export const RefundIcon = ({ className, onClick }) => {
   };
 
   return (
-    <HiReceiptRefund
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
+    <HiReceiptRefund className={clsx(("w-6 h-6", className))} {...props} />
   );
 };
 
@@ -421,10 +372,7 @@ export const CheckedShieldIcon = ({ className, onClick }) => {
   };
 
   return (
-    <GiCheckedShield
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
+    <GiCheckedShield className={clsx(("w-6 h-6", className))} {...props} />
   );
 };
 
@@ -446,12 +394,7 @@ export const TickIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <TiTick
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <TiTick className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const ContactInfoIcon = ({ className, onClick }) => {
@@ -459,12 +402,7 @@ export const ContactInfoIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <GrContactInfo
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <GrContactInfo className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const BoxFillIcon = ({ className, onClick }) => {
@@ -472,12 +410,7 @@ export const BoxFillIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <BsFillBox2Fill
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <BsFillBox2Fill className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const DashboardIcon = ({ className, onClick }) => {
@@ -485,12 +418,7 @@ export const DashboardIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <MdDashboard
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <MdDashboard className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const MoneyBillWaveIcon = ({ className, onClick }) => {
@@ -499,10 +427,7 @@ export const MoneyBillWaveIcon = ({ className, onClick }) => {
   };
 
   return (
-    <FaMoneyBillWave
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
+    <FaMoneyBillWave className={clsx(("w-6 h-6", className))} {...props} />
   );
 };
 
@@ -511,12 +436,7 @@ export const UsersIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaUsers
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaUsers className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const UserCogIcon = ({ className, onClick }) => {
@@ -524,12 +444,7 @@ export const UserCogIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaUserCog
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaUserCog className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const UserShieldIcon = ({ className, onClick }) => {
@@ -537,12 +452,7 @@ export const UserShieldIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaUserShield
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaUserShield className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const NewsIcon = ({ className, onClick }) => {
@@ -550,12 +460,7 @@ export const NewsIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <BiNews
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <BiNews className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const HomeIcon = ({ className, onClick }) => {
@@ -563,12 +468,7 @@ export const HomeIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <AiTwotoneHome
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <AiTwotoneHome className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const TableRestaurantIcon = ({ className, onClick }) => {
@@ -577,10 +477,7 @@ export const TableRestaurantIcon = ({ className, onClick }) => {
   };
 
   return (
-    <MdTableRestaurant
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
+    <MdTableRestaurant className={clsx(("w-6 h-6", className))} {...props} />
   );
 };
 
@@ -616,10 +513,7 @@ export const ExcelIcon = ({ className, onClick }) => {
   };
 
   return (
-    <AiFillFileExcel
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
+    <AiFillFileExcel className={clsx(("w-6 h-6", className))} {...props} />
   );
 };
 
@@ -628,12 +522,7 @@ export const ImportFileIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaFileImport
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaFileImport className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const SearchIcon = ({ className, onClick }) => {
@@ -641,26 +530,15 @@ export const SearchIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <BsSearch
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <BsSearch className={clsx(("w-6 h-6", className))} {...props} />;
 };
-
 
 export const SpinnerIcon = ({ className, onClick }) => {
   const props = {
     onClick,
   };
 
-  return (
-    <FaSpinner
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaSpinner className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const PhoneIcon = ({ className, onClick }) => {
@@ -668,12 +546,7 @@ export const PhoneIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <AiFillPhone
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <AiFillPhone className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const CameraVideoIcon = ({ className, onClick }) => {
@@ -694,12 +567,7 @@ export const SendIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <BsSendFill
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <BsSendFill className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const EmojiWinkIcon = ({ className, onClick }) => {
@@ -708,10 +576,7 @@ export const EmojiWinkIcon = ({ className, onClick }) => {
   };
 
   return (
-    <BsFillEmojiWinkFill
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
+    <BsFillEmojiWinkFill className={clsx(("w-6 h-6", className))} {...props} />
   );
 };
 
@@ -721,10 +586,7 @@ export const MessengerIcon = ({ className, onClick }) => {
   };
 
   return (
-    <FaFacebookMessenger
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
+    <FaFacebookMessenger className={clsx(("w-6 h-6", className))} {...props} />
   );
 };
 
@@ -733,12 +595,7 @@ export const CrownIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaCrown
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaCrown className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const LogOutIcon = ({ className, onClick }) => {
@@ -746,12 +603,7 @@ export const LogOutIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <IoIosLogOut
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <IoIosLogOut className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const UserPlusIcon = ({ className, onClick }) => {
@@ -759,12 +611,7 @@ export const UserPlusIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaUserPlus
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaUserPlus className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const UserSlashIcon = ({ className, onClick }) => {
@@ -772,12 +619,7 @@ export const UserSlashIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <FaUserSlash
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <FaUserSlash className={clsx(("w-6 h-6", className))} {...props} />;
 };
 
 export const ChangeIcon = ({ className, onClick }) => {
@@ -785,10 +627,5 @@ export const ChangeIcon = ({ className, onClick }) => {
     onClick,
   };
 
-  return (
-    <TbExchange
-      className={clsx(("w-6 h-6", className))}
-      {...props}
-    />
-  );
+  return <TbExchange className={clsx(("w-6 h-6", className))} {...props} />;
 };

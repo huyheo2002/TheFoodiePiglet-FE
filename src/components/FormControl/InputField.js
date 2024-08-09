@@ -1,6 +1,11 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { CloseCircleIcon, ContactInfoIcon, EyeClosedIcon, EyeOpenIcon } from "../Icons";
+import {
+  CloseCircleIcon,
+  ContactInfoIcon,
+  EyeClosedIcon,
+  EyeOpenIcon,
+} from "../Icons";
 
 function InputField({ ...props }) {
   const {
@@ -30,7 +35,7 @@ function InputField({ ...props }) {
       className={clsx("w-full py-1 select-none", {
         "pointer-events-none": onlyRead,
         "!hidden": hidden,
-        [className]: className
+        [className]: className,
       })}
       onClick={onClick}
     >
@@ -73,8 +78,6 @@ function InputField({ ...props }) {
               onClick={autoFill}
             />
           )}
-
-          {/* password */}
           {typeInp === "password" && props.type === "password" ? (
             <EyeClosedIcon
               className="cursor-pointer text-gray-400 text-xl hover:text-sky-400 transition-all ml-3"
