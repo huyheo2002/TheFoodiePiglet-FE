@@ -20,79 +20,66 @@ import imgShipper from "../../assets/images/Base/shipper_01.png";
 import Paypal from "../../components/Paypal";
 import Congrat from "../../components/Congrat";
 import * as commonServices from "../../services/commonServices";
+import toast from "react-hot-toast";
+import { TBUTTON_VARIANT } from "../../types/button";
+import { useAuth } from "../../contexts/authContext";
 
 
 function Cart() {
   const dispatch = useDispatch();
-  const { reloadCart, setReloadCart, paymentOnlineSuccess, setPaymentOnlineSuccess, showCongrat, setShowCongrat, reloadItemInCart, setReloadItemInCart } = useContext(GlobalContext);
+  const { setReloadCart, paymentOnlineSuccess, setPaymentOnlineSuccess, showCongrat } = useContext(GlobalContext);
   const [listItemInCart, setListItemInCart] = useState([]);
-  const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
+  const { dataUser } = useAuth();
 
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
-  const decoded = async () => {
-    if (valueUserLocal) {
-      const respon = await commonServices.handleDecoded(valueUserLocal.token);
-      // console.log("respon.decoded", respon)
-      if (respon && respon.errCode === 0) {
-        setDataUserDecoded(respon.decoded);
+  const handleProducts = async () => {
+    if (dataUser) {
+      const responCart = await cartServices.getAllCartItemOfUser(dataUser.user.id);
+      const responProducts = await productServices.getAllProductCompact() ?? null;
 
-        // fix cứng :v
-        const responCart = await cartServices.getAllCartItemOfUser(respon.decoded.user.id);
-        const responProducts = await productServices.getAllProductCompact() ?? null;
+      if (responCart && responProducts) {
+        const dataListItemCart = responCart.listItem ?? [];
+        const dataListItemProduct = responProducts.products ?? [];
+        const handleListProductOfUserInCart = (Array.isArray(dataListItemCart) && dataListItemCart.length > 0) ? dataListItemCart.reduce((filtered, product, index) => {
+          let filterListItemInCart = dataListItemCart.filter((item) => product.prodId === item.prodId);
+          if (filterListItemInCart.length > 0) {
+            filterListItemInCart.map((itemProductInCart, index) => {
+              let filterListProduct = dataListItemProduct.filter((item) => item.id === itemProductInCart.prodId);
 
-        if (responCart && responProducts) {
-          const dataListItemCart = responCart.listItem ?? [];
-          const dataListItemProduct = responProducts.products ?? [];
-          // console.log("10/10/2023 dataListItemCart 1", dataListItemCart)
-
-          // handleListProductOfUserInCart
-          const handleListProductOfUserInCart = (Array.isArray(dataListItemCart) && dataListItemCart.length > 0) ? dataListItemCart.reduce((filtered, product, index) => {
-            let filterListItemInCart = dataListItemCart.filter((item) => product.prodId === item.prodId);
-            // console.log("10/10/2023 dataListItemCart 2", dataListItemCart)
-            // console.log("10/10/2023 filterListItemInCart", filterListItemInCart)
-            if (filterListItemInCart.length > 0) {
-              filterListItemInCart.map((itemProductInCart, index) => {
-                let filterListProduct = dataListItemProduct.filter((item) => item.id === itemProductInCart.prodId);
-                // console.log("10/10/2023 filterListProduct", filterListProduct)
-
-                if (filterListProduct.length > 0) {
-                  itemProductInCart.name = filterListProduct[0].name;
-                  itemProductInCart.image = filterListProduct[0].image;
-                  itemProductInCart.Variants = filterListProduct[0].Variants
-                  if (filterListProduct[0].Variants) {
-                    let filterVariants = filterListProduct[0].Variants.filter((variant) => variant.name === product.size);
-                    // console.log("10/10/2023 filterVariants", filterVariants)
-
-                    if (filterVariants.length > 0) {
-                      itemProductInCart.originalPrice = filterVariants[0].price;
-                      itemProductInCart.discount = filterVariants[0].discountVariant;
-                    }
+              if (filterListProduct.length > 0) {
+                itemProductInCart.name = filterListProduct[0].name;
+                itemProductInCart.image = filterListProduct[0].image;
+                itemProductInCart.Variants = filterListProduct[0].Variants
+                if (filterListProduct[0].Variants) {
+                  let filterVariants = filterListProduct[0].Variants.filter((variant) => variant.name === product.size);
+                  if (filterVariants.length > 0) {
+                    itemProductInCart.originalPrice = filterVariants[0].price;
+                    itemProductInCart.discount = filterVariants[0].discountVariant;
                   }
-
-                  filtered.push(itemProductInCart)
                 }
-              })
-            }
 
-            return [...new Set(filtered)];
-          }, []) : [];
-
-          if (Array.isArray(handleListProductOfUserInCart)) {
-            setListItemInCart(handleListProductOfUserInCart);
+                filtered.push(itemProductInCart)
+              }
+            })
           }
 
-          if (handleListProductOfUserInCart.length > 0) {
-            setReloadCart(true);
-          } else {
-            setReloadCart(false);
-          }
+          return [...new Set(filtered)];
+        }, []) : [];
+
+        if (Array.isArray(handleListProductOfUserInCart)) {
+          setListItemInCart(handleListProductOfUserInCart);
+        }
+
+        if (handleListProductOfUserInCart.length > 0) {
+          setReloadCart(true);
+        } else {
+          setReloadCart(false);
         }
       }
     }
   };
 
   useEffect(() => {
-    decoded();
+    handleProducts();
   }, [])
 
   // orders
@@ -106,7 +93,6 @@ function Cart() {
   });
 
   const [openModalPaymentOnline, setOpenModalPaymentOnline] = useState(false);
-  const [currentNote, setCurrentNote] = useState("");
 
   const inputs = [
     // {
@@ -159,43 +145,25 @@ function Cart() {
     }
   ];
 
-  // console.log("values in cart", values)
-  // handle get current date
-  // const minDate = "2023-10-03"
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
-  const currentDay = String(currentDate.getDate()).padStart(2, "0");
-  const currentDateStr = `${currentYear}-${currentMonth}-${currentDay}`;
-
-  // console.log("reloadCart in cart", reloadCart)
   const fetchListItemInCart = async () => {
-    if (dataUserDecoded) {
-      const responCart = await cartServices.getAllCartItemOfUser(dataUserDecoded.user.id);
+    if (dataUser) {
+      const responCart = await cartServices.getAllCartItemOfUser(dataUser.user.id);
       const responProducts = await productServices.getAllProductCompact() ?? null;
 
       if (responCart && responProducts) {
         const dataListItemCart = responCart.listItem ?? [];
         const dataListItemProduct = responProducts.products ?? [];
-        // console.log("10/10/2023 dataListItemCart 1", dataListItemCart)
-
-        // handleListProductOfUserInCart
         const handleListProductOfUserInCart = (Array.isArray(dataListItemCart) && dataListItemCart.length > 0) ? dataListItemCart.reduce((filtered, product, index) => {
           let filterListItemInCart = dataListItemCart.filter((item) => product.prodId === item.prodId);
-          // console.log("10/10/2023 dataListItemCart 2", dataListItemCart)
-          // console.log("10/10/2023 filterListItemInCart", filterListItemInCart)
           if (filterListItemInCart.length > 0) {
             filterListItemInCart.map((itemProductInCart, index) => {
               let filterListProduct = dataListItemProduct.filter((item) => item.id === itemProductInCart.prodId);
-              // console.log("10/10/2023 filterListProduct", filterListProduct)
-
               if (filterListProduct.length > 0) {
                 itemProductInCart.name = filterListProduct[0].name;
                 itemProductInCart.image = filterListProduct[0].image;
                 itemProductInCart.Variants = filterListProduct[0].Variants
                 if (filterListProduct[0].Variants) {
                   let filterVariants = filterListProduct[0].Variants.filter((variant) => variant.name === product.size);
-                  // console.log("10/10/2023 filterVariants", filterVariants)
 
                   if (filterVariants.length > 0) {
                     itemProductInCart.originalPrice = filterVariants[0].price;
@@ -234,21 +202,18 @@ function Cart() {
   }, []);
 
   const handleRefreshCart = () => {
-    if (dataUserDecoded) {
-      dispatch(handleRefreshCartRedux(dataUserDecoded.user.id));
+    if (dataUser) {
+      dispatch(handleRefreshCartRedux(dataUser.user.id));
       setListItemInCart([]);
       setReloadCart(false);
     } else {
-      alert("Bạn phải đăng nhập để sử dụng chức năng này");
+      toast.error("You need login to used this feature");
     }
   }
 
   // handle order  
   const onChangeInput = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-
-    // fix note :v
-    setCurrentNote([e.target.name] == "note" && e.target.value)
   };
 
   const handleClearInput = (getKey) => {
@@ -264,8 +229,8 @@ function Cart() {
   }
 
   const handleGetCurrentContact = () => {
-    if (dataUserDecoded && values) {
-      setValues({ ...values, contactInfo: `${dataUserDecoded.user.email}-${dataUserDecoded.user.phone}` })
+    if (dataUser && values) {
+      setValues({ ...values, contactInfo: `${dataUser.user.email}-${dataUser.user.phone}` })
     } else {
       return null;
     }
@@ -278,7 +243,6 @@ function Cart() {
     const dataEntry = Object.fromEntries(data.entries());
     const totalPriceNumber = dataEntry.totalPrice ? parseFloat(dataEntry.totalPrice.replace(/\$/g, "")) : 0;
 
-    // handle 
     const getPurchasedItems = listItemInCart.length > 0 ? listItemInCart.reduce((result, item) => {
       let getDescItems = `name:${item.name}-size:${item.size}-quantity:${item.quantity}-price:${item.price};`;
 
@@ -287,19 +251,13 @@ function Cart() {
       :
       "";
 
-    console.log("getPurchasedItems", getPurchasedItems)
-
     data.set("totalPrice", totalPriceNumber)
-    data.set("userId", dataUserDecoded ? dataUserDecoded.user.id : null)
+    data.set("userId", dataUser ? dataUser.user.id : null)
     data.set("purchasedItems", getPurchasedItems)
-
-    console.log("data entry:", Object.fromEntries(data.entries()));
 
     try {
       const respon = await paymentServices.handleCreateNewOrder(data);
       if (respon && respon.errCode === 0) {
-        // delayCloseModalOrders();
-        // reset data
         setValues(
           {
             totalPrice: "",
@@ -308,17 +266,16 @@ function Cart() {
             note: "",
           }
         );
-        await cartServices.handleRefreshCart(dataUserDecoded.user.id).then(() => setListItemInCart([]));
+        await cartServices.handleRefreshCart(dataUser.user.id).then(() => setListItemInCart([]));
         handleCloseModalOrders();
 
-        // open modal order success
         setOpenModalOrdersSuccess(true);
         setReloadCart(false);
       } else if (respon.errCode === 1) {
-        alert("Hãy kiếm tra lại thông tin")
+        toast.error("Please check information again");
       }
     } catch (error) {
-      console.log("err", error)
+      console.error(error)
     }
   }
 
@@ -341,23 +298,17 @@ function Cart() {
 
   useEffect(() => {
     if (paymentOnlineSuccess) {
-      // console.log("zo 123");
       handleCloseModalPaymentOnline();
     }
   }, [paymentOnlineSuccess])
 
-  // console.log("listItemInCart", listItemInCart)
-  // console.log("values", values)
-  // console.log("values note", values?.note)
-
   return (
     <div className="flex flex-col items-center justify-center container overflow-hidden">
       <Heading line variant={"primary"}>
-        Giỏ hàng
+        Card
       </Heading>
       <div className="w-full flex flex-row flex-wrap justify-center mb-6">
         {listItemInCart.length > 0 ? listItemInCart.map((item, index) => {
-          // console.log("2023 10 10 hello tôi là ", item);
           return <ItemCompact key={index} size={"oneItems-onRows"} type={"cart"} data={item} onHandleRefreshCart={handleReloadItemInCart} />
         })
           :
@@ -370,11 +321,11 @@ function Cart() {
               Hãy tiếp tục và khám phá các sản phẩm của chúng tôi.
             </p>
             <div className="flex mt-6 justify-center">
-              <Button variant={"primary"} to={"/"} onClick={() => WindowScrollTop()}>
-                Trang Chủ
+              <Button variant={TBUTTON_VARIANT.PRIMARY} to={"/"} onClick={() => WindowScrollTop()}>
+                Home
               </Button>
-              <Button variant={"primary"} to={"/menu"} onClick={() => WindowScrollTop()}>
-                Mua sắm ngay
+              <Button variant={TBUTTON_VARIANT.PRIMARY} to={"/menu"} onClick={() => WindowScrollTop()}>
+                Order now
               </Button>
             </div>
           </div>
@@ -385,19 +336,19 @@ function Cart() {
         <div className="w-full my-8 bg-[#1e1e1e] shadow-black-b-0.75 border-2 rounded-lg border-rgba-white-0.1">
           <div className="flex justify-between items-center px-6 py-6">
             <h2 className="text-xl font-semibold text-white">
-              Tổng cộng: {`${Math.round(listItemInCart.reduce((total, item) => total + item.price, 0) * 100) / 100}$`}
+              Total: {`${Math.round(listItemInCart.reduce((total, item) => total + item.price, 0) * 100) / 100}$`}
             </h2>
             <div className="flex">
               <Button variant={"success"}
                 onClick={() => handleRefreshCart()}
-              >Làm mới giỏ hàng</Button>
+              >Refresh Card</Button>
               <Button variant={"success"} to={"/menu"} onClick={() => WindowScrollTop()}>Mua tiếp</Button>
               <Button variant={"success"}
                 onClick={() => setOpenModalOrders(true)}
-              >Đặt hàng</Button>
+              >Order</Button>
               <Button variant={"success"}
                 onClick={() => setOpenModalPaymentOnline(true)}
-              >Thanh toán online</Button>
+              >Pay now</Button>
             </div>
           </div>
         </div>
@@ -502,8 +453,8 @@ function Cart() {
           </div>
 
           <div className="flex justify-end mt-3 w-full">
-            <Button variant={"primary"} onClick={() => { }}>Submit</Button>
-            <Button variant={"primary"} onClick={() => {
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => { }}>Submit</Button>
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => {
               setValues({
                 totalPrice: "",
                 deliveryAddress: "",
@@ -536,10 +487,10 @@ function Cart() {
               </p>
             </div>
             <div className="mt-6 flex justify-start">
-              <Button variant={"primary"} to={"/profile"}
+              <Button variant={TBUTTON_VARIANT.PRIMARY} to={"/profile"}
                 onClick={() => WindowScrollTop()}
               >Xem đơn hàng của bạn</Button>
-              <Button variant={"primary"} onClick={() => {
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => {
                 handleCloseModalOrdersSuccess();
                 WindowScrollTop();
               }}>Thoát</Button>
@@ -652,7 +603,7 @@ function Cart() {
 
                     return result + getDescItems;
                   }, ""),
-                  userId: dataUserDecoded ? dataUserDecoded.user.id : null,
+                  userId: dataUser ? dataUser.user.id : null,
                   totalPrice: listItemInCart.length > 0 ? Math.round(listItemInCart.reduce((total, item) => total + item.price, 0) * 100) / 100 : 0,
                   paymentDate: new Date(),
                 }}
@@ -680,13 +631,13 @@ function Cart() {
               </p>
             </div>
             <div className="mt-6 flex justify-start">
-              <Button variant={"primary"} to={"/profile"}
+              <Button variant={TBUTTON_VARIANT.PRIMARY} to={"/profile"}
                 onClick={() => {
                   handleCloseModalPaymentOnlineSuccess();
                   WindowScrollTop()
                 }}
               >Xem đơn hàng của bạn</Button>
-              <Button variant={"primary"} onClick={() => {
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => {
                 handleCloseModalPaymentOnlineSuccess();
                 WindowScrollTop();
               }}>Thoát</Button>

@@ -16,9 +16,6 @@ export const handleLoginRedux = (username, password) => {
       const res = await authServices.handleLogin(username, password);
       console.log("respon login redux", res);
       if (res && res.errCode === 0) {
-
-        // let decoded = decodeJwt(res.accessToken);
-        // console.log("decoded", decoded)
         dispatch({
           type: FETCH_USER_SUCCESS,
           data: {
@@ -63,8 +60,6 @@ export const handleLoginGoogleRedux = (userId) => {
       const res = await authServices.handleLoginGoogle(userId);
       console.log("respon redux google", res);
       if (res && res.errCode === 0) {
-        // let decoded = decodeJwt(res.accessToken);
-        // console.log("decoded", decoded)
         dispatch({
           type: FETCH_USER_SUCCESS,
           data: {

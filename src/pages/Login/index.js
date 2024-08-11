@@ -20,11 +20,15 @@ import { LoadingIcon } from "../../components/Icons";
 import * as commonServices from "../../services/commonServices";
 import Modal from "../../components/Modal";
 import * as authServices from "../../services/authServices";
+import { TBUTTON_VARIANT } from "../../types/button";
+import toast from "react-hot-toast";
+import { useAuth } from "../../contexts/authContext";
 
 function Login() {
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { dataUser } = useAuth();
 
   const [values, setValues] = useState({
     username: "",
@@ -54,35 +58,25 @@ function Login() {
     },
   ];
 
-  const user = useSelector((state) => state.user);
-  // console.log("state user login in login Pages", user)
   const isLoading = useSelector((state) => state.user.isLoading);
   const dataUserRedux = useSelector((state) => state.user.user);
   const isError = useSelector((state) => state.user.isError);
-  // console.log("isError", isError);
-  // console.log("dataUserRedux", dataUserRedux)
   const [checkError, setCheckError] = useState(false);
 
   const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
 
-  // forgot password 
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [valueEmailFP, setValueEmailFP] = useState("");
   const [valueUsernameFP, setValueUsernameFP] = useState("");
   const [openModalSendRequest, setOpenModalSendRequest] = useState(false);
 
   const onChangeInput = (e) => {
-    // e.target.name lấy key trong obj
-    // e.target.value lấy giá trị trong obj
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   const inputClear = (getKey) => {
     setValues({ ...values, [getKey]: "" });
   };
-
-  const lockFeatures = useSelector((state) => state.user.isLockFeatures);
-  // console.log("lockFeatures home", lockFeatures);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -103,15 +97,10 @@ function Login() {
 
       if (dataUserRedux && dataUserRedux.token && dataUserRedux.auth === true) {
         setValueLocal(dataUserRedux);
-
-        const respon = await commonServices.handleDecoded(dataUserRedux.token);
-        console.log("respon.decoded login", respon);
-        if (respon && respon.errCode === 0) {
-          if (respon.decoded.user.roleName === "User") {
-            navigate("/");
-          } else {
-            navigate("/system");
-          }
+        if (dataUser.user.roleName === "User") {
+          navigate("/");
+        } else {
+          navigate("/system");
         }
       }
     };
@@ -150,21 +139,19 @@ function Login() {
   const onSubmitForgotPassword = async (e) => {
     e.preventDefault();
     if (!valueEmailFP || !valueUsernameFP) {
-      alert("Vui lòng nhập đầy đủ các trường thông tin");
+      toast.error("Please enter full fields");
       return;
     }
 
     const data = new FormData(e.target);
-    console.log("data entry:", Object.fromEntries(data.entries()));
     try {
       const respon = await authServices.handleFotgotPassword(data);
       if (respon && respon.errCode === 0) {
-        console.log("respon FP", respon);
         handleCloseModalForgotPassword();
         setOpenModalSendRequest(true);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -185,7 +172,6 @@ function Login() {
               <Heading variant={"modal"}>
                 {t("login.heading.login")}
               </Heading>
-              {/* form control */}
               <div className="px-4 py-2">
                 {inputs.map((item, index) => {
                   return (
@@ -211,8 +197,7 @@ function Login() {
               </div>
               <div className="flex justify-end">
                 <Button
-                  variant={"primary"}
-                  // clone :V
+                  variant={TBUTTON_VARIANT.PRIMARY}
                   iconRight={<LoadingIcon className="opacity-0" />}
                   iconLeft={
                     <LoadingIcon
@@ -227,7 +212,7 @@ function Login() {
                 >
                   {t("login.button.login")}
                 </Button>
-                <Button to={"/"} variant={"primary"} onClick={() => handleBackHome()}>
+                <Button to={"/"} variant={TBUTTON_VARIANT.PRIMARY} onClick={() => handleBackHome()}>
                   {t("login.button.back")}
                 </Button>
               </div>
@@ -243,7 +228,6 @@ function Login() {
                   {t("login.other.register")}
                 </Link>
               </div>
-              {/* separate */}
               <div
                 className="text-gray-400 flex font-medium text-sm select-none
                   before:content-[''] before:border-t-[1px] before:border-t-gray-400 before:grow before:self-center before:mr-2
@@ -252,7 +236,6 @@ function Login() {
               >
                 {t("login.other.separate")}
               </div>
-              {/* social */}
               <div className="flex justify-center mt-3">
                 <Image
                   src={logoGoogle}
@@ -277,7 +260,6 @@ function Login() {
         </div>
       </div>
 
-      {/* modal forgot password */}
       <Modal open={isForgotPassword} close={handleCloseModalForgotPassword}>
         <form autoComplete="off" onSubmit={onSubmitForgotPassword}>
           <Heading variant={"primary"}>Forgot Password</Heading>
@@ -288,7 +270,6 @@ function Login() {
               placeholder={t("login.input.labelUsername")}
               label={t("login.input.labelUsername")}
               errorMessage={t("login.input.errMsgUsername")}
-              // pattern="/^(?=.{3,}$)(?:(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)|^[a-z]+)$/"
               onChange={onChangeInputUsernameFP}
               clear={inputClearUsernameFP}
               value={valueUsernameFP}
@@ -308,17 +289,15 @@ function Login() {
               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
             />
           </div>
-          {/* footer */}
           <div className="flex justify-end">
-            <Button variant={"primary"}>Submit</Button>
-            <Button variant={"primary"} onClick={handleCloseModalForgotPassword}>
+            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalForgotPassword}>
               Cancel
             </Button>
           </div>
         </form>
       </Modal>
 
-      {/* modal send req forgot password success */}
       <Modal open={openModalSendRequest} close={handleCloseModalSendRequest}>
         <Heading variant={"primary"}>Password Reset</Heading>
         <div className="mt-4 mx-auto">
@@ -331,7 +310,7 @@ function Login() {
         </div>
 
         <div className="flex justify-end">
-          <Button variant={"primary"} onClick={handleCloseModalSendRequest}>
+          <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalSendRequest}>
             Cancel
           </Button>
         </div>

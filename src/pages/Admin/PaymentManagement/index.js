@@ -1,18 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
 import DataTable from "../../../components/DataTable";
-import * as productServices from "../../../services/productServices";
-import * as categoryServices from "../../../services/categoryServices";
-import {
-  BookOpenIcon,
-  DotHorizontalIcon,
-  PencilIcon,
-  PlusIcon,
-  TrashIcon,
-} from "../../../components/Icons";
 import Modal from "../../../components/Modal";
 import Heading from "../../../components/Heading";
 import InputField from "../../../components/FormControl/InputField";
-import InputFile from "../../../components/FormControl/inputFile";
 import Button from "../../../components/Button";
 import InputRadio from "../../../components/FormControl/inputRadio";
 import { useNavigate } from "react-router-dom";
@@ -22,13 +12,12 @@ import DatePicker from "../../../components/FormControl/datePicker";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import * as commonServices from "../../../services/commonServices";
 import * as permissionServices from "../../../services/permissionServices";
+import { TBUTTON_VARIANT } from "../../../types/button";
+import { useAuth } from "../../../contexts/authContext";
 
 function PaymentManagement() {
-  const navigate = useNavigate();
-
   const currentPermissionGroup = "quan-ly-hoa-don";
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
+  const { dataUser } = useAuth();
   const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
   const [listPermissionCurrentInPage, setListPermissionCurrentInPage] = useState([]);
 
@@ -147,32 +136,25 @@ function PaymentManagement() {
   const [valuesUpdate, setValuesUpdate] = useState({});
   const [idPaymentDelete, setIdPaymentDelete] = useState(-1);
 
-  // decoded and handle permission
-  const decoded = async () => {
-    const respon = await commonServices.handleDecoded(dataUser.token);
-    // console.log("respon.decoded", respon)
-    if (respon && respon.errCode === 0) {
-      setDataUserDecoded(respon.decoded);
+  // handle permission
+  const handlePermission = async () => {
+    const dataListPermission = dataUser.permissions || [];
+    let splitFields =
+      dataListPermission.length > 0 &&
+      dataListPermission.map((item) => {
+        if (item.Permission) {
+          item.permissionName = item.Permission.name;
+          item.permissionGroupId = item.Permission.permissionGroupId;
 
-      // handle permissions
-      const dataListPermission = respon.decoded.permissions || [];
-      let splitFields =
-        dataListPermission.length > 0 &&
-        dataListPermission.map((item) => {
-          if (item.Permission) {
-            item.permissionName = item.Permission.name;
-            item.permissionGroupId = item.Permission.permissionGroupId;
+          delete item.Permission;
+        }
 
-            delete item.Permission;
-          }
+        return item;
+      });
 
-          return item;
-        });
-
-      // show full info
-      if (splitFields.length > 0) {
-        setListPermissionOfUser(splitFields)
-      }
+    // show full info
+    if (splitFields.length > 0) {
+      setListPermissionOfUser(splitFields)
     }
   };
 
@@ -200,19 +182,14 @@ function PaymentManagement() {
     }
   }
 
-  // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
-
   useEffect(() => {
-    decoded();
+    handlePermission();
     handleGetAllPermissionInPage();
   }, [])
-
-  // console.log("listPermissionOfUser", listPermissionOfUser);
 
   const fetchListPayments = async () => {
     const respon = await paymentServices.getAllPayment() ?? null;
     if (respon) {
-      console.log("respon detail payments", respon)
       setListPayments(respon.payments)
     }
   }
@@ -480,7 +457,7 @@ function PaymentManagement() {
             </div>
 
             <div className="flex justify-end">
-              <Button variant={"primary"} onClick={handleCloseModalCreate}>
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalCreate}>
                 Cancel
               </Button>
             </div>
@@ -696,7 +673,7 @@ function PaymentManagement() {
           </div>
           {/* footer */}
           <div className="flex justify-end">
-            <Button variant={"primary"} onClick={handleCloseModalRead}>
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalRead}>
               Cancel
             </Button>
           </div>
@@ -941,8 +918,8 @@ function PaymentManagement() {
             </div>
 
             <div className="flex justify-end">
-              <Button variant={"primary"}>Submit</Button>
-              <Button variant={"primary"} onClick={handleCloseModalUpdate}>
+              <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalUpdate}>
                 Cancel
               </Button>
             </div>
@@ -971,8 +948,8 @@ function PaymentManagement() {
             </div>
             {/* footer */}
             <div className="flex justify-end">
-              <Button variant={"primary"}>Submit</Button>
-              <Button variant={"primary"} onClick={handleCloseModalDelete}>
+              <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalDelete}>
                 Cancel
               </Button>
             </div>

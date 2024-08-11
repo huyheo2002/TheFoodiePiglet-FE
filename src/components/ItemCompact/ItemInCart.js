@@ -22,6 +22,8 @@ import { useDispatch } from "react-redux";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import * as commonServices from "../../services/commonServices";
 import toast from "react-hot-toast";
+import { TBUTTON_VARIANT } from "../../types/button";
+import { useAuth } from "../../contexts/authContext";
 
 function ItemInCart({ size, type, data, onHandleRefreshCart }) {
   const { t } = useTranslation(["home"]);
@@ -36,20 +38,7 @@ function ItemInCart({ size, type, data, onHandleRefreshCart }) {
   const [discount, setDiscount] = useState(data && data.discount);
 
   const [changeItem, setChangeItem] = useState(false);
-  const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
-
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
-
-  const decoded = async () => {
-    const respon = await commonServices.handleDecoded(valueUserLocal.token);
-    if (respon && respon.errCode === 0) {
-      setDataUserDecoded(respon.decoded);
-    }
-  };
-
-  useEffect(() => {
-    decoded();
-  }, []);
+  const { dataUser } = useAuth();
 
   const onHandlePlusItem = (currentCount) => {
     let priceOneItem = data && parseInt(data.price / data.quantity);
@@ -126,8 +115,8 @@ function ItemInCart({ size, type, data, onHandleRefreshCart }) {
     const dataSubmit = new FormData();
     let checkAllowAddToCart = true;
 
-    if (dataUserDecoded) {
-      dataSubmit.set("userId", dataUserDecoded.user.id);
+    if (dataUser) {
+      dataSubmit.set("userId", dataUser.user.id);
     } else {
       toast.error("You need login to open this features");
       checkAllowAddToCart = false;
@@ -293,16 +282,16 @@ function ItemInCart({ size, type, data, onHandleRefreshCart }) {
         </span>
 
         <div className="mt-5 flex">
-          <Button variant="delete" onClick={() => onhandleRemoveItem()}>
+          <Button variant={TBUTTON_VARIANT.DELETE} onClick={() => onhandleRemoveItem()}>
             {t("button.delete")}
           </Button>
           {changeItem && (
-            <Button variant="delete" onClick={() => onhandleSubmitAddToCart()}>
+            <Button variant={TBUTTON_VARIANT.DELETE} onClick={() => onhandleSubmitAddToCart()}>
               Lưu thay đổi
             </Button>
           )}
           <Button
-            variant="delete"
+            variant={TBUTTON_VARIANT.DELETE}
             iconLeft={
               <HeartFillIcon className={"flex justify-center items-center"} />
             }

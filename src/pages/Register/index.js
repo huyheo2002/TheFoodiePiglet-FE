@@ -7,6 +7,7 @@ import { handleNoLoginRedux } from "../../redux/actions/userAction";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import * as userServices from "../../services/userServices";
+import { TBUTTON_VARIANT } from "../../types/button";
 
 
 function Register() {
@@ -108,7 +109,6 @@ function Register() {
                         <Heading variant={"modal"}>
                             {t("login.heading.register")}
                         </Heading>
-                        {/* form control */}
                         <div className="px-4 py-2">
                             {inputs.map((item, index) => {
                                 return (
@@ -131,10 +131,10 @@ function Register() {
                             </span> */}
                         </div>
                         <div className="flex justify-end">
-                            <Button variant={"primary"}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}>
                                 {t("login.button.register")}
                             </Button>
-                            <Button to={"/"} variant={"primary"} onClick={() => handleBackHome()}>
+                            <Button to={"/"} variant={TBUTTON_VARIANT.PRIMARY} onClick={() => handleBackHome()}>
                                 {t("login.button.back")}
                             </Button>
                         </div>

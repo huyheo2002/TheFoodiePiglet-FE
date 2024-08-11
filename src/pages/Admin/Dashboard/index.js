@@ -1,18 +1,12 @@
-import { useContext, useEffect, useState } from "react";
-import DataTable from "../../../components/DataTable";
-import { BookOpenIcon } from "../../../components/Icons";
+import { useEffect, useState } from "react";
 import NotificationCard from "../../../components/NotificationCard";
 import StatisticelCard from "../../../components/StatisticelCard";
-import { dataUser } from "../../../data/fakeDataUser";
-import GlobalContext from "../../../contexts/globalContext";
-import * as userServices from "../../../services/userServices";
 import clsx from "clsx";
 import * as notificationServices from "../../../services/notificationServices";
 import { useNavigate } from "react-router-dom";
 
 function DashBoard() {
   const navigate = useNavigate();
-  // notify
   const [listNotify, setListNotify] = useState([]);
   const numberOfItemsToShow = 4;
   const visibleList = listNotify.length > 0 && listNotify.slice(0, numberOfItemsToShow);
@@ -31,7 +25,6 @@ function DashBoard() {
   return (
     <div className="pl-3 w-[calc(100%-1rem)]">
       <div className="flex justify-between">
-        {/* left */}
         <div className="w-[calc(75%-1rem)] pr-4 ">
           <div className="w-full h-auto bg-white rounded-lg px-3 py-4">
             <h1 className="mb-3 text-2xl font-semibold capitalize">

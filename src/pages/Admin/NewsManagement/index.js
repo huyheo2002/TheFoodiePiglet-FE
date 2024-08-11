@@ -12,14 +12,15 @@ import * as commonServices from "../../../services/commonServices";
 import * as permissionServices from "../../../services/permissionServices";
 import TextareaField from "../../../components/FormControl/textAreaField";
 import { useLocalStorage } from "react-use";
+import { TBUTTON_VARIANT } from "../../../types/button";
+import { useAuth } from "../../../contexts/authContext";
 
 
 function NewsManagement() {
     const currentPermissionGroup = "quan-ly-tin-tuc";
-    const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-    const [dataUserDecoded, setDataUserDecoded] = useState(null);
     const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
     const [listPermissionCurrentInPage, setListPermissionCurrentInPage] = useState([]);
+    const { dataUser } = useAuth();
 
     const [listNews, setListNews] = useState([]);
     const [listNewsFull, setListNewsFull] = useState([]);
@@ -31,7 +32,7 @@ function NewsManagement() {
     const [openModalUpdate, setOpenModalUpdate] = useState(false);
     const [openModalDelete, setOpenModalDelete] = useState(false);
 
-    // INPUT 
+    // INPUT
     const inputs = [
         {
             id: 1,
@@ -72,73 +73,58 @@ function NewsManagement() {
     const [categoryIndex, setCategoryIndex] = useState(-1);
     const [image, setImage] = useState("");
 
-    // decoded and handle permission
-    const decoded = async () => {
-        const respon = await commonServices.handleDecoded(dataUser.token);
-        // console.log("respon.decoded", respon)
-        if (respon && respon.errCode === 0) {
-            setDataUserDecoded(respon.decoded);
+    // handle permission
+    const loadListPermission = async () => {
+        const dataListPermission = dataUser.permissions || [];
+        let splitFields =
+            dataListPermission.length > 0 &&
+            dataListPermission.map((item) => {
+                if (item.Permission) {
+                    item.permissionName = item.Permission.name;
+                    item.permissionGroupId = item.Permission.permissionGroupId;
 
-            // handle permissions
-            const dataListPermission = respon.decoded.permissions || [];
-            let splitFields =
-                dataListPermission.length > 0 &&
-                dataListPermission.map((item) => {                    
-                    if (item.Permission) {
-                        item.permissionName = item.Permission.name;
-                        item.permissionGroupId = item.Permission.permissionGroupId;
-                        
-                        delete item.Permission;
-                    }
+                    delete item.Permission;
+                }
 
-                    return item;
-                });
+                return item;
+            });
 
-            // show full info
-            if (splitFields.length > 0) {
-                setListPermissionOfUser(splitFields)
-            }
+        // show full info
+        if (splitFields.length > 0) {
+            setListPermissionOfUser(splitFields)
         }
     };
 
     const handleGetAllPermissionInPage = async () => {
         const respon = await permissionServices.getAllPermissionGroup();
-        // console.log("respon permission group", respon);
         if (respon && respon.errCode == 0) {
             const dataPermissionGroup = respon.permissionGroup || [];
 
             const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
-            // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
 
-            if(filterCurrentPermissionGroup.length > 0) {
+            if (filterCurrentPermissionGroup.length > 0) {
                 const responPermission = await permissionServices.getAllPermission();
                 if (responPermission && responPermission.errCode == 0) {
                     const dataPermission = responPermission.permission || [];
 
                     const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
 
-                    if(filterCurrentPermission.length > 0) {
+                    if (filterCurrentPermission.length > 0) {
                         setListPermissionCurrentInPage(filterCurrentPermission);
                     }
-                }                
-            }            
+                }
+            }
         }
     }
 
-    // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
-
     useEffect(() => {
-        decoded();
+        loadListPermission();
         handleGetAllPermissionInPage();
     }, [])
 
-    // console.log("listPermissionOfUser", listPermissionOfUser);
-
     const handleGetlistNewsFull = async () => {
         const res = await newsServices.getAllNews("all");
-        // console.log("res", res);
         if (res && res.errCode === 0) {
-            // setListNews(res.news);
             const dataListNews = res.news || [];
             let splitFields =
                 dataListNews.length > 0 &&
@@ -513,7 +499,7 @@ function NewsManagement() {
                     </div>
                     {/* footer */}
                     <div className="flex justify-end">
-                        <Button variant={"primary"} onClick={handleCloseModalRead}>
+                        <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalRead}>
                             Cancel
                         </Button>
                     </div>
@@ -583,8 +569,8 @@ function NewsManagement() {
                         </div>
                         {/* footer */}
                         <div className="flex justify-end">
-                            <Button variant={"primary"}>Submit</Button>
-                            <Button variant={"primary"} onClick={handleCloseModalCreate}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalCreate}>
                                 Cancel
                             </Button>
                         </div>
@@ -670,8 +656,8 @@ function NewsManagement() {
                         </div>
                         {/* footer */}
                         <div className="flex justify-end">
-                            <Button variant={"primary"}>Submit</Button>
-                            <Button variant={"primary"} onClick={handleCloseModalUpdate}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalUpdate}>
                                 Cancel
                             </Button>
                         </div>
@@ -698,8 +684,8 @@ function NewsManagement() {
                         </div>
                         {/* footer */}
                         <div className="flex justify-end">
-                            <Button variant={"primary"}>Submit</Button>
-                            <Button variant={"primary"} onClick={handleCloseModalDelete}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalDelete}>
                                 Cancel
                             </Button>
                         </div>

@@ -18,9 +18,7 @@ import Picker from "@emoji-mart/react";
 import DataEmoji from "@emoji-mart/data";
 import GlobalContext from "../../contexts/globalContext";
 import * as chatServices from "../../services/chatServices";
-import * as commonServices from "../../services/commonServices";
 import robot from "../../assets/images/Base/robot.png";
-import useLocalStorage from "../../hooks/useLocalStorage";
 import Modal from "../Modal";
 import Heading from "../Heading";
 import Button from "../Button";
@@ -30,6 +28,8 @@ import clsx from "clsx";
 import InputField from "../FormControl/InputField";
 import io from "socket.io-client";
 import toast from "react-hot-toast";
+import { TBUTTON_VARIANT } from "../../types/button";
+import { useAuth } from "../../contexts/authContext";
 
 const socket = io(process.env.REACT_APP_BACKEND_URL) ?? null;
 
@@ -43,10 +43,9 @@ function ChatWindow() {
     setReloadSidebarChat,
   } = useContext(GlobalContext);
   const [text, setText] = useState("");
+  const {dataUser} = useAuth();
   const [showEmoji, setShowEmoji] = useState(false);
   const [dataChatRoom, setDataChatRoom] = useState(null);
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
   // list member
   const [openModalListMember, setOpenModalListMember] = useState(false);
   const [listMember, setListMember] = useState([]);
@@ -100,17 +99,6 @@ function ChatWindow() {
       setDataChatRoom(null);
     }
   }, [idChatRoom]);
-
-  const decoded = async () => {
-    const respon = await commonServices.handleDecoded(dataUser.token);
-    if (respon && respon.errCode === 0) {
-      setDataUserDecoded(respon.decoded);
-    }
-  };
-
-  useEffect(() => {
-    decoded();
-  }, []);
 
   const handleOpenModalListMember = async () => {
     if (idChatRoom) {
@@ -216,7 +204,7 @@ function ChatWindow() {
     e.preventDefault();
     const data = new FormData(e.target);
     data.set("roomId", idChatRoom);
-    data.set("userId", dataUserDecoded && dataUserDecoded.user.id);
+    data.set("userId", dataUser && dataUser.user.id);
 
     try {
       const respon = await chatServices.handleChangeNameGroup(data);
@@ -322,7 +310,7 @@ function ChatWindow() {
   const handleLeaveRoom = async () => {
     const data = new FormData();
     data.set("roomId", idChatRoom);
-    data.set("userId", dataUserDecoded && dataUserDecoded.user.id);
+    data.set("userId", dataUser && dataUser.user.id);
 
     if (idChatRoom) {
       const respon = await chatServices.getAllMemberInRoom(idChatRoom);
@@ -347,14 +335,14 @@ function ChatWindow() {
       } else if (arrListMember.length > 1) {
         if (
           dataChatRoom &&
-          dataUserDecoded &&
-          dataChatRoom.roomCreatorId === dataUserDecoded.user.id
+          dataUser &&
+          dataChatRoom.roomCreatorId === dataUser.user.id
         ) {
           toast.error(
             "You are the leader group, please tranfer permission for other before leaving"
           );
           return;
-        } else if (dataChatRoom.roomCreatorId !== dataUserDecoded.user.id) {
+        } else if (dataChatRoom.roomCreatorId !== dataUser.user.id) {
           const respon = await chatServices.handleLeaveRoom(data);
           if (respon && respon.errCode === 0) {
             setIdChatRoom(null);
@@ -402,7 +390,7 @@ function ChatWindow() {
   const handleSendLetter = async () => {
     const data = new FormData();
     data.set("roomId", dataChatRoom && dataChatRoom.id);
-    data.set("userId", dataUserDecoded && dataUserDecoded.user.id);
+    data.set("userId", dataUser && dataUser.user.id);
     data.set("content", text);
 
     try {
@@ -423,7 +411,7 @@ function ChatWindow() {
   // const handleSendLetter = () => {
   //     const data = {
   //         roomId: dataChatRoom && dataChatRoom.id,
-  //         userId: dataUserDecoded && dataUserDecoded.user.id,
+  //         userId: dataUser && dataUser.user.id,
   //         content: text,
   //     };
 
@@ -592,7 +580,7 @@ function ChatWindow() {
   // }, [handleSendLetter, handleRecallMessageSocket, handleDeleteMessageSocket]);
 
   // console.log("dataChatRoom",dataChatRoom);
-  // console.log("dataUserDecoded",dataUserDecoded);
+  // console.log("dataUser",dataUser);
 
   return (
     <Fragment>
@@ -609,9 +597,9 @@ function ChatWindow() {
                   fallback={imageChatRoom}
                 />
                 <h3 className="text-lg font-semibold text-black ml-3">
-                  {dataUserDecoded &&
+                  {dataUser &&
                   dataChatRoom &&
-                  dataUserDecoded.user.id !== dataChatRoom.roomCreatorId
+                  dataUser.user.id !== dataChatRoom.roomCreatorId
                     ? `${dataChatRoom.User.name} (${dataChatRoom.User.username})`
                     : dataChatRoom.name}
                 </h3>
@@ -636,9 +624,9 @@ function ChatWindow() {
                   />
                   <div className="bg-white text-[#4a4a4a] hidden shadow-black-rb-0.35 flex-col min-w-[14rem] z-50 absolute top-full right-0 rounded-b-lg overflow-hidden group-hover:flex cursor-pointer">
                     {dataChatRoom &&
-                      dataUserDecoded &&
+                      dataUser &&
                       dataChatRoom.roomCreatorId ===
-                        dataUserDecoded.user.id && (
+                        dataUser.user.id && (
                         <div
                           className="w-full h-10 leading-10 relative select-none group hover:bg-[#e6f2fe] transition-all duration-300 rounded-lg px-4 inline-flex items-center text-[#4a4a4a] text-sm font-medium tracking-wider capitalize hover:text-[#548be6]"
                           onClick={() => handleOpenModalGroupName()}
@@ -663,9 +651,9 @@ function ChatWindow() {
                       </p>
                     </div>
                     {dataChatRoom &&
-                      dataUserDecoded &&
+                      dataUser &&
                       dataChatRoom.roomCreatorId ===
-                        dataUserDecoded.user.id && (
+                        dataUser.user.id && (
                         <div
                           className="w-full h-10 leading-10 relative select-none group hover:bg-[#e6f2fe] transition-all duration-300 rounded-lg px-4 inline-flex items-center text-[#4a4a4a] text-sm font-medium tracking-wider capitalize hover:text-[#548be6]"
                           onClick={() => handleOpenModalAddMember()}
@@ -680,9 +668,9 @@ function ChatWindow() {
                       )}
 
                     {dataChatRoom &&
-                      dataUserDecoded &&
+                      dataUser &&
                       dataChatRoom.roomCreatorId ===
-                        dataUserDecoded.user.id && (
+                        dataUser.user.id && (
                         <div
                           className="w-full h-10 leading-10 relative select-none group hover:bg-[#e6f2fe] transition-all duration-300 rounded-lg px-4 inline-flex items-center text-[#4a4a4a] text-sm font-medium tracking-wider capitalize hover:text-[#548be6]"
                           onClick={() => handleOpenModalRemoveMember()}
@@ -727,8 +715,8 @@ function ChatWindow() {
                       const getAvatar = server.concat(image);
 
                       if (
-                        dataUserDecoded &&
-                        item.userId === dataUserDecoded.user.id
+                        dataUser &&
+                        item.userId === dataUser.user.id
                       ) {
                         return (
                           <div
@@ -800,8 +788,8 @@ function ChatWindow() {
                             </div>
                           </div>
 
-                          {dataUserDecoded &&
-                            item.userId === dataUserDecoded.user.id && (
+                          {dataUser &&
+                            item.userId === dataUser.user.id && (
                               <span className="ml-2 hidden group-hover:flex">
                                 {canRecall && (
                                   <ChangeIcon
@@ -872,7 +860,7 @@ function ChatWindow() {
           <div className="text-center w-full h-full flex flex-col justify-center items-center py-4 select-none">
             <Image src={robot} />
             <h1 className="text-3xl font-bold mb-4">
-              Welcome {dataUserDecoded && dataUserDecoded.user.name}
+              Welcome {dataUser && dataUser.user.name}
             </h1>
             <p className="text-gray-600 mb-4 font-semibold text-lg">
               Please select a chat to Start Messaging
@@ -884,7 +872,7 @@ function ChatWindow() {
       {/* list member */}
       <Modal open={openModalListMember} close={handleCloseModalListMember}>
         <div className="container mx-auto mt-8">
-          <Heading variant="primary" line>
+          <Heading variant={TBUTTON_VARIANT.PRIMARY} line>
             List member
           </Heading>
           <div className="grid grid-cols-4 gap-4">
@@ -915,7 +903,7 @@ function ChatWindow() {
                       {filterRoleName.length > 0 && filterRoleName[0].name}
                     </p>
                     {dataChatRoom &&
-                      dataUserDecoded &&
+                      dataUser &&
                       dataChatRoom.roomCreatorId !== item.User.id && (
                         <div
                           className="flex justify-start items-center mt-3"
@@ -939,7 +927,7 @@ function ChatWindow() {
           </div>
           <div className="flex justify-end">
             <Button
-              variant="primary"
+              variant={TBUTTON_VARIANT.PRIMARY}
               onClick={() => handleCloseModalListMember()}
             >
               Cancel
@@ -951,7 +939,7 @@ function ChatWindow() {
       {/* add member */}
       <Modal open={openModalAddMember} close={handleCloseModalAddMember}>
         <div className="container mx-auto mt-8">
-          <Heading variant="primary" line>
+          <Heading variant={TBUTTON_VARIANT.PRIMARY} line>
             Add member
           </Heading>
           <div
@@ -1068,11 +1056,11 @@ function ChatWindow() {
               })}
           </div>
           <div className="flex justify-end">
-            <Button variant="primary" onClick={() => handleAddMember()}>
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => handleAddMember()}>
               Submit
             </Button>
             <Button
-              variant="primary"
+              variant={TBUTTON_VARIANT.PRIMARY}
               onClick={() => handleCloseModalAddMember()}
             >
               Cancel
@@ -1084,7 +1072,7 @@ function ChatWindow() {
       {/* Change name group */}
       <Modal open={openModalUpdateGroupName} close={handleCloseModalGroupName}>
         <form autoComplete="off" onSubmit={handleChangeNameGroup}>
-          <Heading variant={"primary"}>Change Group Name</Heading>
+          <Heading variant={TBUTTON_VARIANT.PRIMARY}>Change Group Name</Heading>
           <div className="">
             {inputChangeGroupName.map((item, index) => {
               return (
@@ -1101,9 +1089,9 @@ function ChatWindow() {
           </div>
           {/* footer */}
           <div className="flex justify-end">
-            <Button variant={"primary"}>Submit</Button>
+            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
             <Button
-              variant={"primary"}
+              variant={TBUTTON_VARIANT.PRIMARY}
               onClick={() => handleCloseModalGroupName()}
             >
               Cancel
@@ -1115,7 +1103,7 @@ function ChatWindow() {
       {/* remove member */}
       <Modal open={openModalRemoveMember} close={handleCloseModalRemoveMember}>
         <div className="container mx-auto mt-8">
-          <Heading variant="primary" line>
+          <Heading variant={TBUTTON_VARIANT.PRIMARY} line>
             Remove member
           </Heading>
           <div
@@ -1228,11 +1216,11 @@ function ChatWindow() {
               })}
           </div>
           <div className="flex justify-end">
-            <Button variant="primary" onClick={() => handleRemoveMember()}>
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => handleRemoveMember()}>
               Submit
             </Button>
             <Button
-              variant="primary"
+              variant={TBUTTON_VARIANT.PRIMARY}
               onClick={() => handleCloseModalRemoveMember()}
             >
               Cancel
@@ -1248,13 +1236,13 @@ function ChatWindow() {
       >
         <div className="container mx-auto mt-8">
           <form autoComplete="off" onSubmit={handlePromoteToLeader}>
-            <Heading variant="primary">Promote to Leader</Heading>
+            <Heading variant={TBUTTON_VARIANT.PRIMARY}>Promote to Leader</Heading>
             <p>Are you sure you want to elevate this person to leader?</p>
 
             <div className="flex justify-end">
-              <Button variant="primary">Submit</Button>
+              <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
               <Button
-                variant="primary"
+                variant={TBUTTON_VARIANT.PRIMARY}
                 onClick={() => handleCloseModalPromoteToLeader()}
               >
                 Cancel

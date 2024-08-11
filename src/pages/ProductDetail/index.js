@@ -13,13 +13,15 @@ import WindowScrollTop from "../../utils/windowScroll";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import GlobalContext from "../../contexts/globalContext";
 import * as commonServices from "../../services/commonServices";
-
+import { TBUTTON_VARIANT } from "../../types/button";
+import toast from "react-hot-toast";
+import { useAuth } from "../../contexts/authContext";
 
 function ProductDetail() {
     const params = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { reloadCart, setReloadCart } = useContext(GlobalContext);
+    const { setReloadCart } = useContext(GlobalContext);
     const [size, setSize] = useState("M");
     const [currentCount, setCurrentCount] = useState(1);
     const [currentPrice, setCurrentPrice] = useState(0);
@@ -28,28 +30,8 @@ function ProductDetail() {
     const [originalPricePreview, setOriginalPricePreview] = useState(null);
     const [discount, setDiscount] = useState(null);
     const [dataProduct, setDataProduct] = useState(null);
-    // console.log("dataProduct", dataProduct)
-
-    // modal add to cart success 
     const [openModalAddToCartSuccess, setOpenModalAddToCartSucess] = useState(false);
-
-    // localstorage
-    const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
-
-    const [dataUserDecoded, setDataUserDecoded] = useState(null);
-    const decoded = async () => {
-        if(valueUserLocal) {
-            const respon = await commonServices.handleDecoded(valueUserLocal.token);
-            // console.log("respon.decoded", respon)
-            if (respon && respon.errCode === 0) {
-                setDataUserDecoded(respon.decoded);
-            }
-        }
-    };
-
-    useEffect(() => {
-        decoded();
-    }, [])
+    const {dataUser} = useAuth();
 
     const optionsSize = [
         { value: "S", label: "S" },
@@ -57,14 +39,11 @@ function ProductDetail() {
         { value: "L", label: "L" },
     ];
 
-    // onhandle getdata
     const fetchApiVariantProduct = async (prodId) => {
         let respon = await variantServices.findVariantInProduct(prodId) ?? null;
-        // console.log("respon variant in prod detail", respon)
         if (respon) {
             const dataProductSelected = respon.variant ?? [];
             let filterValue = dataProductSelected.length > 0 && dataProductSelected.filter((item) => item.name === size)
-            // console.log("filterValue", filterValue)
             if (filterValue.length > 0) {
                 setCurrentPrice(filterValue[0].currentPrice)
                 setOriginalPrice(filterValue[0].originalPrice);
@@ -99,7 +78,6 @@ function ProductDetail() {
         fetchApiProduct();
     }, [])
 
-    // onhandle count
     const onHandlePlusItem = (currentCount) => {
         setCurrentCount((currentCount += 1));
         setCurrentPricePreview(currentPrice * currentCount);
@@ -116,7 +94,6 @@ function ProductDetail() {
         }
     };
 
-    // onhandle selected size
     const handleGetValueSize = (currentValue) => {
         setSize(currentValue);
         setCurrentCount(1);
@@ -129,10 +106,10 @@ function ProductDetail() {
         const data = new FormData();
         let checkAllowAddToCart = true;
 
-        if (dataUserDecoded) {
-            data.set("userId", dataUserDecoded.user.id);
+        if (dataUser) {
+            data.set("userId", dataUser.user.id);
         } else {
-            // alert("Bạn phải đăng nhập mới có thể mở khoá chức năng này");
+            toast.error("You need login to used this feature");
             checkAllowAddToCart = false;
             return;
         }
@@ -143,7 +120,6 @@ function ProductDetail() {
         data.set("price", currentPricePreview ? Math.round(currentPricePreview * 100) / 100 : Math.round(currentPrice * 100) / 100);
 
         try {
-            // const respon = await cartServices.handleAddToCart(data);
             if (checkAllowAddToCart) {
                 let responAddToCartSubmit = null;
                 responAddToCartSubmit = dispatch(handleAddToCartRedux(data));
@@ -153,10 +129,7 @@ function ProductDetail() {
                     if (dataProduct) {
                         let checkVariant = dataProduct.Variants ?? [];
                         if (checkVariant.length > 0) {
-                            // let filterPrice = checkVariant.filter = 
-
                             let filterValue = checkVariant.filter((item) => item.name === size)
-                            // console.log("filterValue", filterValue)
                             if (filterValue.length > 0) {
                                 setCurrentPricePreview(filterValue[0].currentPrice)
                                 setOriginalPricePreview(filterValue[0].originalPrice);
@@ -280,14 +253,14 @@ function ProductDetail() {
                             </div>
 
                             <form onSubmit={onhandleSubmitAddToCart} autoComplete="off" className="flex space-x-4 mb-4">
-                                <Button variant={"primary"}
+                                <Button variant={TBUTTON_VARIANT.PRIMARY}
                                     onClick={() => {
-                                        if (!dataUserDecoded) {
-                                            alert("Bạn phải đăng nhập mới có thể mở khoá chức năng này");
+                                        if (!dataUser) {
+                                            toast.error("You need login to used this feature");
                                         }
                                     }}
                                 >Add to Cart</Button>
-                                <Button variant={"primary"}
+                                <Button variant={TBUTTON_VARIANT.PRIMARY}
                                     onClick={() => {
                                         navigate(-1);
                                     }}
@@ -311,8 +284,8 @@ function ProductDetail() {
                             <p className="text-gray-600">Món ăn của bạn đã được thêm vào giỏ hàng. Bạn có thể tiếp tục mua sắm hoặc xem giỏ hàng của mình.</p>
                         </div>
                         <div className="mt-6">
-                            <Button variant={"primary"} onClick={() => setOpenModalAddToCartSucess(false)}>Tiếp tục mua sắm</Button>
-                            <Button variant={"primary"} to={"/cart"} onClick={() => {
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => setOpenModalAddToCartSucess(false)}>Tiếp tục mua sắm</Button>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} to={"/cart"} onClick={() => {
                                 WindowScrollTop()
                             }}>Vào giỏ hàng</Button>
                         </div>

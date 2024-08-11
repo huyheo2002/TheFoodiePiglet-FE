@@ -11,6 +11,7 @@ import TimePicker from "../../components/FormControl/timePicker";
 import Congrat from "../../components/Congrat";
 import WindowScrollTop from "../../utils/windowScroll";
 import GlobalContext from "../../contexts/globalContext";
+import { TBUTTON_VARIANT } from "../../types/button";
 
 function Orders() {
   const { showCongrat, setShowCongrat } = useContext(GlobalContext)
@@ -481,8 +482,8 @@ function Orders() {
         })}
 
         <div className="flex justify-end mt-3 w-full">
-          <Button variant={"primary"} onClick={() => { }}>Submit</Button>
-          <Button variant={"primary"} onClick={() => {
+          <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => { }}>Submit</Button>
+          <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => {
             setValues({});
             setSelectedTimeStart("");
             setSelectedTimeEnd("");
@@ -513,7 +514,7 @@ function Orders() {
           <div className="bg-white p-8 rounded shadow-md text-center flex flex-col justify-center items-center w-full">
             <h1 className="text-2xl font-semibold mb-4">Đặt bàn thất bại</h1>
             <p className="text-gray-600 mb-6">Rất tiếc, chúng tôi không thể đặt bàn cho bạn vào thời điểm này.</p>
-            <Button variant={"primary"} onClick={handleCloseModalOrdersFail}>Thử lại</Button>
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalOrdersFail}>Thử lại</Button>
           </div>
         </Modal>
       }
@@ -531,7 +532,7 @@ function Orders() {
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-36 h-36 mb-4 my-3 text-green-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-            </svg>            
+            </svg>
             <div className="mt-4">
               <p className="text-gray-700 text-center">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.
                 <br />
@@ -539,7 +540,7 @@ function Orders() {
               </p>
             </div>
             <div className="mt-6 flex justify-start">
-              <Button variant={"primary"} onClick={() => {
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => {
                 handleCloseModalOrderSuccess();
                 WindowScrollTop();
               }}>Thoát</Button>

@@ -7,31 +7,21 @@ import GlobalContext from "../../contexts/globalContext";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
 import * as commonServices from "../../services/commonServices";
+import { useAuth } from "../../contexts/authContext";
 
 const AdminLayout = ({ children }) => {
   const navigate = useNavigate();
   const toggleSidebar = useSelector((states) => states.admin.toggleSidebar);
   const { toggleDataTable, setToggleDataTable } = useContext(GlobalContext);
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-
-  const decoded = async () => {
-    if (dataUser) {
-      const respon = await commonServices.handleDecoded(dataUser.token);
-      if (respon && respon.errCode === 0) {
-        return respon.decoded;
-      }
-    }
-  };
+  const { dataUser } = useAuth();
 
   useEffect(() => {
     if (!dataUser) {
       navigate("/");
     } else {
-      decoded().then((infoUser) => {
-        if (infoUser.user.roleName === "User") {
-          navigate("/");
-        }
-      });
+      if (dataUser.user.roleName === "User") {
+        navigate("/");
+      }
     }
   }, []);
 

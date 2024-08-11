@@ -24,14 +24,12 @@ import TextareaField from "../../components/FormControl/textAreaField";
 import Congrat from "../../components/Congrat";
 import imgShipper from "../../assets/images/Base/shipper_01.png";
 import * as authServices from "../../services/authServices";
+import { TBUTTON_VARIANT } from "../../types/button";
+import { useAuth } from "../../contexts/authContext";
 
 function Profile() {
     const { paymentOnlineSuccess, setPaymentOnlineSuccess, showCongrat } = useContext(GlobalContext);
-    const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
-    const [dataUserDecoded, setDataUserDecoded] = useState(null);
-
     const [roleName, setRoleName] = useState("");
-
     const [listUsersDetail, setListUsersDetail] = useState([]);
     const [dataRead, setDataRead] = useState({});
     const [image, setImage] = useState("");
@@ -39,6 +37,7 @@ function Profile() {
     const [openModalRead, setOpenModalRead] = useState(false);
     const [valuesUpdate, setValuesUpdate] = useState({});
     const [openModalUpdate, setOpenModalUpdate] = useState(false);
+    const { dataUser } = useAuth();
 
     const inputs = [
         // {
@@ -233,27 +232,17 @@ function Profile() {
         },
     ];
 
-    const decoded = async () => {
-        if (valueLocal) {
-            const respon = await commonServices.handleDecoded(valueLocal.token);
-            // console.log("respon.decoded", respon)
-            if (respon && respon.errCode === 0) {
-                // console.log("respon.decoded.user", respon.decoded.user);
-                setRoleName(respon.decoded.user.roleName);
-                setDataUserDecoded(respon.decoded);
+    const getPaymentOfUser = async () => {
+        setRoleName(dataUser.user.roleName);
 
-                // fetchList payment
-                const responOrder = await paymentServices.getAllPaymentOfUser(respon.decoded.user.id);
-                // console.log("responOrder payment", responOrder);
-                if (responOrder && responOrder.errCode === 0) {
-                    setListOrder(responOrder.payments);
-                }
-            }
+        const responOrder = await paymentServices.getAllPaymentOfUser(dataUser.user.id);
+        if (responOrder && responOrder.errCode === 0) {
+            setListOrder(responOrder.payments);
         }
-    };    
+    };
 
     useEffect(() => {
-        decoded();
+        getPaymentOfUser();
     }, [refreshPayment])
 
     // handle get api users full
@@ -369,13 +358,11 @@ function Profile() {
             data.set("id", valuesUpdate.id)
         }
 
-        console.log("data entry:", Object.fromEntries(data.entries()));
         try {
             const respon = await userServices.handleUpdateUser(data);
             // console.log("respon", respon);
             if (respon && respon.errCode === 0) {
-                dataUserDecoded.user = respon.user;
-                setValueLocal(dataUserDecoded);
+                dataUser.user = respon.user;
                 handleCloseModalUpdate();
                 handleGetAllUsers();
             } else if (respon.errCode === 1) {
@@ -601,8 +588,8 @@ function Profile() {
     };
 
     const handleGetCurrentContact = () => {
-        if (dataUserDecoded && values) {
-            setValues({ ...values, contactInfo: `${dataUserDecoded.user.email}-${dataUserDecoded.user.phone}` })
+        if (dataUser && values) {
+            setValues({ ...values, contactInfo: `${dataUser.user.email}-${dataUser.user.phone}` })
         } else {
             return null;
         }
@@ -626,7 +613,7 @@ function Profile() {
         e.preventDefault();
 
         const data = new FormData(e.target);
-        data.set("id", dataUserDecoded.user.id)
+        data.set("id", dataUser.user.id)
 
         try {
             const respon = await authServices.handleChangePassword(data);
@@ -642,7 +629,7 @@ function Profile() {
         }
     };
 
-    // console.log("dataUserDecoded", dataUserDecoded);
+    // console.log("dataUser", dataUser);
     return (
         <Fragment>
             <div className="min-h-screen bg-transparent py-4">
@@ -651,21 +638,21 @@ function Profile() {
                         <div className="w-full">
                             <div className="flex items-center space-x-5">
                                 <div className="h-40 w-40 rounded-full flex flex-shrink-0 justify-center items-center text-white text-2xl font-mono overflow-hidden border-2 border-rgba-white-0.1">
-                                    <Image className={"w-full h-full"} src={dataUserDecoded ? dataUserDecoded.user.avatar !== null ? dataUserDecoded.user.avatar : " " : " "} fallback={ava} />
+                                    <Image className={"w-full h-full"} src={dataUser ? dataUser.user.avatar !== null ? dataUser.user.avatar : " " : " "} fallback={ava} />
                                 </div>
                                 <div className="block pl-2 font-semibold text-xl self-center text-gray-700">
-                                    <h2 className="leading-relaxed text-white font-semibold text-2xl">{dataUserDecoded && dataUserDecoded.user.name}</h2>
+                                    <h2 className="leading-relaxed text-white font-semibold text-2xl">{dataUser && dataUser.user.name}</h2>
                                     <p className="text-sm font-normal leading-relaxed text-white">{roleName}</p>
                                 </div>
                             </div>
                             <div className="mt-4 flex">
-                                <Button variant={"primary"}
-                                    onClick={() => handleOpenModalUpdate(dataUserDecoded.user.id)}
+                                <Button variant={TBUTTON_VARIANT.PRIMARY}
+                                    onClick={() => handleOpenModalUpdate(dataUser.user.id)}
                                 >Thay đổi thông tin</Button>
-                                <Button variant={"primary"}
-                                    onClick={() => handleOpenModalRead(dataUserDecoded.user.id)}
+                                <Button variant={TBUTTON_VARIANT.PRIMARY}
+                                    onClick={() => handleOpenModalRead(dataUser.user.id)}
                                 >Thông tin chi tiết</Button>
-                                <Button variant={"primary"}
+                                <Button variant={TBUTTON_VARIANT.PRIMARY}
                                     onClick={() => setOpenModalChangePassword(true)}
                                 >Đổi mật khẩu</Button>
                             </div>
@@ -721,12 +708,12 @@ function Profile() {
                                             <p className="text-gray-600 mt-2">Ngày đặt hàng: {formattedDate ? formattedDate : item.createdAt}</p>
                                             <p className="text-gray-600">Tổng tiền: {item.totalPrice}$</p>
                                             <div className="flex mt-3">
-                                                <Button variant={"primary"}
+                                                <Button variant={TBUTTON_VARIANT.PRIMARY}
                                                     onClick={() => {
                                                         handleOpenModalOrderDetail(item);
                                                     }}
                                                 >Xem chi tiết</Button>
-                                                {item.paymentStatus !== "Đã thanh toán" && <Button variant={"primary"}
+                                                {item.paymentStatus !== "Đã thanh toán" && <Button variant={TBUTTON_VARIANT.PRIMARY}
                                                     onClick={() => handleOpenModalPaymentOnline(item)}
                                                 >Thanh toán online</Button>}
                                             </div>
@@ -743,10 +730,10 @@ function Profile() {
                                         Hãy tiếp tục và khám phá các sản phẩm của chúng tôi.
                                     </p>
                                     <div className="flex mt-6 justify-center">
-                                        <Button variant={"primary"} to={"/"} onClick={() => WindowScrollTop()}>
+                                        <Button variant={TBUTTON_VARIANT.PRIMARY} to={"/"} onClick={() => WindowScrollTop()}>
                                             Trang Chủ
                                         </Button>
-                                        <Button variant={"primary"} to={"/menu"} onClick={() => WindowScrollTop()}>
+                                        <Button variant={TBUTTON_VARIANT.PRIMARY} to={"/menu"} onClick={() => WindowScrollTop()}>
                                             Mua sắm ngay
                                         </Button>
                                     </div>
@@ -833,7 +820,7 @@ function Profile() {
                     </div>
                     {/* footer */}
                     <div className="flex justify-end">
-                        <Button variant={"primary"} onClick={handleCloseModalRead}>
+                        <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalRead}>
                             Cancel
                         </Button>
                     </div>
@@ -911,8 +898,8 @@ function Profile() {
                         </div>
                         {/* footer */}
                         <div className="flex justify-end">
-                            <Button variant={"primary"}>Submit</Button>
-                            <Button variant={"primary"} onClick={handleCloseModalUpdate}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalUpdate}>
                                 Cancel
                             </Button>
                         </div>
@@ -991,12 +978,12 @@ function Profile() {
                         <div className="flex justify-end">
                             {dataOrderDetail && dataOrderDetail.orderStatus && dataOrderDetail.orderStatus === "Đang xử lý" &&
                                 <Fragment>
-                                    <Button variant={"primary"}
+                                    <Button variant={TBUTTON_VARIANT.PRIMARY}
                                         onClick={() => handleShowModalCancelOrder(dataOrderDetail)}
                                     >
                                         Huỷ đơn hàng
                                     </Button>
-                                    <Button variant={"primary"}
+                                    <Button variant={TBUTTON_VARIANT.PRIMARY}
                                         onClick={() => {
                                             setOpenModalOrdersDetail(false);
                                             setRefreshPayment(!refreshPayment);
@@ -1007,10 +994,10 @@ function Profile() {
                                     </Button>
                                 </Fragment>
                             }
-                            <Button variant={"primary"} onClick={handleExportClick}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleExportClick}>
                                 Xuất bill
                             </Button>
-                            <Button variant={"primary"} onClick={handleCloseModalOrderDetail}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalOrderDetail}>
                                 Thoát
                             </Button>
                         </div>
@@ -1029,10 +1016,10 @@ function Profile() {
                         <span className="block sm:inline">Bạn có chắc chắn muốn huỷ đơn hàng này không?</span>
                     </div>
                     <div className="flex justify-end mt-3">
-                        <Button variant={"primary"}
+                        <Button variant={TBUTTON_VARIANT.PRIMARY}
                             onClick={() => handleDeletePayment(idDelete)}
                         >Xác nhận</Button>
-                        <Button variant={"primary"}
+                        <Button variant={TBUTTON_VARIANT.PRIMARY}
                             onClick={() => setOpenModalCancelOrder(false)}
                         >Thoát</Button>
                     </div>
@@ -1076,10 +1063,10 @@ function Profile() {
                         />
 
                         <div className="flex justify-end mt-3">
-                            <Button variant={"primary"}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}>
                                 Xác nhận
                             </Button>
-                            <Button variant={"primary"}
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}
                                 onClick={handleCloseModalChangeInfoOrder}
                             >
                                 Hủy
@@ -1196,7 +1183,7 @@ function Profile() {
                                     deliveryAddress: values?.deliveryAddress,
                                     note: values && values?.note,
                                     purchasedItems: values && values?.purchasedItems,
-                                    userId: dataUserDecoded ? dataUserDecoded.user.id : null,
+                                    userId: dataUser ? dataUser.user.id : null,
                                     totalPrice: values && values.totalPrice,
                                     paymentDate: new Date(),
                                 }}
@@ -1224,13 +1211,13 @@ function Profile() {
                             </p>
                         </div>
                         <div className="mt-6 flex justify-start">
-                            <Button variant={"primary"} to={"/profile"}
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} to={"/profile"}
                                 onClick={() => {
                                     handleCloseModalPaymentOnlineSuccess();
                                     WindowScrollTop()
                                 }}
                             >Xem đơn hàng của bạn</Button>
-                            <Button variant={"primary"} onClick={() => {
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => {
                                 handleCloseModalPaymentOnlineSuccess();
                                 WindowScrollTop();
                             }}>Thoát</Button>
@@ -1259,8 +1246,8 @@ function Profile() {
                     </div>
                     {/* footer */}
                     <div className="flex justify-end">
-                        <Button variant={"primary"}>Submit</Button>
-                        <Button variant={"primary"} onClick={handleCloseModalChangePassword}>
+                        <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+                        <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalChangePassword}>
                             Cancel
                         </Button>
                     </div>

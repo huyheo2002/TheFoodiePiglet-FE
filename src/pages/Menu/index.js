@@ -20,6 +20,9 @@ import { handleAddToCartRedux } from "../../redux/actions/cartAction";
 import GlobalContext from "../../contexts/globalContext";
 import * as commonServices from "../../services/commonServices";
 import slider from "../../assets/images/Foods/appetizers-bg2.jpg"
+import { TBUTTON_VARIANT } from "../../types/button";
+import { useAuth } from "../../contexts/authContext";
+import toast from "react-hot-toast";
 
 
 function Menu() {
@@ -41,27 +44,10 @@ function Menu() {
   const [originalPricePreview, setOriginalPricePreview] = useState(null);
   const [discount, setDiscount] = useState(null);
   const [currentIdAddToCart, setCurrentIdAddToCart] = useState(null);
+  const {dataUser} = useAuth();
 
   // modal add to cart success 
   const [openModalAddToCartSuccess, setOpenModalAddToCartSucess] = useState(false);
-
-  // localstorage
-  const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
-
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
-  const decoded = async () => {
-    if(valueUserLocal) {
-      const respon = await commonServices.handleDecoded(valueUserLocal.token);
-      // console.log("respon.decoded", respon)
-      if(respon && respon.errCode === 0) {
-        setDataUserDecoded(respon.decoded);
-      }
-    }
-  };
-
-  useEffect(() => {
-    decoded();
-  }, [])
 
   const optionsSize = [
     { value: "S", label: "S" },
@@ -228,10 +214,10 @@ function Menu() {
     const data = new FormData();
     let checkAllowAddToCart = true;
 
-    if (dataUserDecoded) {
-      data.set("userId", dataUserDecoded.user.id);
+    if (dataUser) {
+      data.set("userId", dataUser.user.id);
     } else {
-      alert("Bạn phải đăng nhập mới có thể mở khoá chức năng này");
+      toast.error("You need login to used this feature");
       checkAllowAddToCart = false;
       return;
     }
@@ -388,8 +374,8 @@ function Menu() {
           </div>
 
           <div className="flex justify-end">
-            <Button variant={"primary"}>Add to Cart</Button>
-            <Button variant={"primary"} onClick={handleCloseModalAddToCart}>
+            <Button variant={TBUTTON_VARIANT.PRIMARY}>Add to Cart</Button>
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalAddToCart}>
               Cancel
             </Button>
           </div>
@@ -410,8 +396,8 @@ function Menu() {
               <p className="text-gray-600">Món ăn của bạn đã được thêm vào giỏ hàng. Bạn có thể tiếp tục mua sắm hoặc xem giỏ hàng của mình.</p>
             </div>
             <div className="mt-6">
-              <Button variant={"primary"} onClick={() => setOpenModalAddToCartSucess(false)}>Tiếp tục mua sắm</Button>
-              <Button variant={"primary"} to={"/cart"} onClick={() => {
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => setOpenModalAddToCartSucess(false)}>Tiếp tục mua sắm</Button>
+              <Button variant={TBUTTON_VARIANT.PRIMARY} to={"/cart"} onClick={() => {
                 WindowScrollTop()
               }}>Vào giỏ hàng</Button>
             </div>

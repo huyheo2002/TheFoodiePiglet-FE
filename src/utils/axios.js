@@ -3,31 +3,36 @@ import axios from "axios";
 const instance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
   headers: { 'Content-Type': 'application/x-www-form-urlencoded', }
-  
 });
 
-// instance.interceptors.request.use(
-//   (config) => {
-//     const token = localStorage.getItem("dataUser");
+instance.interceptors.request.use(
+  (config) => {
+    const storedData = localStorage.getItem("dataUser");
+    let token;
 
-//     if (token && !isTokenExpired(token)) {
-//       config.headers["Authorization"] = `Bearer ${token}`;
-//     }
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        token = parsedData?.token;
+      } catch (error) {
+        console.error("Error parsing token:", error);
+      }
+    }
 
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      console.warn("No token found or token is undefined");
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 instance.defaults.withCredentials = true;
-
-// const logRequestConfig = (config) => {
-//   console.log("Request Config:", config);
-//   return config;
-// };
-// instance.interceptors.request.use(logRequestConfig);
 
 // Add a response interceptor
 instance.interceptors.response.use(

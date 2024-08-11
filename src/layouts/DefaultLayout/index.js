@@ -2,10 +2,8 @@ import React, { useContext, useEffect } from "react";
 import Header from "../components/Header";
 import bg from "../../assets/images/Base/background.png";
 import Footer from "../components/Footer";
-import Congrat from "../../components/Congrat";
 import GlobalContext from "../../contexts/globalContext";
 
-// only header
 const DefaultLayout = ({ children }) => {
   const { showCongrat, setShowCongrat } = useContext(GlobalContext);
   const delayCloseCongrat = () => {
@@ -23,9 +21,7 @@ const DefaultLayout = ({ children }) => {
 
   return (
     <div className="w-full relative overflow-hidden">
-      {/* {showCongrat && <Congrat />} */}
       <Header />
-      {/* <Sidebar /> */}
       <div className="mx-16 relative pt-20">{children}</div>
       <Footer />
       <div

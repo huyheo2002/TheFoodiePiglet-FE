@@ -5,20 +5,18 @@ import * as commonServices from "../../services/commonServices";
 import * as authServices from "../../services/authServices";
 import Button from "../../components/Button";
 import { useEffect } from "react";
+import { TBUTTON_VARIANT } from "../../types/button";
+import { useAuth } from "../../contexts/authContext";
 
 function ResetPassword() {
+    const { dataUser } = useAuth();
     const params = useParams();
     const navigate = useNavigate();
-    console.log("params", params);
 
-    const decoded = async () => {
+    const checkAuth = async () => {
         if (params.token) {
-            console.log("params.token", params.token);
-            const respon = await commonServices.handleDecoded(params.token);
-            console.log("respon.decoded", respon)
-            if (respon && respon.errCode === 0) {
-                console.log("okok");
-                return respon.decoded.infoUser;
+            if (dataUser) {
+                return dataUser.infoUser;
             } else {
                 navigate("/not-found")
             }
@@ -30,20 +28,17 @@ function ResetPassword() {
     };
 
     useEffect(() => {
-        decoded();
+        checkAuth();
     }, [])
 
     const handleSubmit = async () => {
-        await decoded().then(async result =>  {
-            console.log("result", result);
+        await checkAuth().then(async result => {
             const data = new FormData();
             data.set("username", result.username);
             data.set("email", result.email);
 
-            console.log("data entry:", Object.fromEntries(data.entries()));
             const respon = await authServices.handleResetPassword(data);
-
-            if(respon && respon.errCode === 0) {
+            if (respon && respon.errCode === 0) {
                 navigate("/login");
             }
         })
@@ -62,7 +57,7 @@ function ResetPassword() {
             </div>
 
             <div className="flex justify-end">
-                <Button variant={"primary"} onClick={handleSubmit}>
+                <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleSubmit}>
                     Xác nhận
                 </Button>
             </div>

@@ -23,6 +23,8 @@ import Image from "../../../../components/Image";
 import * as notificationServices from "../../../../services/notificationServices";
 import GlobalContext from "../../../../contexts/globalContext";
 import Button from "../../../../components/Button";
+import { useAuth } from "../../../../contexts/authContext";
+import { TBUTTON_VARIANT } from "../../../../types/button";
 
 function Header() {
   const navigate = useNavigate();
@@ -30,28 +32,14 @@ function Header() {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation(["header"]);
   const toggleSidebar = useSelector((states) => states.admin.toggleSidebar);
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
   // notify
   const [listNotify, setListNotify] = useState([]);
   const numberOfItemsToShow = 8;
   const visibleList = listNotify.length > 0 && listNotify.slice(0, numberOfItemsToShow);
 
   const listLanguages = ["languages-vi", "languages-en"];
-  // decoded dataUser
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
-
-  const decoded = async () => {
-    if (dataUser) {
-      const respon = await commonServices.handleDecoded(dataUser.token);
-      // console.log("respon.decoded", respon)
-      if (respon && respon.errCode === 0) {
-        setDataUserDecoded(respon.decoded);
-      }
-    }
-  };
-
+  const { dataUser } = useAuth();
   useEffect(() => {
-    decoded();
     handleGetAllNotify();
   }, [])
 
@@ -65,14 +53,6 @@ function Header() {
       setListNotify(respon.notify)
     }
   }
-
-  // console.log("listNotify", listNotify)
-
-  // useEffect(() => {
-  //   if (dataUserDecoded && dataUserDecoded.user.roleName === "User") {
-  //     navigate("/");
-  //   }
-  // }, []);
 
   const handleToggleSidebar = () => {
     if (toggleSidebar === true) {
@@ -132,11 +112,11 @@ function Header() {
         <div className="mx-2 relative group h-full flex justify-center items-center">
           <MessageIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" />
           <div className="select-none cursor-pointer absolute bottom-0 right-0 z-50 -translate-x-1/4 -translate-y-1/4 border-2 border-solid border-[#548be6] rounded-full w-6 h-6 font-medium text-sm flex justify-center items-center bg-[#e6f2fe] text-[#548be6]">
-            15          
+            15
           </div>
         </div>
         <div className="mx-2 relative group h-full flex justify-center items-center">
-          <BellIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" 
+          <BellIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300"
             onClick={() => navigate("/system/notify-detail")}
           />
           <div className={clsx("bg-white hidden shadow-black-rb-0.35 flex-col w-[260px] z-50 absolute top-full left-0 rounded-b-lg overflow-hidden group-hover:flex max-h-[400px] overflow-y-scroll scrollbar", {
@@ -150,14 +130,14 @@ function Header() {
                 <p className="text-sm">Hiện bạn chưa có thông báo nào.</p>
               </div>
               :
-              <Fragment>                
+              <Fragment>
                 {visibleList.length > 0 && visibleList.map((item, index) => {
                   return <NotificationCard data={item} key={index} onClick={() => navigate("/system/notify-detail")} />
                 })}
 
-                {listNotify.length > numberOfItemsToShow &&  (
+                {listNotify.length > numberOfItemsToShow && (
                   <div className="mx-3 mt-2 my-4">
-                    <Button variant={"primary"} onClick={() => {}}
+                    <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => { }}
                       to={"/system/notify-detail"}
                     >
                       Xem thêm
@@ -170,8 +150,8 @@ function Header() {
           </div>
         </div>
         <div className="mx-2 relative group h-full flex justify-center items-center">
-          {dataUserDecoded &&
-            <p className="text-base font-semibold">{t("userLogin.msgWelcome")} {dataUserDecoded.user.name}</p>
+          {dataUser &&
+            <p className="text-base font-semibold">{t("userLogin.msgWelcome")} {dataUser.user.name}</p>
           }
           <UserIcon className="mx-2 !w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" />
           {/* <EarthIcon className="!w-10 !h-8 cursor-pointer text-[#4a4a4a] hover:text-[#548be6] transition-all duration-300" /> */}

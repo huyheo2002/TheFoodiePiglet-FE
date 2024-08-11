@@ -21,33 +21,25 @@ function ContextWrapper(props) {
   const [imageChatRoom, setImageChatRoom] = useState(null);
   const [reloadSidebarChat, setReloadSidebarChat] = useState(false);
 
-  // value local
-  const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
+  // const fetchListUser = async () => {
+  //   if (dataUser) {
+  //     let dataUser = dataUser.user.id ?? null;
+  //     const respon = await cartServices.getAllCartItemOfUser(dataUser);
+  //     if (respon && respon.errCode === 0) {
+  //       if (Array.isArray(respon.listItem) && respon.listItem.length > 0) {
+  //         setReloadCart(true);
+  //       } else {
+  //         setReloadCart(false);
+  //       }
+  //     }
+  //   } else {
+  //     setReloadCart(false);
+  //   }
+  // };
 
-  const fetchListUser = async () => {
-    if (valueUserLocal) {
-      const responDecodedUser = await commonServices.handleDecoded(
-        valueUserLocal && valueUserLocal.token
-      );
-      if (responDecodedUser && responDecodedUser.errCode === 0) {
-        let dataUser = responDecodedUser.decoded.user.id ?? null;
-        const respon = await cartServices.getAllCartItemOfUser(dataUser);
-        if (respon && respon.errCode === 0) {
-          if (Array.isArray(respon.listItem) && respon.listItem.length > 0) {
-            setReloadCart(true);
-          } else {
-            setReloadCart(false);
-          }
-        }
-      }
-    } else {
-      setReloadCart(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchListUser();
-  }, [valueUserLocal]);
+  // useEffect(() => {
+  //   fetchListUser();
+  // }, [dataUser]);
 
   return (
     <GlobalContext.Provider

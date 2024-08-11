@@ -11,32 +11,30 @@ import * as chatServices from "../../services/chatServices";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import GlobalContext from "../../contexts/globalContext";
 import toast from "react-hot-toast";
+import { useAuth } from "../../contexts/authContext";
 
 function Sidebar() {
   const { setIdChatRoom, idChatRoom } = useContext(GlobalContext);
   const [activeOption, setActiveOption] = useState(1);
   const [chatBoxActive, setChatBoxActive] = useState(-1);
   const [listUser, setListUser] = useState([]);
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
+  const { dataUser } = useAuth();
   const [listChatroom, setListChatroom] = useState([]);
 
   const handleGetAllUsers = async () => {
     const responUser = await userServices.getAllUsers("all");
     if (responUser && responUser.errCode === 0 && responUser.users) {
       if (dataUser) {
-        const respon = await commonServices.handleDecoded(dataUser.token);
-        if (respon && respon.errCode === 0) {
-          const listUser = responUser.users || [];
-          const filterListUser =
-            listUser.length > 0 &&
-            listUser.filter(
-              (item) =>
-                item.id !== respon.decoded.user.id && item.Role.name !== "User"
-            );
-          setListUser(filterListUser);
+        const listUser = responUser.users || [];
+        const filterListUser =
+          listUser.length > 0 &&
+          listUser.filter(
+            (item) =>
+              item.id !== dataUser.user.id && item.Role.name !== "User"
+          );
+        setListUser(filterListUser);
 
-          return respon.decoded;
-        }
+        return dataUser;
       }
     }
   };

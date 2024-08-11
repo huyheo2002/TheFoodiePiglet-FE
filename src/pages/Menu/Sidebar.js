@@ -20,7 +20,6 @@ function Sidebar({ getCategorySelected }) {
 
   useEffect(() => {
     let filterDataCategory = typeOfFoods.length > 0 ? typeOfFoods.filter((item) => item.id === indexActive) : [];
-    // console.log("filterDataCategory", filterDataCategory)
     if (filterDataCategory.length > 0) {
       getCategorySelected(filterDataCategory);
     }

@@ -15,7 +15,7 @@ function News() {
   const [randomNews, setRandomNews] = useState([]);
 
   const [categoryCurrent, setCategoryCurrent] = useState("");
-  
+
   const fetchDataGenres = async () => {
     let respon = await genresServices.getAllGenres() ?? null;
 
@@ -61,8 +61,8 @@ function News() {
       <div className="w-full relative overflow-hidden">
         <div className="relative inset-0 z-10 flex flex-row flex-wrap w-full justify-around my-6">
           {randomNews.length > 0 && randomNews.map((item, index) => {
-            return <ItemNews itemCompact key={index} data={item}/>
-          })}                  
+            return <ItemNews itemCompact key={index} data={item} />
+          })}
         </div>
 
         {/* overlay */}

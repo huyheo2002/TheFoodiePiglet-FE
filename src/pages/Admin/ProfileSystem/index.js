@@ -10,10 +10,11 @@ import InputField from "../../../components/FormControl/InputField";
 import InputFile from "../../../components/FormControl/inputFile";
 import InputRadio from "../../../components/FormControl/inputRadio";
 import * as authServices from "../../../services/authServices";
+import { TBUTTON_VARIANT } from "../../../types/button";
+import { useAuth } from "../../../contexts/authContext";
 
 function ProfileSystem() {
-    const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
-    const [dataUserDecoded, setDataUserDecoded] = useState(null);
+    const {dataUser} = useAuth();
     const [image, setImage] = useState("");
     const [gender, setGender] = useState(-1);
     const [valuesUpdate, setValuesUpdate] = useState({});
@@ -21,21 +22,6 @@ function ProfileSystem() {
     const [listUsersDetail, setListUsersDetail] = useState([]);
     const [openModalChangePassword, setOpenModalChangePassword] = useState(false);
     const [valuesChangePassword, setValuesChangePassword] = useState({});
-
-    // decoded and handle permission
-    const decoded = async () => {
-        if (valueLocal) {
-            const respon = await commonServices.handleDecoded(valueLocal.token);
-            // console.log("respon.decoded", respon)
-            if (respon && respon.errCode === 0) {
-                setDataUserDecoded(respon.decoded);
-            }
-        }
-    };
-
-    useEffect(() => {
-        decoded();
-    }, [])
 
     const inputs = [
         {
@@ -209,13 +195,11 @@ function ProfileSystem() {
             data.set("id", valuesUpdate.id)
         }
 
-        console.log("data entry:", Object.fromEntries(data.entries()));
         try {
             const respon = await userServices.handleUpdateUser(data);
             // console.log("respon", respon);
             if (respon && respon.errCode === 0) {
-                dataUserDecoded.user = respon.user;
-                setValueLocal(dataUserDecoded);
+                dataUser.user = respon.user;
                 handleCloseModalUpdate();
                 handleGetAllUsers();
             } else if (respon.errCode === 1) {
@@ -255,7 +239,7 @@ function ProfileSystem() {
         e.preventDefault();
 
         const data = new FormData(e.target);
-        data.set("id", dataUserDecoded.user.id)        
+        data.set("id", dataUser.user.id)        
 
         try {
             const respon = await authServices.handleChangePassword(data);
@@ -279,9 +263,9 @@ function ProfileSystem() {
                         <div className="w-1/3 p-4">
                             <div className="bg-white rounded-lg shadow-lg p-6">
                                 <div className="text-center">
-                                    <Image src={dataUserDecoded ? dataUserDecoded.user.avatar !== null ? dataUserDecoded.user.avatar : "" : ""} className="w-56 h-auto rounded-full mx-auto mb-4" />
-                                    <h1 className="text-2xl font-bold">{dataUserDecoded ? dataUserDecoded.user.name || dataUserDecoded.user.username : ""}</h1>
-                                    <p className="text-gray-600 font-semibold text-lg">{dataUserDecoded ? dataUserDecoded.user.roleName : ""}</p>
+                                    <Image src={dataUser ? dataUser.user.avatar !== null ? dataUser.user.avatar : "" : ""} className="w-56 h-auto rounded-full mx-auto mb-4" />
+                                    <h1 className="text-2xl font-bold">{dataUser ? dataUser.user.name || dataUser.user.username : ""}</h1>
+                                    <p className="text-gray-600 font-semibold text-lg">{dataUser ? dataUser.user.roleName : ""}</p>
                                 </div>
                             </div>
                         </div>
@@ -291,31 +275,31 @@ function ProfileSystem() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="flex items-center">
                                         <p className="text-gray-600 font-semibold text-lg mr-3">Username: </p>
-                                        <p>{dataUserDecoded ? dataUserDecoded.user.username : ""}</p>
+                                        <p>{dataUser ? dataUser.user.username : ""}</p>
                                     </div>
                                     <div className="flex items-center">
                                         <p className="text-gray-600 font-semibold text-lg mr-3">Email: </p>
-                                        <p>{dataUserDecoded ? dataUserDecoded.user.email : ""}</p>
+                                        <p>{dataUser ? dataUser.user.email : ""}</p>
                                     </div>
                                     <div className="flex items-center">
                                         <p className="text-gray-600 font-semibold text-lg mr-3">Phone: </p>
-                                        <p>{dataUserDecoded ? dataUserDecoded.user.phone : ""}</p>
+                                        <p>{dataUser ? dataUser.user.phone : ""}</p>
                                     </div>
                                     <div className="flex items-center">
                                         <p className="text-gray-600 font-semibold text-lg mr-3">Address: </p>
-                                        <p>{dataUserDecoded ? dataUserDecoded.user.address : ""}</p>
+                                        <p>{dataUser ? dataUser.user.address : ""}</p>
                                     </div>
                                     <div className="flex items-center">
                                         <p className="text-gray-600 font-semibold text-lg mr-3">Gender: </p>
-                                        <p>{dataUserDecoded ? dataUserDecoded.user.gender === true ? "Male" : "Female" : ""}</p>
+                                        <p>{dataUser ? dataUser.user.gender === true ? "Male" : "Female" : ""}</p>
                                     </div>
                                 </div>
                                 <div className="mt-6">
-                                    <Button variant={"primary"}
+                                    <Button variant={TBUTTON_VARIANT.PRIMARY}
                                         onClick={() => setOpenModalChangePassword(true)}
                                     >Change Password</Button>
-                                    <Button variant={"primary"}
-                                        onClick={() => handleOpenModalUpdate(dataUserDecoded.user.id)}
+                                    <Button variant={TBUTTON_VARIANT.PRIMARY}
+                                        onClick={() => handleOpenModalUpdate(dataUser.user.id)}
                                     >Edit Personal Info</Button>
                                 </div>
                             </div>
@@ -395,8 +379,8 @@ function ProfileSystem() {
                         </div>
                         {/* footer */}
                         <div className="flex justify-end">
-                            <Button variant={"primary"}>Submit</Button>
-                            <Button variant={"primary"} onClick={handleCloseModalUpdate}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalUpdate}>
                                 Cancel
                             </Button>
                         </div>
@@ -424,8 +408,8 @@ function ProfileSystem() {
                     </div>
                     {/* footer */}
                     <div className="flex justify-end">
-                        <Button variant={"primary"}>Submit</Button>
-                        <Button variant={"primary"} onClick={handleCloseModalChangePassword}>
+                        <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+                        <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalChangePassword}>
                             Cancel
                         </Button>
                     </div>

@@ -10,6 +10,7 @@ import {
 import Image from "../Image";
 import clsx from "clsx";
 import ItemInCart from "./ItemInCart";
+import { TBUTTON_VARIANT } from "../../types/button";
 
 function ItemCompact({
   size,
@@ -92,7 +93,7 @@ function ItemCompact({
         {/* button action */}
         <div className="mt-5 flex">
           <Button
-            variant="primary"
+            variant={TBUTTON_VARIANT.PRIMARY}
             onClick={() => {
               if (onhandleAddToCart) {
                 onhandleAddToCart();
@@ -102,7 +103,7 @@ function ItemCompact({
             {t("button.addToCart")}
           </Button>
           <Button
-            variant="primary"
+            variant={TBUTTON_VARIANT.PRIMARY}
             onClick={() => {
               if (onHandleProductDetail) {
                 onHandleProductDetail();

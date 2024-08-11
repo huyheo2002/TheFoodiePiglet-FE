@@ -9,23 +9,17 @@ function LoginSuccess() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
-
-  // let spliceId = Number.parseInt(userId.toString().slice(0, 9));
-
   const dataUserRedux = useSelector((state) => state.user.user);
-  console.log("dataUserRedux login", dataUserRedux)
   useEffect(() => {
     dispatch(handleLoginGoogleRedux(userId));
   }, [])
 
-  useEffect(() => {    
+  useEffect(() => {
     if (dataUserRedux && dataUserRedux.auth === true) {
       setValueLocal(dataUserRedux);
       navigate("/");
     }
   }, [dataUserRedux]);
-
-
 
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-75 z-50">

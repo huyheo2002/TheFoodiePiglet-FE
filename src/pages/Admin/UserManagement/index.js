@@ -12,14 +12,15 @@ import useLocalStorage from "../../../hooks/useLocalStorage";
 import * as commonServices from "../../../services/commonServices";
 import * as permissionServices from "../../../services/permissionServices";
 import GlobalContext from "../../../contexts/globalContext";
+import { TBUTTON_VARIANT } from "../../../types/button";
+import { useAuth } from "../../../contexts/authContext";
 
 function UserManagement() {
   const currentPermissionGroup = "quan-ly-nguoi-dung";
   const { reloadNotify, setReloadNotify } = useContext(GlobalContext);
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
   const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
   const [listPermissionCurrentInPage, setListPermissionCurrentInPage] = useState([]);
+  const { dataUser } = useAuth();
 
   const [listUsers, setListUsers] = useState([]);
   const [listUsersDetail, setListUsersDetail] = useState([]);
@@ -137,38 +138,31 @@ function UserManagement() {
   const [valuesUpdate, setValuesUpdate] = useState({});
   const [idUserDelete, setIdUserDelete] = useState(-1);
 
-  // decoded and handle permission
-  const decoded = async () => {
-    const respon = await commonServices.handleDecoded(dataUser.token);
-    // console.log("respon.decoded", respon)
-    if (respon && respon.errCode === 0) {
-      setDataUserDecoded(respon.decoded);
+  // handle permission
+  const handlePermission = async () => {
+    // handle permissions
+    const dataListPermission = dataUser.permissions || [];
+    let splitFields =
+      dataListPermission.length > 0 &&
+      dataListPermission.map((item) => {
+        if (item.Permission) {
+          item.permissionName = item.Permission.name;
+          item.permissionGroupId = item.Permission.permissionGroupId;
 
-      // handle permissions
-      const dataListPermission = respon.decoded.permissions || [];
-      let splitFields =
-        dataListPermission.length > 0 &&
-        dataListPermission.map((item) => {
-          if (item.Permission) {
-            item.permissionName = item.Permission.name;
-            item.permissionGroupId = item.Permission.permissionGroupId;
+          delete item.Permission;
+        }
 
-            delete item.Permission;
-          }
+        return item;
+      });
 
-          return item;
-        });
-
-      // show full info
-      if (splitFields.length > 0) {
-        setListPermissionOfUser(splitFields)
-      }
+    // show full info
+    if (splitFields.length > 0) {
+      setListPermissionOfUser(splitFields)
     }
   };
 
   const handleGetAllPermissionInPage = async () => {
     const respon = await permissionServices.getAllPermissionGroup();
-    // console.log("respon permission group", respon);
     if (respon && respon.errCode == 0) {
       const dataPermissionGroup = respon.permissionGroup || [];
 
@@ -193,7 +187,7 @@ function UserManagement() {
   // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
 
   useEffect(() => {
-    decoded();
+    handlePermission();
     handleGetAllPermissionInPage();
   }, [])
 
@@ -408,9 +402,9 @@ function UserManagement() {
     e.preventDefault();
     const data = new FormData(e.target);
 
-    if (dataUserDecoded) {
-      data.set("originatorId", dataUserDecoded.user.id)
-    }    
+    if (dataUser) {
+      data.set("originatorId", dataUser.user.id)
+    }
 
     try {
       const respon = await userServices.handleCreateUser(data);
@@ -437,9 +431,9 @@ function UserManagement() {
       data.set("id", valuesUpdate.id)
     }
 
-    if (dataUserDecoded) {
-      data.set("originatorId", dataUserDecoded.user.id)
-    } 
+    if (dataUser) {
+      data.set("originatorId", dataUser.user.id)
+    }
 
     console.log("data entry:", Object.fromEntries(data.entries()));
     try {
@@ -462,7 +456,7 @@ function UserManagement() {
     e.preventDefault();
 
     try {
-      const respon = await userServices.handleDeleteUser(idUserDelete, dataUserDecoded ? dataUserDecoded.user.id : null);
+      const respon = await userServices.handleDeleteUser(idUserDelete, dataUser ? dataUser.user.id : null);
       if (respon && respon.errCode === 0) {
         handleCloseModalDelete();
         handleGetAllUsers();
@@ -606,7 +600,7 @@ function UserManagement() {
           </div>
           {/* footer */}
           <div className="flex justify-end">
-            <Button variant={"primary"} onClick={handleCloseModalRead}>
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalRead}>
               Cancel
             </Button>
           </div>
@@ -684,8 +678,8 @@ function UserManagement() {
             </div>
             {/* footer */}
             <div className="flex justify-end">
-              <Button variant={"primary"}>Submit</Button>
-              <Button variant={"primary"} onClick={handleCloseModalCreate}>
+              <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalCreate}>
                 Cancel
               </Button>
             </div>
@@ -797,8 +791,8 @@ function UserManagement() {
             </div>
             {/* footer */}
             <div className="flex justify-end">
-              <Button variant={"primary"}>Submit</Button>
-              <Button variant={"primary"} onClick={handleCloseModalUpdate}>
+              <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalUpdate}>
                 Cancel
               </Button>
             </div>
@@ -861,8 +855,8 @@ function UserManagement() {
             </div>
             {/* footer */}
             <div className="flex justify-end">
-              <Button variant={"primary"}>Submit</Button>
-              <Button variant={"primary"} onClick={handleCloseModalDelete}>
+              <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalDelete}>
                 Cancel
               </Button>
             </div>

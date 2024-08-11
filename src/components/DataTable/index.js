@@ -19,6 +19,7 @@ import Modal from "../Modal";
 import { useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
 import toast from "react-hot-toast";
+import { TBUTTON_VARIANT } from "../../types/button";
 
 function DataTable({
   data,
@@ -154,14 +155,14 @@ function DataTable({
     <Fragment>
       <div className="flex justify-end my-2">
         {btnBack && (
-          <Button variant={"primary"} onClick={() => navigate(-1)}>
+          <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => navigate(-1)}>
             Back
           </Button>
         )}
         {listPermission && listPermissionCurrentInPage && permissionCreate ? (
           <Fragment>
             <Button
-              variant={"excel"}
+              variant={TBUTTON_VARIANT.EXCEL}
               onClick={() => {}}
               iconLeft={<ExcelIcon className={"!w-6 !h-6"} />}
             >
@@ -171,7 +172,7 @@ function DataTable({
             </Button>
 
             <Button
-              variant={"primary"}
+              variant={TBUTTON_VARIANT.PRIMARY}
               onClick={handleModalCreate && handleModalCreate}
               iconLeft={<PlusIcon className={"!w-6 !h-6"} />}
             >
@@ -180,7 +181,7 @@ function DataTable({
           </Fragment>
         ) : (
           <Button
-            variant={"viewMore"}
+          variant={TBUTTON_VARIANT.VIEW_MORE}
             onClick={() => {
               toast.error("Bạn chưa được cấp quyền để thực hiện chức năng này")
             }}

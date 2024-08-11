@@ -7,13 +7,9 @@ import {
   LineDownIcon,
   UserIcon,
 } from "../../../components/Icons";
-// import { useContext } from "react";
-// import GlobalContext from "../../../contexts/globalContext";
-import useLocalStorage from "../../../hooks/useLocalStorage";
 import logo from "../../../assets/images/Base/logo-transparent.png";
 import Image from "../../../components/Image";
-import * as commonServices from "../../../services/commonServices";
-import { useEffect, useState } from "react";
+import { useAuth } from "../../../contexts/authContext";
 
 const NAVBAR_ITEM = [
   {
@@ -66,7 +62,7 @@ const NAVBAR_RIGHT_ITEM = [
   {
     icon: <CartIcon className="!w-6 !h-6" />,
     keyword: "cart",
-    to: "/cart",    
+    to: "/cart",
     onlyShowIcon: true,
   },
   {
@@ -74,7 +70,7 @@ const NAVBAR_RIGHT_ITEM = [
     keyword: "notify",
     // to: "/news",    
     onlyShowIcon: true,
-    customDropdown: true, 
+    customDropdown: true,
   },
   {
     icon: <EarthIcon className="!w-6 !h-6 cursor-pointer" />,
@@ -98,54 +94,33 @@ const NAVBAR_RIGHT_ITEM = [
     onlyShowIcon: false,
     to: "/login",
     // using when login success
-    subNav: [      
+    subNav: [
       {
         keyword: "manager",
         to: "/system",
-      },  
+      },
       {
         keyword: "profile",
         to: "/profile",
-      },   
+      },
       {
         keyword: "logout",
         to: "/login",
-      },    
+      },
     ],
   },
 ];
 
 function Header() {
-  // const { testContext } = useContext(GlobalContext);
-  // console.log("testContext", testContext);
-
-  // const user = useSelector(state => state.user.user);
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
-
-  const decoded = async () => {
-    if(dataUser) {
-      const respon = await commonServices.handleDecoded(dataUser.token);
-      // console.log("respon.decoded", respon)
-      if(respon && respon.errCode === 0) {
-        setDataUserDecoded(respon.decoded);
-      }
-    }
-  };
-
-  useEffect(() => {
-    decoded();
-  }, [])
-
-  // console.log("dataUserDecoded", dataUserDecoded);
+  const { dataUser } = useAuth();
 
   return (
-    <header className="w-full h-16 shadow-bs-black-b-0.35 bg-rgba-black-0.75 flex justify-between px-8 fixed z-[9999999999] top-0 left-0 right-0">
+    <header className="w-full h-16 shadow-bs-black-b-0.35 bg-rgba-black-0.75 flex justify-between px-8 fixed z-[9999] top-0 left-0 right-0">
       {/* left */}
       <div className="max-h-16 flex">
         {/* logo */}
-        <Link to="" className="max-h-16 inline-block h-full">          
-          <Image src={logo} className="h-full"/>
+        <Link to="" className="max-h-16 inline-block h-full">
+          <Image src={logo} className="h-full" />
           {/* <Image src={"https://scontent.fhan14-1.fna.fbcdn.net/v/t1.15752-9/368426111_259349003674501_1649132107272678005_n.png?_nc_cat=105&ccb=1-7&_nc_sid=ae9488&_nc_ohc=JR3EoCaRzloAX-fzIEn&_nc_ht=scontent.fhan14-1.fna&oh=03_AdS8O9UYzIMs_bxovxTcIB_Mu6PPTwmFXKjGSkqN3-DojQ&oe=65103B1E"} className="h-full"/>           */}
 
         </Link>
@@ -154,7 +129,7 @@ function Header() {
       </div>
       {/* right */}
       <div className="flex items-center h-full">
-        <Menu data={NAVBAR_RIGHT_ITEM} userLogin={dataUserDecoded ? dataUserDecoded : null}/>        
+        <Menu data={NAVBAR_RIGHT_ITEM} userLogin={dataUser ? dataUser : null} />
       </div>
     </header>
   );

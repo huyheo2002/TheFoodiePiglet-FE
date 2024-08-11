@@ -7,6 +7,7 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import * as commonServices from "../../services/commonServices";
 import * as chatServices from "../../services/chatServices";
 import GlobalContext from "../../contexts/globalContext";
+import { useAuth } from "../../contexts/authContext";
 
 function Search({ ItemSearchResult, type, listData }) {
   const { setIdChatRoom, idChatRoom } = useContext(GlobalContext);
@@ -15,8 +16,7 @@ function Search({ ItemSearchResult, type, listData }) {
   const [showResult, setShowResult] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
+  const { dataUser } = useAuth();
 
   const inputRef = useRef();
 
@@ -66,30 +66,18 @@ function Search({ ItemSearchResult, type, listData }) {
     }
   }, [debounced]);
 
-  const decoded = async () => {
-    const respon = await commonServices.handleDecoded(dataUser.token);
-    if (respon && respon.errCode === 0) {
-      setDataUserDecoded(respon.decoded);
-    }
-  };
-
-  useEffect(() => {
-    decoded();
-  }, []);
-
   // USER
   const handleSubmitCreateChatRoom = async (dataItem) => {
     const data = new FormData();
     data.set("name", `${dataItem.name} (${dataItem.Role.name})`);
     data.set("participantId", dataItem.id);
-    if (dataUserDecoded) {
-      data.set("roomCreatorId", dataUserDecoded.user.id);
+    if (dataUser) {
+      data.set("roomCreatorId", dataUser.user.id);
     }
 
     try {
       const respon = await chatServices.handleCreateChatroom(data);
       if (respon) {
-        console.log("respon room", respon);
         setIdChatRoom(respon.room.id);
       }
     } catch (error) {

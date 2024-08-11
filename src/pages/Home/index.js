@@ -27,7 +27,9 @@ import slider3 from "../../assets/images/Base/homeSlider-3.jpeg";
 import slider4 from "../../assets/images/Base/homeSlider-4.jpeg";
 import slider5 from "../../assets/images/Base/homeSlider-5.jpeg";
 import slider6 from "../../assets/images/Base/homeSlider-6.jpeg";
-
+import { TBUTTON_VARIANT } from "../../types/button";
+import { useAuth } from "../../contexts/authContext";
+import toast from "react-hot-toast";
 
 const DATA_SLIDER = [
   {
@@ -68,11 +70,11 @@ const DATA_SLIDER = [
   },
 ];
 
-
 function Home() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { reloadCart, setReloadCart, reloadItemInCart, setReloadItemInCart } = useContext(GlobalContext);
+  const { setReloadCart } = useContext(GlobalContext);
+  const { dataUser } = useAuth();
   const { t } = useTranslation(["home", "header"]);
   const [typeOfProduct, setTypeOfProduct] = useState(homeTypeOfFoods);
   const [dataProducts, setDataProducts] = useState([]);
@@ -85,27 +87,7 @@ function Home() {
   const [originalPricePreview, setOriginalPricePreview] = useState(null);
   const [discount, setDiscount] = useState(null);
   const [currentIdAddToCart, setCurrentIdAddToCart] = useState(null);
-
-  // modal add to cart success 
   const [openModalAddToCartSuccess, setOpenModalAddToCartSucess] = useState(false);
-
-  // localstorage
-  const [valueUserLocal, setValueUserLocal] = useLocalStorage("dataUser", "");
-
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
-  const decoded = async () => {
-    if (valueUserLocal) {
-      const respon = await commonServices.handleDecoded(valueUserLocal.token);
-      // console.log("respon.decoded", respon)
-      if (respon && respon.errCode === 0) {
-        setDataUserDecoded(respon.decoded);
-      }
-    }
-  };
-
-  useEffect(() => {
-    decoded();
-  }, [])
 
   const optionsSize = [
     { value: "S", label: "S" },
@@ -115,7 +97,6 @@ function Home() {
 
   const fetchListProductsCompact = async () => {
     let respon = await productServices.getAllProductCompact() ?? null;
-    // console.log("respon home", respon)
     if (respon) {
       const dataListProduct = respon.products || [];
       let splitFields =
@@ -145,7 +126,7 @@ function Home() {
                   item.originalPrice = `${maxPriceOriginal} $`;
                 }
 
-                // discount variant                
+                // discount variant
                 if (variant.discountVariant > maxDiscountVariant) {
                   maxDiscountVariant = variant.discountVariant;
                   item.discount = `${maxDiscountVariant} %` ?? `0 %`;
@@ -264,10 +245,10 @@ function Home() {
     const data = new FormData();
     let checkAllowAddToCart = true;
 
-    if (dataUserDecoded) {
-      data.set("userId", dataUserDecoded.user.id);
+    if (dataUser) {
+      data.set("userId", dataUser.user.id);
     } else {
-      alert("Bạn phải đăng nhập mới có thể mở khoá chức năng này");
+      toast.error("You need login to used this feature");
       checkAllowAddToCart = false;
       return;
     }
@@ -295,14 +276,13 @@ function Home() {
   return (
     <div className="mt-8 relative">
       {/* slideshow */}
-      <SlideShow data={DATA_SLIDER}/>
+      <SlideShow data={DATA_SLIDER} />
       {/* product specialities */}
       <Heading line iconRight={<HotMealIcon className={"text-[1.5rem] -translate-y-1 text-primary-hover"} />}>
         {t("heading.special")}
       </Heading>
       <div className="flex flex-row flex-wrap">
         {dataProducts.length > 0 && dataProducts.map((item, index) => {
-          // console.log("item compact in home", item)
           return <ItemCompact key={index} data={item} onhandleAddToCart={() => {
             setCurrentIdAddToCart(item.id);
             handleOpenModalAddToCart(item.id);
@@ -436,8 +416,8 @@ function Home() {
           </div>
 
           <div className="flex justify-end">
-            <Button variant={"primary"}>Add to Cart</Button>
-            <Button variant={"primary"} onClick={handleCloseModalAddToCart}>
+            <Button variant={TBUTTON_VARIANT.PRIMARY}>Add to Cart</Button>
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalAddToCart}>
               Cancel
             </Button>
           </div>
@@ -458,8 +438,8 @@ function Home() {
               <p className="text-gray-600">Món ăn của bạn đã được thêm vào giỏ hàng. Bạn có thể tiếp tục mua sắm hoặc xem giỏ hàng của mình.</p>
             </div>
             <div className="mt-6">
-              <Button variant={"primary"} onClick={() => setOpenModalAddToCartSucess(false)}>Tiếp tục mua sắm</Button>
-              <Button variant={"primary"} to={"/cart"} onClick={() => {
+              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => setOpenModalAddToCartSucess(false)}>Tiếp tục mua sắm</Button>
+              <Button variant={TBUTTON_VARIANT.PRIMARY} to={"/cart"} onClick={() => {
                 WindowScrollTop()
               }}>Vào giỏ hàng</Button>
             </div>

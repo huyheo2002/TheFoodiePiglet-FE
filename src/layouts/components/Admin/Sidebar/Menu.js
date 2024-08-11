@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 import * as commonServices from "../../../../services/commonServices";
 import * as permissionServices from "../../../../services/permissionServices";
+import { useAuth } from "../../../../contexts/authContext";
 
 function Menu({ data }) {
   const { t } = useTranslation(["admin"]);
@@ -13,35 +14,20 @@ function Menu({ data }) {
   const [active, setActive] = useState(-1);
   const toggleSidebar = useSelector(states => states.admin.toggleSidebar)
   const [listPermissionGroup, setListPermissionGroup] = useState([]);
-
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
-
-  const decoded = async () => {
-    const respon = await commonServices.handleDecoded(dataUser.token);
-    // console.log("respon.decoded", respon)
-    if (respon && respon.errCode === 0) {
-      setDataUserDecoded(respon.decoded);
-    }
-  };
-  // console.log("dataUserDecoded.permissions", dataUserDecoded && dataUserDecoded.permissions);
-  // console.log("dataUserDecoded", dataUserDecoded);
+  const { dataUser } = useAuth();
 
   const handleCheckPermission = async () => {
     const responPermissionGroup = await permissionServices.getAllPermissionGroup();
     if (responPermissionGroup && responPermissionGroup.errCode === 0) {
       setListPermissionGroup(responPermissionGroup.permissionGroup);
-      // console.log("dataPermissionGroup", dataPermissionGroup);      
     }
   }
 
   const loadCurrentActive = () => {
     if (data) {
       data.forEach((group) => {
-        // console.log("group", group);
         const items = group.items || [];
         const item = items.filter((item) => item.to === currentURL);
-        // console.log("item", item);
         if (item.length > 0) {
           return setActive(item[0].idItem);
         }
@@ -52,7 +38,6 @@ function Menu({ data }) {
   }
 
   useEffect(() => {
-    decoded();
     handleCheckPermission();
     loadCurrentActive();
   }, [])
@@ -63,7 +48,7 @@ function Menu({ data }) {
     if (listItem && listItem.length > 0) {
       subItems = listItem;
     }
-    // console.log("subItems", subItems);
+
     return (
       <ul className="list-none w-full">
         {subItems &&
@@ -71,15 +56,11 @@ function Menu({ data }) {
             let openFeature = false;
 
             const newArrayPG = listPermissionGroup.length > 0 && listPermissionGroup.reduce((filtered, item, index) => {
-              const listPermissionOfUser = dataUserDecoded && dataUserDecoded.permissions;
-              // console.log("listPermissionOfUser", listPermissionOfUser);
+              const listPermissionOfUser = dataUser && dataUser.permissions;
               const checkPermission = listPermissionOfUser && listPermissionOfUser.filter(itemPermission => {
-                // console.log("itemPermission.Permission.permissionGroupId", itemPermission.Permission.permissionGroupId);
-
                 return itemPermission.Permission.permissionGroupId === item.id;
               });
 
-              // console.log("checkPermission", checkPermission)
               if (checkPermission && checkPermission.length > 0) {
                 filtered.push(item);
               }
@@ -166,36 +147,36 @@ function Menu({ data }) {
     <div className={clsx("px-3 h-full overflow-y-scroll scrollbar")}>
       {data &&
         data.map((item, index) => {
-          let itemSubmenu  = item.items || [];
+          let itemSubmenu = item.items || [];
 
           const newArrayPG = listPermissionGroup.length > 0 && listPermissionGroup.reduce((filtered, item, index) => {
-            const listPermissionOfUser = dataUserDecoded && dataUserDecoded.permissions;
-            
+            const listPermissionOfUser = dataUser && dataUser.permissions;
+
             const checkPermission = listPermissionOfUser && listPermissionOfUser.filter(itemPermission => {
-      
+
               return itemPermission.Permission.permissionGroupId === item.id;
             });
-      
+
             if (checkPermission && checkPermission.length > 0) {
               filtered.push(item);
             }
-      
+
             return filtered;
           }, [])
 
           let checkShowHeading = itemSubmenu.length > 0 && itemSubmenu.filter(itemSubmenu => {
-            if(!itemSubmenu.keyword) {
+            if (!itemSubmenu.keyword) {
               return true;
             } else {
               let openFeatures = newArrayPG.length > 0 && newArrayPG.filter(itemPermissionGroup => itemPermissionGroup.keyword === itemSubmenu.keyword);
 
-              if(openFeatures.length > 0) {
+              if (openFeatures.length > 0) {
                 return true;
               } else {
                 return false;
               }
             }
-          })         
+          })
 
           return (
             <Fragment key={index}>

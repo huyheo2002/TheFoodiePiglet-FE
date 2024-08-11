@@ -8,30 +8,17 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import avaGroup from "../../assets/images/GroupChat/ava4.jpg";
 import GlobalContext from "../../contexts/globalContext";
 import { BellIcon } from "../Icons";
+import { useAuth } from "../../contexts/authContext";
 
 function ChatBoxCompact({ idTest, active, onClick, data }) {
   const {
-    setIdChatRoom,
-    idChatRoom,
-    imageChatRoom,
     setImageChatRoom,
     reloadSidebarChat,
   } = useContext(GlobalContext);
-  const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
+  const { dataUser } = useAuth();
   const [showImageGroup, setShowImageGroup] = useState(null);
   const [messageLastest, setMessageLastest] = useState(null);
-  const [dataUserDecoded, setDataUserDecoded] = useState(null);
   const [nameRoom, setNameRoom] = useState(null);
-
-  const handleDecoded = async () => {
-    if (dataUser) {
-      const respon = await commonServices.handleDecoded(dataUser.token);
-      if (respon && respon.errCode === 0) {
-        setDataUserDecoded(respon.decoded);
-        return respon.decoded.user;
-      }
-    }
-  };
 
   const handleGetAllRoomParticipant = async (userId) => {
     const respon = await chatServices.getAllRoomParticipant();
@@ -77,10 +64,8 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
   };
 
   useEffect(() => {
-    handleDecoded().then((infoUser) => {
-      handleGetNameRoom(`${infoUser.name} (${infoUser.roleName})`);
-      handleGetAllRoomParticipant(infoUser.id);
-    });
+    handleGetNameRoom(`${dataUser.name} (${dataUser.roleName})`);
+    handleGetAllRoomParticipant(dataUser.id);
     handleGetAllMessageInRoom();
   }, [reloadSidebarChat]);
 
@@ -170,9 +155,9 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
               "text-sm text-[#65676b] font-normal ml-2 whitespace-nowrap",
               {
                 "text-green-500":
-                  dataUserDecoded &&
+                  dataUser &&
                   messageLastest &&
-                  dataUserDecoded.user.id !== messageLastest.userId,
+                  dataUser.user.id !== messageLastest.userId,
               }
             )}
           >

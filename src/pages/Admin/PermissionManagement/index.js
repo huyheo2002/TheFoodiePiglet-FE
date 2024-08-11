@@ -8,11 +8,12 @@ import InputField from "../../../components/FormControl/InputField";
 import InputRadio from "../../../components/FormControl/inputRadio";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import * as commonServices from "../../../services/commonServices";
+import { TBUTTON_VARIANT } from "../../../types/button";
+import { useAuth } from "../../../contexts/authContext";
 
 function PermissionManagement() {
     const currentPermissionGroup = "quan-ly-quyen";
-    const [dataUser, setDataUser] = useLocalStorage("dataUser", "");
-    const [dataUserDecoded, setDataUserDecoded] = useState(null);
+    const { dataUser } = useAuth();
     const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
     const [listPermissionCurrentInPage, setListPermissionCurrentInPage] = useState([]);
 
@@ -50,32 +51,26 @@ function PermissionManagement() {
     const [openModalUpdate, setOpenModalUpdate] = useState(false);
     const [openModalDelete, setOpenModalDelete] = useState(false);
 
-    // decoded and handle permission
-    const decoded = async () => {
-        const respon = await commonServices.handleDecoded(dataUser.token);
-        // console.log("respon.decoded", respon)
-        if (respon && respon.errCode === 0) {
-            setDataUserDecoded(respon.decoded);
+    // handle permission
+    const handlePermission = async () => {
+        // handle permissions
+        const dataListPermission = dataUser.permissions || [];
+        let splitFields =
+            dataListPermission.length > 0 &&
+            dataListPermission.map((item) => {
+                if (item.Permission) {
+                    item.permissionName = item.Permission.name;
+                    item.permissionGroupId = item.Permission.permissionGroupId;
 
-            // handle permissions
-            const dataListPermission = respon.decoded.permissions || [];
-            let splitFields =
-                dataListPermission.length > 0 &&
-                dataListPermission.map((item) => {
-                    if (item.Permission) {
-                        item.permissionName = item.Permission.name;
-                        item.permissionGroupId = item.Permission.permissionGroupId;
+                    delete item.Permission;
+                }
 
-                        delete item.Permission;
-                    }
+                return item;
+            });
 
-                    return item;
-                });
-
-            // show full info
-            if (splitFields.length > 0) {
-                setListPermissionOfUser(splitFields)
-            }
+        // show full info
+        if (splitFields.length > 0) {
+            setListPermissionOfUser(splitFields)
         }
     };
 
@@ -103,10 +98,8 @@ function PermissionManagement() {
         }
     }
 
-    // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
-
     useEffect(() => {
-        decoded();
+        handlePermission();
         handleGetAllPermissionInPage();
     }, [])
 
@@ -390,8 +383,8 @@ function PermissionManagement() {
                         </div>
                         {/* footer */}
                         <div className="flex justify-end">
-                            <Button variant={"primary"}>Submit</Button>
-                            <Button variant={"primary"} onClick={handleCloseModalCreate}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalCreate}>
                                 Cancel
                             </Button>
                         </div>
@@ -454,7 +447,7 @@ function PermissionManagement() {
                     </div>
                     {/* footer */}
                     <div className="flex justify-end">
-                        <Button variant={"primary"} onClick={handleCloseModalRead}>
+                        <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalRead}>
                             Cancel
                         </Button>
                     </div>
@@ -517,8 +510,8 @@ function PermissionManagement() {
                         </div>
                         {/* footer */}
                         <div className="flex justify-end">
-                            <Button variant={"primary"}>Submit</Button>
-                            <Button variant={"primary"} onClick={handleCloseModalUpdate}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalUpdate}>
                                 Cancel
                             </Button>
                         </div>
@@ -547,8 +540,8 @@ function PermissionManagement() {
                         </div>
                         {/* footer */}
                         <div className="flex justify-end">
-                            <Button variant={"primary"}>Submit</Button>
-                            <Button variant={"primary"} onClick={handleCloseModalDelete}>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalDelete}>
                                 Cancel
                             </Button>
                         </div>

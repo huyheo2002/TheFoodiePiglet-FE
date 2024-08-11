@@ -1,6 +1,6 @@
-// import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
+import { TBUTTON_VARIANT } from "../../types/button";
 
 function Error() {
     const navigate = useNavigate();
@@ -10,7 +10,7 @@ function Error() {
             <hr className="border-none h-1 bg-[#999] my-12 mx-auto w-1/2"/>
             <p className="text-xl">Oops! The page you requested was not found.</p>
             <span className="mt-4">
-                <Button variant={"primary"} onClick={() => navigate(-1)}>Go back</Button>
+                <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => navigate(-1)}>Go back</Button>
             </span>
         </div>
     );
