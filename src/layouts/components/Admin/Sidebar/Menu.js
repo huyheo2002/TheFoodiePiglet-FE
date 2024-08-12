@@ -1,10 +1,7 @@
 import clsx from "clsx";
 import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useLocalStorage } from "react-use";
-import * as commonServices from "../../../../services/commonServices";
 import * as permissionServices from "../../../../services/permissionServices";
 import { useAuth } from "../../../../contexts/authContext";
 
@@ -12,16 +9,16 @@ function Menu({ data }) {
   const { t } = useTranslation(["admin"]);
   const currentURL = window.location.pathname;
   const [active, setActive] = useState(-1);
-  const toggleSidebar = useSelector(states => states.admin.toggleSidebar)
   const [listPermissionGroup, setListPermissionGroup] = useState([]);
   const { dataUser } = useAuth();
 
   const handleCheckPermission = async () => {
-    const responPermissionGroup = await permissionServices.getAllPermissionGroup();
+    const responPermissionGroup =
+      await permissionServices.getAllPermissionGroup();
     if (responPermissionGroup && responPermissionGroup.errCode === 0) {
       setListPermissionGroup(responPermissionGroup.permissionGroup);
     }
-  }
+  };
 
   const loadCurrentActive = () => {
     if (data) {
@@ -35,12 +32,12 @@ function Menu({ data }) {
     } else {
       return setActive(-1);
     }
-  }
+  };
 
   useEffect(() => {
     handleCheckPermission();
     loadCurrentActive();
-  }, [])
+  }, []);
 
   const renderListItems = (listItem) => {
     let subItems = [];
@@ -55,20 +52,30 @@ function Menu({ data }) {
           subItems.map((item, index) => {
             let openFeature = false;
 
-            const newArrayPG = listPermissionGroup.length > 0 && listPermissionGroup.reduce((filtered, item, index) => {
-              const listPermissionOfUser = dataUser && dataUser.permissions;
-              const checkPermission = listPermissionOfUser && listPermissionOfUser.filter(itemPermission => {
-                return itemPermission.Permission.permissionGroupId === item.id;
-              });
+            const newArrayPG =
+              listPermissionGroup.length > 0 &&
+              listPermissionGroup.reduce((filtered, item, index) => {
+                const listPermissionOfUser = dataUser && dataUser.permissions;
+                const checkPermission =
+                  listPermissionOfUser &&
+                  listPermissionOfUser.filter((itemPermission) => {
+                    return (
+                      itemPermission.Permission.permissionGroupId === item.id
+                    );
+                  });
 
-              if (checkPermission && checkPermission.length > 0) {
-                filtered.push(item);
-              }
+                if (checkPermission && checkPermission.length > 0) {
+                  filtered.push(item);
+                }
 
-              return filtered;
-            }, [])
+                return filtered;
+              }, []);
 
-            const checkPermission = newArrayPG.length > 0 && newArrayPG.filter(itemPermission => itemPermission.keyword == item.keyword);
+            const checkPermission =
+              newArrayPG.length > 0 &&
+              newArrayPG.filter(
+                (itemPermission) => itemPermission.keyword == item.keyword
+              );
 
             if (checkPermission.length > 0) {
               openFeature = true;
@@ -149,40 +156,54 @@ function Menu({ data }) {
         data.map((item, index) => {
           let itemSubmenu = item.items || [];
 
-          const newArrayPG = listPermissionGroup.length > 0 && listPermissionGroup.reduce((filtered, item, index) => {
-            const listPermissionOfUser = dataUser && dataUser.permissions;
+          const newArrayPG =
+            listPermissionGroup.length > 0 &&
+            listPermissionGroup.reduce((filtered, item, index) => {
+              const listPermissionOfUser = dataUser && dataUser.permissions;
 
-            const checkPermission = listPermissionOfUser && listPermissionOfUser.filter(itemPermission => {
+              const checkPermission =
+                listPermissionOfUser &&
+                listPermissionOfUser.filter((itemPermission) => {
+                  return (
+                    itemPermission.Permission.permissionGroupId === item.id
+                  );
+                });
 
-              return itemPermission.Permission.permissionGroupId === item.id;
-            });
+              if (checkPermission && checkPermission.length > 0) {
+                filtered.push(item);
+              }
 
-            if (checkPermission && checkPermission.length > 0) {
-              filtered.push(item);
-            }
+              return filtered;
+            }, []);
 
-            return filtered;
-          }, [])
-
-          let checkShowHeading = itemSubmenu.length > 0 && itemSubmenu.filter(itemSubmenu => {
-            if (!itemSubmenu.keyword) {
-              return true;
-            } else {
-              let openFeatures = newArrayPG.length > 0 && newArrayPG.filter(itemPermissionGroup => itemPermissionGroup.keyword === itemSubmenu.keyword);
-
-              if (openFeatures.length > 0) {
+          let checkShowHeading =
+            itemSubmenu.length > 0 &&
+            itemSubmenu.filter((itemSubmenu) => {
+              if (!itemSubmenu.keyword) {
                 return true;
               } else {
-                return false;
+                let openFeatures =
+                  newArrayPG.length > 0 &&
+                  newArrayPG.filter(
+                    (itemPermissionGroup) =>
+                      itemPermissionGroup.keyword === itemSubmenu.keyword
+                  );
+
+                if (openFeatures.length > 0) {
+                  return true;
+                } else {
+                  return false;
+                }
               }
-            }
-          })
+            });
 
           return (
             <Fragment key={index}>
-              <h1 className={clsx("text-lg font-semibold py-2 select-none", {
-                "!hidden": checkShowHeading && checkShowHeading.length <= 0,
-              })}>
+              <h1
+                className={clsx("text-lg font-semibold py-2 select-none", {
+                  "!hidden": checkShowHeading && checkShowHeading.length <= 0,
+                })}
+              >
                 {t(`sidebar.title.${item.title}`)}
               </h1>
               {renderListItems(item.items)}

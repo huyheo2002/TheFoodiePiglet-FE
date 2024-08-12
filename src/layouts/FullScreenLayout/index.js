@@ -7,7 +7,6 @@ function FullScreenLayout({ children }) {
   return (
     <div className="w-full relative overflow-hidden">
       <Header />
-      {/* <Sidebar /> */}
       <div className="relative">{children}</div>
       <Footer />
       <div

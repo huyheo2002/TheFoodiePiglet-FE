@@ -2,7 +2,19 @@ import clsx from "clsx";
 import logo from "../../../../assets/images/Base/logo-transparent.png";
 import Image from "../../../../components/Image";
 import Menu from "./Menu";
-import { BoxFillIcon, DashboardIcon, HomeIcon, MessengerIcon, MoneyBillWaveIcon, NewsIcon, TableRestaurantIcon, UserCogIcon, UserIcon, UserShieldIcon, UsersIcon } from "../../../../components/Icons";
+import {
+  BoxFillIcon,
+  DashboardIcon,
+  HomeIcon,
+  MessengerIcon,
+  MoneyBillWaveIcon,
+  NewsIcon,
+  TableRestaurantIcon,
+  UserCogIcon,
+  UserIcon,
+  UserShieldIcon,
+  UsersIcon,
+} from "../../../../components/Icons";
 import { useSelector } from "react-redux";
 
 const SIDEBAR_DATA = [
@@ -43,13 +55,13 @@ const SIDEBAR_DATA = [
         name: "users",
         keyword: "quan-ly-nguoi-dung",
         icon: <UserIcon className="!w-6 !h-6" />,
-      }    
+      },
     ],
   },
   {
     id: 2,
     title: "manageContent",
-    items: [      
+    items: [
       {
         idItem: 6,
         to: "/system/product",
@@ -63,7 +75,7 @@ const SIDEBAR_DATA = [
         keyword: "quan-ly-tin-tuc",
         name: "news",
         icon: <NewsIcon className="!w-6 !h-6" />,
-      }
+      },
     ],
   },
   {
@@ -107,17 +119,17 @@ const SIDEBAR_DATA = [
 ];
 
 function Sidebar() {
-  const toggleSidebar = useSelector(states => states.admin.toggleSidebar)
+  const toggleSidebar = useSelector((states) => states.admin.toggleSidebar);
 
   return (
-    <div className={clsx("flex flex-col pt-4 relative w-full", {
-      "!hidden": toggleSidebar === false
-    })}>
-      {/* logo */}
+    <div
+      className={clsx("flex flex-col pt-4 relative w-full", {
+        "!hidden": toggleSidebar === false,
+      })}
+    >
       <div className="h-[20vh] absolute inset-x-0 top-0 z-20">
         {toggleSidebar && <Image src={logo} />}
       </div>
-      {/* menu */}
       <div className="h-[calc(80vh)] absolute inset-x-0 bottom-0 z-30 top-[20vh] py-4">
         <Menu data={SIDEBAR_DATA} />
       </div>

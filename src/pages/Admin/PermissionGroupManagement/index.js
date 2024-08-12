@@ -5,425 +5,434 @@ import Button from "../../../components/Button";
 import Modal from "../../../components/Modal";
 import Heading from "../../../components/Heading";
 import InputField from "../../../components/FormControl/InputField";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import * as commonServices from "../../../services/commonServices";
 import { TBUTTON_VARIANT } from "../../../types/button";
 import { useAuth } from "../../../contexts/authContext";
+import toast from "react-hot-toast";
 
 function PermissionGroupManagement() {
-    const currentPermissionGroup = "quan-ly-nhom-quyen";
-    const { dataUser } = useAuth();
-    const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
-    const [listPermissionCurrentInPage, setListPermissionCurrentInPage] = useState([]);
+  const currentPermissionGroup = "quan-ly-nhom-quyen";
+  const { dataUser } = useAuth();
+  const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
+  const [listPermissionCurrentInPage, setListPermissionCurrentInPage] =
+    useState([]);
 
-    const [listPermissionGroup, setListPermissionGroup] = useState([]);
+  const [listPermissionGroup, setListPermissionGroup] = useState([]);
 
-    // MODAL
-    const [openModalRead, setOpenModalRead] = useState(false);
-    const [openModalCreate, setOpenModalCreate] = useState(false);
-    const [openModalUpdate, setOpenModalUpdate] = useState(false);
-    const [openModalDelete, setOpenModalDelete] = useState(false);
+  // MODAL
+  const [openModalRead, setOpenModalRead] = useState(false);
+  const [openModalCreate, setOpenModalCreate] = useState(false);
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [openModalDelete, setOpenModalDelete] = useState(false);
 
-    // INPUT 
-    const inputs = [
-        {
-            id: 1,
-            name: "name",
-            type: "text",
-            placeholder: "Enter your name permission group",
-            label: "Name Permission Group",
-            required: true,
-        },
-    ];
-    const [valuesCreate, setValuesCreate] = useState({});
-    const [dataRead, setDataRead] = useState({});
-    const [valuesUpdate, setValuesUpdate] = useState({});
-    const [idPermissionGroupDelete, setIdPermissionGroupDelete] = useState(-1);
+  // INPUT
+  const inputs = [
+    {
+      id: 1,
+      name: "name",
+      type: "text",
+      placeholder: "Enter your name permission group",
+      label: "Name Permission Group",
+      required: true,
+    },
+  ];
+  const [valuesCreate, setValuesCreate] = useState({});
+  const [dataRead, setDataRead] = useState({});
+  const [valuesUpdate, setValuesUpdate] = useState({});
+  const [idPermissionGroupDelete, setIdPermissionGroupDelete] = useState(-1);
 
-    // handle permission
-    const handlePermission = async () => {
-        const dataListPermission = dataUser.permissions || [];
-        let splitFields =
-            dataListPermission.length > 0 &&
-            dataListPermission.map((item) => {
-                if (item.Permission) {
-                    item.permissionName = item.Permission.name;
-                    item.permissionGroupId = item.Permission.permissionGroupId;
+  const handlePermission = async () => {
+    const dataListPermission = dataUser.permissions || [];
+    let splitFields =
+      dataListPermission.length > 0 &&
+      dataListPermission.map((item) => {
+        if (item.Permission) {
+          item.permissionName = item.Permission.name;
+          item.permissionGroupId = item.Permission.permissionGroupId;
 
-                    delete item.Permission;
-                }
-
-                return item;
-            });
-
-        // show full info
-        if (splitFields.length > 0) {
-            setListPermissionOfUser(splitFields)
+          delete item.Permission;
         }
-    };
 
-    const handleGetAllPermissionInPage = async () => {
-        const respon = await permissionServices.getAllPermissionGroup();
-        // console.log("respon permission group", respon);
-        if (respon && respon.errCode == 0) {
-            const dataPermissionGroup = respon.permissionGroup || [];
+        return item;
+      });
 
-            const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
-            // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
+    if (splitFields.length > 0) {
+      setListPermissionOfUser(splitFields);
+    }
+  };
 
-            if (filterCurrentPermissionGroup.length > 0) {
-                const responPermission = await permissionServices.getAllPermission();
-                if (responPermission && responPermission.errCode == 0) {
-                    const dataPermission = responPermission.permission || [];
+  const handleGetAllPermissionInPage = async () => {
+    const respon = await permissionServices.getAllPermissionGroup();
+    if (respon && respon.errCode == 0) {
+      const dataPermissionGroup = respon.permissionGroup || [];
 
-                    const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
+      const filterCurrentPermissionGroup =
+        dataPermissionGroup.length > 0 &&
+        dataPermissionGroup.filter(
+          (item) => item.keyword === currentPermissionGroup
+        );
+      if (filterCurrentPermissionGroup.length > 0) {
+        const responPermission = await permissionServices.getAllPermission();
+        if (responPermission && responPermission.errCode == 0) {
+          const dataPermission = responPermission.permission || [];
 
-                    if (filterCurrentPermission.length > 0) {
-                        setListPermissionCurrentInPage(filterCurrentPermission);
-                    }
-                }
-            }
+          const filterCurrentPermission =
+            dataPermission.length > 0 &&
+            dataPermission.filter(
+              (item) =>
+                item.permissionGroupId === filterCurrentPermissionGroup[0].id
+            );
+
+          if (filterCurrentPermission.length > 0) {
+            setListPermissionCurrentInPage(filterCurrentPermission);
+          }
         }
+      }
+    }
+  };
+
+  useEffect(() => {
+    handlePermission();
+    handleGetAllPermissionInPage();
+  }, []);
+
+  const handleGetAllPermissionGroup = async () => {
+    const respon = await permissionServices.getAllPermissionGroup();
+    if (respon && respon.errCode == 0) {
+      const dataPermissionGroup = respon.permissionGroup || [];
+      let splitFields =
+        dataPermissionGroup.length > 0 &&
+        dataPermissionGroup.map((item) => {
+          if (item.createdAt || item.updatedAt) {
+            delete item.createdAt;
+            delete item.updatedAt;
+          }
+
+          return item;
+        });
+
+      if (splitFields.length > 0) {
+        setListPermissionGroup(splitFields);
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleGetAllPermissionGroup();
+  }, []);
+
+  const handleOpenModalCreate = () => {
+    setOpenModalCreate(true);
+  };
+
+  const handleCloseModalCreate = () => {
+    setOpenModalCreate(false);
+  };
+
+  const handleOpenModalRead = (id) => {
+    setOpenModalRead(true);
+    let filterPermissionGroup =
+      listPermissionGroup.length > 0 &&
+      listPermissionGroup.filter((item) => item.id === id);
+
+    if (filterPermissionGroup) {
+      filterPermissionGroup = filterPermissionGroup.map((item) => {
+        const sanitizedUser = {};
+        for (const key in item) {
+          if (item[key] === null || item[key] === undefined) {
+            sanitizedUser[key] = "";
+          } else {
+            sanitizedUser[key] = item[key];
+          }
+        }
+        return sanitizedUser;
+      });
     }
 
-    // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
+    if (filterPermissionGroup.length > 0) {
+      setDataRead(filterPermissionGroup[0]);
+    }
+  };
 
-    useEffect(() => {
-        handlePermission();
-        handleGetAllPermissionInPage();
-    }, [])
+  const handleCloseModalRead = () => {
+    setOpenModalRead(false);
+  };
 
-    const handleGetAllPermissionGroup = async () => {
-        const respon = await permissionServices.getAllPermissionGroup();
-        if (respon && respon.errCode == 0) {
-            const dataPermissionGroup = respon.permissionGroup || [];
-            let splitFields =
-                dataPermissionGroup.length > 0 &&
-                dataPermissionGroup.map((item) => {
-                    if (item.createdAt || item.updatedAt) {
-                        delete item.createdAt;
-                        delete item.updatedAt;
-                    }
+  const handleOpenModalUpdate = (id) => {
+    setOpenModalUpdate(true);
+    let filterPermissionGroup =
+      listPermissionGroup.length > 0 &&
+      listPermissionGroup.filter((item) => item.id === id);
 
-                    return item;
-                })
-
-            if (splitFields.length > 0) {
-                setListPermissionGroup(splitFields);
-            }
+    if (filterPermissionGroup) {
+      filterPermissionGroup = filterPermissionGroup.map((item) => {
+        const sanitizedUser = {};
+        for (const key in item) {
+          if (item[key] === null || item[key] === undefined) {
+            sanitizedUser[key] = "";
+          } else {
+            sanitizedUser[key] = item[key];
+          }
         }
+        return sanitizedUser;
+      });
     }
 
-    useEffect(() => {
+    if (filterPermissionGroup.length > 0) {
+      setValuesUpdate(filterPermissionGroup[0]);
+    }
+  };
+
+  const handleCloseModalUpdate = () => {
+    setOpenModalUpdate(false);
+  };
+
+  const handleOpenModalDelete = (id) => {
+    setOpenModalDelete(true);
+    setIdPermissionGroupDelete(id);
+  };
+
+  const handleCloseModalDelete = () => {
+    setOpenModalDelete(false);
+  };
+
+  const onChangeInputCreate = (e) => {
+    setValuesCreate({ ...valuesCreate, [e.target.name]: e.target.value });
+  };
+
+  const inputCreateClear = (getKey) => {
+    setValuesCreate({ ...valuesCreate, [getKey]: "" });
+  };
+
+  const onChangeInputUpdate = (e) => {
+    setValuesUpdate({ ...valuesUpdate, [e.target.name]: e.target.value });
+  };
+
+  const inputUpdateClear = (getKey) => {
+    setValuesUpdate({ ...valuesUpdate, [getKey]: "" });
+  };
+
+  const onhandleSubmitCreatePermissionGroup = async (e) => {
+    e.preventDefault();
+    const data = new FormData(e.target);
+
+    try {
+      const respon = await permissionServices.handleCreatePermissionGroup(data);
+
+      if (respon && respon.errCode === 0) {
+        handleCloseModalCreate();
         handleGetAllPermissionGroup();
-    }, [])
+        toast.success("Create permission group successfully");
+      } else {
+        toast.error("Error when create permission group");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    // handle MODAL
-    // -- modal create
-    // modal create user
-    const handleOpenModalCreate = () => {
-        setOpenModalCreate(true);
-    };
+  const onhandleSubmitUpdatePermissionGroup = async (e) => {
+    e.preventDefault();
 
-    const handleCloseModalCreate = () => {
-        setOpenModalCreate(false);
-    };
+    const data = new FormData(e.target);
+    if (valuesUpdate) {
+      data.set("id", valuesUpdate.id);
+    }
 
-    // -- modal read
-    const handleOpenModalRead = (id) => {
-        setOpenModalRead(true);
-        let filterPermissionGroup =
-            listPermissionGroup.length > 0 &&
-            listPermissionGroup.filter((item) => item.id === id);
+    try {
+      const respon = await permissionServices.handleUpdatePermissionGroup(data);
 
-        if (filterPermissionGroup) {
-            filterPermissionGroup = filterPermissionGroup.map((item) => {
-                const sanitizedUser = {};
-                for (const key in item) {
-                    if (item[key] === null || item[key] === undefined) {
-                        sanitizedUser[key] = '';
-                    } else {
-                        sanitizedUser[key] = item[key];
-                    }
-                }
-                return sanitizedUser;
-            });
-        }
+      if (respon && respon.errCode === 0) {
+        handleCloseModalUpdate();
+        handleGetAllPermissionGroup();
+        toast.success("Updating permission group successfully");
+      } else {
+        toast.error("Error when updating permission group");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-        if (filterPermissionGroup.length > 0) {
-            setDataRead(filterPermissionGroup[0]);
-        }
-    };
+  const onhandleSubmitDeletePermissionGroup = async (e) => {
+    e.preventDefault();
 
-    const handleCloseModalRead = () => {
-        setOpenModalRead(false);
-    };
+    try {
+      const respon = await permissionServices.handleDeletePermissionGroup(
+        idPermissionGroupDelete
+      );
+      if (respon && respon.errCode === 0) {
+        handleCloseModalDelete();
+        handleGetAllPermissionGroup();
+        toast.success("Deleting permission group successfully");
+      } else {
+        toast.error("Error when deleting permission group");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    // modal update user
-    const handleOpenModalUpdate = (id) => {
-        setOpenModalUpdate(true);
-        let filterPermissionGroup =
-            listPermissionGroup.length > 0 &&
-            listPermissionGroup.filter((item) => item.id === id);
+  return (
+    <Fragment>
+      <div className="pl-3 w-[calc(100%-1rem)]">
+        <div className="bg-white px-3 py-4 rounded-lg">
+          <h1 className="text-2xl font-semibold capitalize">
+            Permission Group Management
+          </h1>
+          {listPermissionGroup.length > 0 && (
+            <DataTable
+              data={listPermissionGroup}
+              btnCreateTitle={"Create Permission Group"}
+              handleModalCreate={handleOpenModalCreate}
+              handleModalRead={handleOpenModalRead}
+              handleModalEdit={handleOpenModalUpdate}
+              handleModalDelete={handleOpenModalDelete}
+              // permission
+              listPermission={listPermissionOfUser}
+              listPermissionCurrentInPage={listPermissionCurrentInPage}
+            />
+          )}
+        </div>
+      </div>
 
-        if (filterPermissionGroup) {
-            filterPermissionGroup = filterPermissionGroup.map((item) => {
-                const sanitizedUser = {};
-                for (const key in item) {
-                    if (item[key] === null || item[key] === undefined) {
-                        sanitizedUser[key] = '';
-                    } else {
-                        sanitizedUser[key] = item[key];
-                    }
-                }
-                return sanitizedUser;
-            });
-        }
-
-        if (filterPermissionGroup.length > 0) {
-            setValuesUpdate(filterPermissionGroup[0]);
-        }
-    };
-
-    const handleCloseModalUpdate = () => {
-        setOpenModalUpdate(false);
-    };
-
-    const handleOpenModalDelete = (id) => {
-        setOpenModalDelete(true);
-        setIdPermissionGroupDelete(id);
-    };
-
-    const handleCloseModalDelete = () => {
-        setOpenModalDelete(false);
-    };
-
-    // handle INPUT
-    // -- input create
-    const onChangeInputCreate = (e) => {
-        setValuesCreate({ ...valuesCreate, [e.target.name]: e.target.value });
-    };
-
-    const inputCreateClear = (getKey) => {
-        setValuesCreate({ ...valuesCreate, [getKey]: "" });
-    };
-
-    // -- input update
-    const onChangeInputUpdate = (e) => {
-        setValuesUpdate({ ...valuesUpdate, [e.target.name]: e.target.value });
-    };
-
-    const inputUpdateClear = (getKey) => {
-        setValuesUpdate({ ...valuesUpdate, [getKey]: "" });
-    };
-
-    // handle submit
-    const onhandleSubmitCreatePermissionGroup = async (e) => {
-        e.preventDefault();
-        const data = new FormData(e.target);
-
-        // console.log("data:", data);
-        // console.log("data entry:", Object.fromEntries(data.entries()));
-
-        try {
-            const respon = await permissionServices.handleCreatePermissionGroup(data);
-
-            if (respon && respon.errCode === 0) {
-                handleCloseModalCreate();
-                handleGetAllPermissionGroup();
-            } else if (respon.errCode !== 0) {
-                alert(respon.message);
-            } else {
-                alert("Tạo nhóm quyền thất bại");
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const onhandleSubmitUpdatePermissionGroup = async (e) => {
-        e.preventDefault();
-
-        const data = new FormData(e.target);
-        if (valuesUpdate) {
-            data.set("id", valuesUpdate.id)
-        }
-
-        try {
-            const respon = await permissionServices.handleUpdatePermissionGroup(data);
-
-            if (respon && respon.errCode === 0) {
-                handleCloseModalUpdate();
-                handleGetAllPermissionGroup();
-            } else if (respon.errCode !== 0) {
-                alert(respon.message);
-            } else {
-                alert("Sửa nhóm quyền thất bại");
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const onhandleSubmitDeletePermissionGroup = async (e) => {
-        e.preventDefault();
-
-        try {
-            const respon = await permissionServices.handleDeletePermissionGroup(idPermissionGroupDelete);
-            if (respon && respon.errCode === 0) {
-                handleCloseModalDelete();
-                handleGetAllPermissionGroup();
-            } else if (respon.errCode !== 0) {
-                alert(respon.message);
-            } else {
-                alert("Xóa nhóm quyền thất bại");
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    return (
-        <Fragment>
-            <div className="pl-3 w-[calc(100%-1rem)]">
-                <div className="bg-white px-3 py-4 rounded-lg">
-                    <h1 className="text-2xl font-semibold capitalize">
-                        Permission Group Management
-                    </h1>
-                    {listPermissionGroup.length > 0 && (
-                        <DataTable
-                            data={listPermissionGroup}
-                            btnCreateTitle={"Create Permission Group"}
-                            handleModalCreate={handleOpenModalCreate}
-                            handleModalRead={handleOpenModalRead}
-                            handleModalEdit={handleOpenModalUpdate}
-                            handleModalDelete={handleOpenModalDelete}
-                            // permission
-                            listPermission={listPermissionOfUser}
-                            listPermissionCurrentInPage={listPermissionCurrentInPage}
-                        />
-                    )}
-                </div>
+      {openModalCreate && (
+        <Modal open={openModalCreate} close={handleCloseModalCreate}>
+          <form
+            autoComplete="off"
+            onSubmit={onhandleSubmitCreatePermissionGroup}
+          >
+            <Heading variant={"primary"}>Create permission group</Heading>
+            <div className="">
+              {inputs.map((item, index) => {
+                return (
+                  <InputField
+                    key={index}
+                    onChange={onChangeInputCreate}
+                    value={valuesCreate && valuesCreate[item.name]}
+                    clear={() => inputCreateClear(item.name)}
+                    onClick={() => {}}
+                    {...item}
+                  />
+                );
+              })}
             </div>
+            {/* footer */}
+            <div className="flex justify-end">
+              <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+              <Button
+                variant={TBUTTON_VARIANT.PRIMARY}
+                onClick={handleCloseModalCreate}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
 
-            {/* modal create */}
-            {openModalCreate && (
-                <Modal open={openModalCreate} close={handleCloseModalCreate}>
-                    <form autoComplete="off" onSubmit={onhandleSubmitCreatePermissionGroup}>
-                        <Heading variant={"primary"}>Create permission group</Heading>
-                        <div className="">
-                            {inputs.map((item, index) => {
-                                return (
-                                    <InputField
-                                        key={index}
-                                        onChange={onChangeInputCreate}
-                                        value={valuesCreate && valuesCreate[item.name]}
-                                        clear={() => inputCreateClear(item.name)}
-                                        onClick={() => { }}
-                                        {...item}
-                                    />
-                                );
-                            })}
-                        </div>
-                        {/* footer */}
-                        <div className="flex justify-end">
-                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
-                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalCreate}>
-                                Cancel
-                            </Button>
-                        </div>
-                    </form>
-                </Modal>
-            )}
+      {openModalRead && (
+        <Modal open={openModalRead} close={handleCloseModalRead}>
+          <Heading variant={"primary"}>
+            Information permission group detail
+          </Heading>
+          <div className="">
+            {inputs.map((item, index) => {
+              return (
+                <InputField
+                  key={index}
+                  value={dataRead[item.name]}
+                  onChange={() => {}}
+                  onlyRead={"true"}
+                  {...item}
+                />
+              );
+            })}
+          </div>
+          {/* footer */}
+          <div className="flex justify-end">
+            <Button
+              variant={TBUTTON_VARIANT.PRIMARY}
+              onClick={handleCloseModalRead}
+            >
+              Cancel
+            </Button>
+          </div>
+        </Modal>
+      )}
 
-            {/* modal read */}
-            {openModalRead && (
-                <Modal open={openModalRead} close={handleCloseModalRead}>
-                    <Heading variant={"primary"}>Information permission group detail</Heading>
-                    <div className="">
-                        {inputs.map((item, index) => {
-                            return (
-                                <InputField
-                                    key={index}
-                                    value={dataRead[item.name]}
-                                    onChange={() => { }}
-                                    onlyRead={"true"}
-                                    {...item}
-                                />
-                            );
-                        })}
-                    </div>
-                    {/* footer */}
-                    <div className="flex justify-end">
-                        <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalRead}>
-                            Cancel
-                        </Button>
-                    </div>
-                </Modal>
-            )}
+      {openModalUpdate && (
+        <Modal open={openModalUpdate} close={handleCloseModalUpdate}>
+          <form
+            autoComplete="off"
+            onSubmit={onhandleSubmitUpdatePermissionGroup}
+          >
+            <Heading variant={"primary"}>Update permission group</Heading>
+            <div className="">
+              {inputs.map((item, index) => {
+                return (
+                  <InputField
+                    key={index}
+                    onChange={onChangeInputUpdate}
+                    clear={() => inputUpdateClear(item.name)}
+                    value={valuesUpdate[item.name]}
+                    onClick={() => {}}
+                    {...item}
+                  />
+                );
+              })}
+            </div>
+            {/* footer */}
+            <div className="flex justify-end">
+              <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+              <Button
+                variant={TBUTTON_VARIANT.PRIMARY}
+                onClick={handleCloseModalUpdate}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
 
-            {/* modal update */}
-            {openModalUpdate && (
-                <Modal open={openModalUpdate} close={handleCloseModalUpdate}>
-                    <form autoComplete="off" onSubmit={onhandleSubmitUpdatePermissionGroup}>
-                        <Heading variant={"primary"}>Update permission group</Heading>
-                        <div className="">
-                            {inputs.map((item, index) => {
-                                return (
-                                    <InputField
-                                        key={index}
-                                        onChange={onChangeInputUpdate}
-                                        clear={() => inputUpdateClear(item.name)}
-                                        value={valuesUpdate[item.name]}
-                                        onClick={() => { }}
-                                        {...item}
-                                    />
-                                );
-                            })}
-                        </div>
-                        {/* footer */}
-                        <div className="flex justify-end">
-                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
-                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalUpdate}>
-                                Cancel
-                            </Button>
-                        </div>
-                    </form>
-                </Modal>
-            )}
+      {openModalDelete && (
+        <Modal open={openModalDelete} close={handleCloseModalDelete}>
+          <form
+            autoComplete="off"
+            onSubmit={onhandleSubmitDeletePermissionGroup}
+          >
+            <Heading variant={"primary"}>
+              Confirm DELETE the permission group
+            </Heading>
+            <div className="my-3 mx-2">
+              <p className="text-xl font-semibold capitalize mb-3">
+                Are you sure delete this permission group
+              </p>
 
-            {/* modal delete  */}
-            {openModalDelete && (
-                <Modal open={openModalDelete} close={handleCloseModalDelete}>
-                    <form autoComplete="off" onSubmit={onhandleSubmitDeletePermissionGroup}>
-                        <Heading variant={"primary"}>Confirm DELETE the permission group</Heading>
-                        <div className="my-3 mx-2">
-                            <p className="text-xl font-semibold capitalize mb-3">
-                                Are you sure delete this permission group
-                            </p>
-
-                            {/* input id clone */}
-                            <InputField
-                                type="text"
-                                name="id"
-                                hidden="true"
-                                value={idPermissionGroupDelete}
-                                onChange={() => { }}
-                            />
-                        </div>
-                        {/* footer */}
-                        <div className="flex justify-end">
-                            <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
-                            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalDelete}>
-                                Cancel
-                            </Button>
-                        </div>
-                    </form>
-                </Modal>
-            )}
-
-        </Fragment>
-    );
+              {/* input id clone */}
+              <InputField
+                type="text"
+                name="id"
+                hidden="true"
+                value={idPermissionGroupDelete}
+                onChange={() => {}}
+              />
+            </div>
+            {/* footer */}
+            <div className="flex justify-end">
+              <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+              <Button
+                variant={TBUTTON_VARIANT.PRIMARY}
+                onClick={handleCloseModalDelete}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
+    </Fragment>
+  );
 }
 
 export default PermissionGroupManagement;

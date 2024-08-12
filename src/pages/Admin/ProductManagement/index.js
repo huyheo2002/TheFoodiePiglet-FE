@@ -4,9 +4,7 @@ import * as productServices from "../../../services/productServices";
 import * as categoryServices from "../../../services/categoryServices";
 import {
     BookOpenIcon,
-    DotHorizontalIcon,
     PencilIcon,
-    PlusIcon,
     TrashIcon,
 } from "../../../components/Icons";
 import Modal from "../../../components/Modal";
@@ -16,8 +14,6 @@ import InputFile from "../../../components/FormControl/inputFile";
 import Button from "../../../components/Button";
 import InputRadio from "../../../components/FormControl/inputRadio";
 import { useNavigate } from "react-router-dom";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import * as commonServices from "../../../services/commonServices";
 import * as permissionServices from "../../../services/permissionServices";
 import { TBUTTON_VARIANT } from "../../../types/button";
 import { useAuth } from "../../../contexts/authContext";
@@ -120,7 +116,6 @@ function ProductManagement() {
 
     // handle permission
     const handlePermission = async () => {
-        // handle permissions
         const dataListPermission = dataUser.permissions || [];
         let splitFields =
             dataListPermission.length > 0 &&
@@ -135,7 +130,6 @@ function ProductManagement() {
                 return item;
             });
 
-        // show full info
         if (splitFields.length > 0) {
             setListPermissionOfUser(splitFields)
         }
@@ -147,8 +141,6 @@ function ProductManagement() {
             const dataPermissionGroup = respon.permissionGroup || [];
 
             const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
-            // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
-
             if (filterCurrentPermissionGroup.length > 0) {
                 const responPermission = await permissionServices.getAllPermission();
                 if (responPermission && responPermission.errCode == 0) {
@@ -173,7 +165,6 @@ function ProductManagement() {
     const updatedManyFeatures = manyFeatures.map((feature) => {
         const updatedFeature = {
             ...feature, onClick: (id) => {
-                console.log("updatedFeature id", id)
                 if (feature.name === "read") {
                     handleOpenModalRead(id);
                 } else if (feature.name === "edit") {
@@ -192,7 +183,6 @@ function ProductManagement() {
         let respon = await productServices.getAllProduct() ?? null;
         if (respon) {
             setListProducts(respon.products)
-            console.log("respon detail products", respon)
         }
     }
 
@@ -275,10 +265,7 @@ function ProductManagement() {
 
     const handleCloseModalCreate = () => {
         setOpenModalCreate(false);
-
-        // reset input radio
         setCategoryId(-1);
-        // reset image
         setImage("");
     };
 
@@ -290,8 +277,6 @@ function ProductManagement() {
     // handle permission
     const handleOpenFeatures = () => {
         if (listPermissionCurrentInPage && listPermissionCurrentInPage.length > 0) {
-            // console.log("listPermissionCurrentInPage dataTable", listPermissionCurrentInPage);
-
             listPermissionCurrentInPage.map((item) => {
                 // check views
                 let strKeyword = item.keyword || "";
@@ -324,7 +309,7 @@ function ProductManagement() {
         handleOpenFeatures();
     }, []);
 
-    // modal read 
+    // modal read
     const handleOpenModalRead = (id) => {
         // console.log("id modal read", id);
         setOpenModalRead(true);

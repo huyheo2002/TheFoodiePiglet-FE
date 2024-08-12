@@ -29,8 +29,7 @@ function Sidebar() {
         const filterListUser =
           listUser.length > 0 &&
           listUser.filter(
-            (item) =>
-              item.id !== dataUser.user.id && item.Role.name !== "User"
+            (item) => item.id !== dataUser.user.id && item.Role.name !== "User"
           );
         setListUser(filterListUser);
 
@@ -67,7 +66,7 @@ function Sidebar() {
         }
       }
     } catch (error) {
-      toast.error(`Error fetching data: ${error} `)
+      toast.error(`Error fetching data: ${error} `);
     }
   };
 

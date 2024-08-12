@@ -3,7 +3,6 @@ import {
   BookOpenIcon,
   DotHorizontalIcon,
   ExcelIcon,
-  ImportFileIcon,
   PencilIcon,
   PlusIcon,
   TrashIcon,
@@ -11,7 +10,6 @@ import {
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import GlobalContext from "../../contexts/globalContext";
 import Pagination from "../Pagination";
-import WindowScrollTop from "../../utils/windowScroll";
 import { useTranslation } from "react-i18next";
 import Button from "../Button";
 import Image from "../Image";
@@ -155,7 +153,10 @@ function DataTable({
     <Fragment>
       <div className="flex justify-end my-2">
         {btnBack && (
-          <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => navigate(-1)}>
+          <Button
+            variant={TBUTTON_VARIANT.PRIMARY}
+            onClick={() => navigate(-1)}
+          >
             Back
           </Button>
         )}
@@ -181,9 +182,9 @@ function DataTable({
           </Fragment>
         ) : (
           <Button
-          variant={TBUTTON_VARIANT.VIEW_MORE}
+            variant={TBUTTON_VARIANT.VIEW_MORE}
             onClick={() => {
-              toast.error("Bạn chưa được cấp quyền để thực hiện chức năng này")
+              toast.error("Bạn chưa được cấp quyền để thực hiện chức năng này");
             }}
             iconLeft={<PlusIcon className={"!w-6 !h-6"} />}
           >
@@ -283,7 +284,9 @@ function DataTable({
                           <BookOpenIcon
                             className="!w-6 !h-6 text-gray-400 hover:text-gray-600 transition-all cursor-default"
                             onClick={() => {
-                              toast.error("Bạn chưa được cấp quyền để thực hiện chức năng này")
+                              toast.error(
+                                "Bạn chưa được cấp quyền để thực hiện chức năng này"
+                              );
                             }}
                           />
                         )}
@@ -303,7 +306,9 @@ function DataTable({
                           <PencilIcon
                             className="!w-6 !h-6 text-gray-400 hover:text-gray-600 transition-all cursor-pointer"
                             onClick={() => {
-                              toast.error("Bạn chưa được cấp quyền để thực hiện chức năng này")
+                              toast.error(
+                                "Bạn chưa được cấp quyền để thực hiện chức năng này"
+                              );
                             }}
                           />
                         )}
@@ -323,7 +328,9 @@ function DataTable({
                           <TrashIcon
                             className="!w-6 !h-6 text-gray-400 hover:text-gray-600 transition-all cursor-pointer"
                             onClick={() => {
-                              toast.error("Bạn chưa được cấp quyền để thực hiện chức năng này")
+                              toast.error(
+                                "Bạn chưa được cấp quyền để thực hiện chức năng này"
+                              );
                             }}
                           />
                         )}

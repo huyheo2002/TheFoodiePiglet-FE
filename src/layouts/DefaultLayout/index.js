@@ -11,10 +11,10 @@ const DefaultLayout = ({ children }) => {
     setTimeout(() => {
       setShowCongrat(false);
     }, 5000);
-  }
+  };
 
   useEffect(() => {
-    if(showCongrat === true) {
+    if (showCongrat === true) {
       delayCloseCongrat();
     }
   }, [showCongrat]);

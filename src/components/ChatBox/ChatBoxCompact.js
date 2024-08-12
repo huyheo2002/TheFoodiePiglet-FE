@@ -1,20 +1,15 @@
 import Image from "../Image";
 import clsx from "clsx";
 import * as chatServices from "../../services/chatServices";
-import * as commonServices from "../../services/commonServices";
 import * as userServices from "../../services/userServices";
 import { useContext, useEffect, useState } from "react";
-import useLocalStorage from "../../hooks/useLocalStorage";
 import avaGroup from "../../assets/images/GroupChat/ava4.jpg";
 import GlobalContext from "../../contexts/globalContext";
 import { BellIcon } from "../Icons";
 import { useAuth } from "../../contexts/authContext";
 
 function ChatBoxCompact({ idTest, active, onClick, data }) {
-  const {
-    setImageChatRoom,
-    reloadSidebarChat,
-  } = useContext(GlobalContext);
+  const { setImageChatRoom, reloadSidebarChat } = useContext(GlobalContext);
   const { dataUser } = useAuth();
   const [showImageGroup, setShowImageGroup] = useState(null);
   const [messageLastest, setMessageLastest] = useState(null);

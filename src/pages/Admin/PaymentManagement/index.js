@@ -5,24 +5,23 @@ import Heading from "../../../components/Heading";
 import InputField from "../../../components/FormControl/InputField";
 import Button from "../../../components/Button";
 import InputRadio from "../../../components/FormControl/inputRadio";
-import { useNavigate } from "react-router-dom";
 import * as paymentServices from "../../../services/paymentServices";
 import TextareaField from "../../../components/FormControl/textAreaField";
 import DatePicker from "../../../components/FormControl/datePicker";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import * as commonServices from "../../../services/commonServices";
 import * as permissionServices from "../../../services/permissionServices";
 import { TBUTTON_VARIANT } from "../../../types/button";
 import { useAuth } from "../../../contexts/authContext";
+import toast from "react-hot-toast";
 
 function PaymentManagement() {
   const currentPermissionGroup = "quan-ly-hoa-don";
   const { dataUser } = useAuth();
   const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
-  const [listPermissionCurrentInPage, setListPermissionCurrentInPage] = useState([]);
+  const [listPermissionCurrentInPage, setListPermissionCurrentInPage] =
+    useState([]);
 
-  const [listPayments, setListPayments] = useState([])
-  const [listPaymentsCompact, setListPaymentsCompact] = useState([])
+  const [listPayments, setListPayments] = useState([]);
+  const [listPaymentsCompact, setListPaymentsCompact] = useState([]);
   const [valuesCreate, setValuesCreate] = useState({});
 
   // inputs products
@@ -110,13 +109,17 @@ function PaymentManagement() {
       placeholder: "Enter your purchased Items",
       label: "Purchased Items",
     },
-
-
   ];
 
   // list radio
   const listPaymentMethod = ["Thanh toán trực tiếp", "Thanh toán online"];
-  const listOrderStatus = ["Đang xử lý", "Đang chuẩn bị", "Đang giao hàng", "Đã hủy", "Hoàn thành"];
+  const listOrderStatus = [
+    "Đang xử lý",
+    "Đang chuẩn bị",
+    "Đang giao hàng",
+    "Đã hủy",
+    "Hoàn thành",
+  ];
   const listPaymentStatus = ["Chưa thanh toán", "Đã thanh toán"];
 
   const [paymentMethodSelected, setPaymentMethodSelected] = useState("");
@@ -152,27 +155,33 @@ function PaymentManagement() {
         return item;
       });
 
-    // show full info
     if (splitFields.length > 0) {
-      setListPermissionOfUser(splitFields)
+      setListPermissionOfUser(splitFields);
     }
   };
 
   const handleGetAllPermissionInPage = async () => {
     const respon = await permissionServices.getAllPermissionGroup();
-    // console.log("respon permission group", respon);
     if (respon && respon.errCode == 0) {
       const dataPermissionGroup = respon.permissionGroup || [];
 
-      const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
-      // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
+      const filterCurrentPermissionGroup =
+        dataPermissionGroup.length > 0 &&
+        dataPermissionGroup.filter(
+          (item) => item.keyword === currentPermissionGroup
+        );
 
       if (filterCurrentPermissionGroup.length > 0) {
         const responPermission = await permissionServices.getAllPermission();
         if (responPermission && responPermission.errCode == 0) {
           const dataPermission = responPermission.permission || [];
 
-          const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
+          const filterCurrentPermission =
+            dataPermission.length > 0 &&
+            dataPermission.filter(
+              (item) =>
+                item.permissionGroupId === filterCurrentPermissionGroup[0].id
+            );
 
           if (filterCurrentPermission.length > 0) {
             setListPermissionCurrentInPage(filterCurrentPermission);
@@ -180,22 +189,22 @@ function PaymentManagement() {
         }
       }
     }
-  }
+  };
 
   useEffect(() => {
     handlePermission();
     handleGetAllPermissionInPage();
-  }, [])
+  }, []);
 
   const fetchListPayments = async () => {
-    const respon = await paymentServices.getAllPayment() ?? null;
+    const respon = (await paymentServices.getAllPayment()) ?? null;
     if (respon) {
-      setListPayments(respon.payments)
+      setListPayments(respon.payments);
     }
-  }
+  };
 
   const fetchListPaymentsCompact = async () => {
-    const respon = await paymentServices.getAllPaymentCompact() ?? null;
+    const respon = (await paymentServices.getAllPaymentCompact()) ?? null;
     if (respon && respon.errCode === 0) {
       const dataListPayments = respon.payments || [];
       let splitFields =
@@ -206,11 +215,9 @@ function PaymentManagement() {
           }
 
           if (item.paymentDate) {
-            // Chuyển chuỗi thành đối tượng Date
             const dateObj = new Date(item.paymentDate);
 
-            // Lấy ra ngày dướng dạng yyyy-mm-dd
-            const formattedDate = dateObj.toISOString().split('T')[0];
+            const formattedDate = dateObj.toISOString().split("T")[0];
             item.paymentDate = formattedDate;
           } else {
             item.paymentDate = "Chưa thanh toán";
@@ -219,21 +226,17 @@ function PaymentManagement() {
           return item;
         });
 
-      // show full info
       if (splitFields.length > 0) {
-        setListPaymentsCompact(splitFields)
+        setListPaymentsCompact(splitFields);
       }
     }
-  }
-
-  console.log("listPaymentsCompact", listPaymentsCompact);
+  };
 
   useEffect(() => {
     fetchListPayments();
     fetchListPaymentsCompact();
-  }, [])
+  }, []);
 
-  // modal create user
   const handleOpenModalCreate = () => {
     setOpenModalCreate(true);
   };
@@ -250,7 +253,6 @@ function PaymentManagement() {
     setValuesCreate({ ...valuesCreate, [getKey]: "" });
   };
 
-  // -- input update
   const onChangeInputUpdate = (e) => {
     setValuesUpdate({ ...valuesUpdate, [e.target.name]: e.target.value });
   };
@@ -261,37 +263,35 @@ function PaymentManagement() {
 
   const handleListPurchasedItems = (inputString) => {
     return inputString
-      .split(';')
+      .split(";")
       .filter(Boolean)
       .map((itemString) => {
-        const itemObject = itemString.split('-').reduce((acc, propString) => {
-          const [key, value] = propString.split(':');
+        const itemObject = itemString.split("-").reduce((acc, propString) => {
+          const [key, value] = propString.split(":");
           acc[key] = value;
           return acc;
         }, {});
 
-        // Kiểm tra nếu đối tượng có ít nhất một cặp key-value thì thêm nó vào mảng
         if (Object.keys(itemObject).length > 0) {
           return itemObject;
         }
 
-        return null; // Trả về null cho các phần tử không hợp lệ
-      }).filter((item) => item !== null); // Loại bỏ các phần tử null
+        return null;
+      })
+      .filter((item) => item !== null);
   };
 
-  // -- modal read
   const handleOpenModalRead = (id) => {
     setOpenModalRead(true);
     let filterPayment =
-      listPayments.length > 0 &&
-      listPayments.filter((item) => item.id === id);
+      listPayments.length > 0 && listPayments.filter((item) => item.id === id);
 
     if (filterPayment) {
       filterPayment = filterPayment.map((item) => {
         const sanitizedUser = {};
         for (const key in item) {
           if (item[key] === null || item[key] === undefined) {
-            sanitizedUser[key] = '';
+            sanitizedUser[key] = "";
           } else {
             sanitizedUser[key] = item[key];
           }
@@ -299,12 +299,12 @@ function PaymentManagement() {
         return sanitizedUser;
       });
 
-      const purchasedItems = handleListPurchasedItems(filterPayment[0].purchasedItems)
-      // console.log("purchasedItems", purchasedItems)
-      setListPurchasedItems(purchasedItems)
+      const purchasedItems = handleListPurchasedItems(
+        filterPayment[0].purchasedItems
+      );
+      setListPurchasedItems(purchasedItems);
     }
 
-    console.log("filterPayment read", filterPayment);
     if (filterPayment.length > 0) {
       setDataRead(filterPayment[0]);
     }
@@ -314,19 +314,17 @@ function PaymentManagement() {
     setOpenModalRead(false);
   };
 
-  // modal update user
   const handleOpenModalUpdate = (id) => {
     setOpenModalUpdate(true);
     let filterPayment =
-      listPayments.length > 0 &&
-      listPayments.filter((item) => item.id === id);
+      listPayments.length > 0 && listPayments.filter((item) => item.id === id);
 
     if (filterPayment) {
       filterPayment = filterPayment.map((item) => {
         const sanitizedUser = {};
         for (const key in item) {
           if (item[key] === null || item[key] === undefined) {
-            sanitizedUser[key] = '';
+            sanitizedUser[key] = "";
           } else {
             sanitizedUser[key] = item[key];
           }
@@ -334,9 +332,10 @@ function PaymentManagement() {
         return sanitizedUser;
       });
 
-      const purchasedItems = handleListPurchasedItems(filterPayment[0].purchasedItems)
-      // console.log("purchasedItems", purchasedItems)
-      setListPurchasedItems(purchasedItems)
+      const purchasedItems = handleListPurchasedItems(
+        filterPayment[0].purchasedItems
+      );
+      setListPurchasedItems(purchasedItems);
     }
 
     if (filterPayment.length > 0) {
@@ -360,7 +359,6 @@ function PaymentManagement() {
     setOpenModalDelete(false);
   };
 
-  // input radio :v
   const handleGetValuePaymentMethod = (currentValue) => {
     setPaymentMethodSelected(currentValue);
   };
@@ -374,22 +372,19 @@ function PaymentManagement() {
   };
 
   const handleSubmitChangeInfoOrder = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const data = new FormData(e.target);
     const dataEntry = Object.fromEntries(data.entries());
 
     if (valuesUpdate) {
-      data.set("id", valuesUpdate.id)
+      data.set("id", valuesUpdate.id);
     }
 
     if (dataEntry.totalPrice) {
       let totalPrice = dataEntry.totalPrice;
       totalPrice = totalPrice.replace("$", "").trim();
-      data.set("totalPrice", totalPrice)
+      data.set("totalPrice", totalPrice);
     }
-
-    // console.log("data:", data);
-    console.log("data entry:", Object.fromEntries(data.entries()));
 
     try {
       const respon = await paymentServices.handleUpdateOrder(data);
@@ -397,15 +392,15 @@ function PaymentManagement() {
         handleCloseModalUpdate();
         fetchListPayments();
         fetchListPaymentsCompact();
+        toast.success("Change infomation order successfully");
       } else if (respon.errCode !== 0) {
-        alert(respon.message);
+        toast.error("Error when change infomation order");
       }
     } catch (error) {
-      console.log(error)
+      console.error(error);
     }
-  }
+  };
 
-  // handle delete orders 
   const handleDeletePayment = async (e) => {
     e.preventDefault();
 
@@ -416,13 +411,14 @@ function PaymentManagement() {
         setIdPaymentDelete(-1);
         fetchListPayments();
         fetchListPaymentsCompact();
+        toast.success("Cancel order successfully");
       } else if (respon.errCode === 1) {
-        alert("Huỷ đơn hàng thất bại")
+        toast.error("Error when cancel order");
       }
     } catch (error) {
-      console.log("err", error)
+      console.error(error);
     }
-  }
+  };
 
   return (
     <Fragment>
@@ -449,15 +445,21 @@ function PaymentManagement() {
 
       {openModalCreate && (
         <Modal open={openModalCreate} close={handleCloseModalCreate}>
-          <form autoComplete="off" onSubmit={() => { }}>
+          <form autoComplete="off" onSubmit={() => {}}>
             <Heading variant={"primary"}>Create payment</Heading>
             <div className="flex flex-col justify-center items-center mb-4">
               <p className="text-lg font-semibold text-black">Oops!</p>
-              <p className="mt-2 text-base font-semibold text-black">Bạn phải đăng nhập với tài khoản User đã được cấp để thực thi chức năng này!</p>
+              <p className="mt-2 text-base font-semibold text-black">
+                Bạn phải đăng nhập với tài khoản User đã được cấp để thực thi
+                chức năng này!
+              </p>
             </div>
 
             <div className="flex justify-end">
-              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalCreate}>
+              <Button
+                variant={TBUTTON_VARIANT.PRIMARY}
+                onClick={handleCloseModalCreate}
+              >
                 Cancel
               </Button>
             </div>
@@ -465,7 +467,6 @@ function PaymentManagement() {
         </Modal>
       )}
 
-      {/* modal read */}
       {openModalRead && (
         <Modal open={openModalRead} close={handleCloseModalRead}>
           <Heading variant={"primary"}>Information payment detail</Heading>
@@ -477,26 +478,25 @@ function PaymentManagement() {
                     <InputField
                       key={index}
                       value={"Chưa thanh toán"}
-                      onClick={() => { }}
-                      onChange={() => { }}
+                      onClick={() => {}}
+                      onChange={() => {}}
                       onlyRead={"true"}
                       {...item}
                       type="text"
                     />
                   );
                 } else {
-                  // Tạo một đối tượng Date từ chuỗi thời gian
                   const dateObj = new Date(dataRead[item.name]);
+                  const formattedDate = dateObj.toISOString().split("T")[0];
 
-                  // Chuyển đổi đối tượng Date thành chuỗi dưới định dạng yyyy-mm-dd
-                  const formattedDate = dateObj.toISOString().split('T')[0];
-
-                  return <DatePicker
-                    key={index}
-                    value={formattedDate}
-                    onChange={() => { }}
-                    {...item}
-                  />
+                  return (
+                    <DatePicker
+                      key={index}
+                      value={formattedDate}
+                      onChange={() => {}}
+                      {...item}
+                    />
+                  );
                 }
               }
 
@@ -505,12 +505,12 @@ function PaymentManagement() {
                   <TextareaField
                     key={index}
                     value={dataRead[item.name]}
-                    onChange={() => { }}
-                    onClick={() => { }}
+                    onChange={() => {}}
+                    onClick={() => {}}
                     onlyRead={"true"}
                     {...item}
                   />
-                )
+                );
               }
 
               if (item.name === "totalPrice") {
@@ -518,8 +518,8 @@ function PaymentManagement() {
                   <InputField
                     key={index}
                     value={`${dataRead[item.name]} $`}
-                    onClick={() => { }}
-                    onChange={() => { }}
+                    onClick={() => {}}
+                    onChange={() => {}}
                     onlyRead={"true"}
                     {...item}
                   />
@@ -634,7 +634,9 @@ function PaymentManagement() {
               if (item.name === "purchasedItems") {
                 return (
                   <div key={index} className="mb-3">
-                    <h3 className="text-lg font-semibold mb-2">Chi tiết sản phẩm</h3>
+                    <h3 className="text-lg font-semibold mb-2">
+                      Chi tiết sản phẩm
+                    </h3>
                     <table className="w-full border-collapse">
                       <thead>
                         <tr>
@@ -645,35 +647,46 @@ function PaymentManagement() {
                         </tr>
                       </thead>
                       <tbody>
-                        {listPurchasedItems.length > 0 && listPurchasedItems.map((itemPurchased, indexItem) => {
-                          return <tr key={indexItem}>
-                            <td className="p-2 border">{itemPurchased.name}</td>
-                            <td className="p-2 border">{itemPurchased.quantity}</td>
-                            <td className="p-2 border">{itemPurchased.size}</td>
-                            <td className="p-2 border">{`${itemPurchased.price}$`}</td>
-                          </tr>
-                        })}
+                        {listPurchasedItems.length > 0 &&
+                          listPurchasedItems.map((itemPurchased, indexItem) => {
+                            return (
+                              <tr key={indexItem}>
+                                <td className="p-2 border">
+                                  {itemPurchased.name}
+                                </td>
+                                <td className="p-2 border">
+                                  {itemPurchased.quantity}
+                                </td>
+                                <td className="p-2 border">
+                                  {itemPurchased.size}
+                                </td>
+                                <td className="p-2 border">{`${itemPurchased.price}$`}</td>
+                              </tr>
+                            );
+                          })}
                       </tbody>
                     </table>
                   </div>
-                )
+                );
               }
 
               return (
                 <InputField
                   key={index}
                   value={dataRead[item.name]}
-                  onClick={() => { }}
-                  onChange={() => { }}
+                  onClick={() => {}}
+                  onChange={() => {}}
                   onlyRead={"true"}
                   {...item}
                 />
               );
             })}
           </div>
-          {/* footer */}
           <div className="flex justify-end">
-            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalRead}>
+            <Button
+              variant={TBUTTON_VARIANT.PRIMARY}
+              onClick={handleCloseModalRead}
+            >
               Cancel
             </Button>
           </div>
@@ -687,22 +700,26 @@ function PaymentManagement() {
             <Heading variant={"primary"}>Update payment</Heading>
             <div className="">
               {inputs.map((item, index) => {
-                console.log("values update", valuesUpdate);
                 let checkPaymentStatus = false;
                 if (valuesUpdate.paymentStatus === "Đã thanh toán") {
                   checkPaymentStatus = true;
                 }
                 let checkOrderStatus = false;
                 if (valuesUpdate.orderStatus === "Hoàn thành") {
-                  checkOrderStatus = true;;
+                  checkOrderStatus = true;
                 }
 
                 if (item.name === "paymentDate") {
                   const dateObject = new Date(valuesUpdate[item.name]);
 
                   const year = dateObject.getUTCFullYear();
-                  const month = (dateObject.getUTCMonth() + 1).toString().padStart(2, "0");
-                  const day = dateObject.getUTCDate().toString().padStart(2, "0");
+                  const month = (dateObject.getUTCMonth() + 1)
+                    .toString()
+                    .padStart(2, "0");
+                  const day = dateObject
+                    .getUTCDate()
+                    .toString()
+                    .padStart(2, "0");
 
                   const formattedDate = `${year}-${month}-${day}`;
 
@@ -711,22 +728,24 @@ function PaymentManagement() {
                       <InputField
                         key={index}
                         value={"Chưa thanh toán"}
-                        onClick={() => { }}
-                        onChange={() => { }}
+                        onClick={() => {}}
+                        onChange={() => {}}
                         onlyRead={"true"}
                         {...item}
                         type="text"
                       />
                     );
                   } else {
-                    return <DatePicker
-                      key={index}
-                      value={formattedDate}
-                      onClick={() => { }}
-                      onChange={() => { }}
-                      onlyRead={"true"}
-                      {...item}
-                    />
+                    return (
+                      <DatePicker
+                        key={index}
+                        value={formattedDate}
+                        onClick={() => {}}
+                        onChange={() => {}}
+                        onlyRead={"true"}
+                        {...item}
+                      />
+                    );
                   }
                 }
 
@@ -735,12 +754,12 @@ function PaymentManagement() {
                     <TextareaField
                       key={index}
                       value={valuesUpdate[item.name]}
-                      onChange={() => { }}
-                      onClick={() => { }}
+                      onChange={() => {}}
+                      onClick={() => {}}
                       onlyRead={"true"}
                       {...item}
                     />
-                  )
+                  );
                 }
 
                 if (item.name === "totalPrice") {
@@ -748,8 +767,8 @@ function PaymentManagement() {
                     <InputField
                       key={index}
                       value={`${valuesUpdate[item.name]} $`}
-                      onClick={() => { }}
-                      onChange={() => { }}
+                      onClick={() => {}}
+                      onChange={() => {}}
                       onlyRead={"true"}
                       {...item}
                     />
@@ -783,7 +802,11 @@ function PaymentManagement() {
                       key={index}
                       options={getDataFromPayment}
                       onChange={handleGetValuePaymentMethod}
-                      checked={paymentMethodSelected !== "" ? paymentMethodSelected : paymentChecked}
+                      checked={
+                        paymentMethodSelected !== ""
+                          ? paymentMethodSelected
+                          : paymentChecked
+                      }
                       edit={true}
                       disable={checkPaymentStatus ?? false}
                       {...item}
@@ -819,7 +842,11 @@ function PaymentManagement() {
                       key={index}
                       options={getDataFromPayment}
                       onChange={handleGetValuePaymentStatus}
-                      checked={paymentStatusSelected !== "" ? paymentStatusSelected : paymentChecked}
+                      checked={
+                        paymentStatusSelected !== ""
+                          ? paymentStatusSelected
+                          : paymentChecked
+                      }
                       edit={true}
                       disable={checkPaymentStatus ?? false}
                       {...item}
@@ -855,7 +882,11 @@ function PaymentManagement() {
                       key={index}
                       options={getDataFromPayment}
                       onChange={handleGetValueOrderStatus}
-                      checked={orderStatusSelected !== "" ? orderStatusSelected : paymentChecked}
+                      checked={
+                        orderStatusSelected !== ""
+                          ? orderStatusSelected
+                          : paymentChecked
+                      }
                       edit={true}
                       disable={checkOrderStatus ?? false}
                       {...item}
@@ -867,7 +898,9 @@ function PaymentManagement() {
                 if (item.name === "purchasedItems") {
                   return (
                     <div key={index} className="mb-3">
-                      <h3 className="text-lg font-semibold mb-2">Chi tiết sản phẩm</h3>
+                      <h3 className="text-lg font-semibold mb-2">
+                        Chi tiết sản phẩm
+                      </h3>
                       <table className="w-full border-collapse">
                         <thead>
                           <tr>
@@ -878,21 +911,35 @@ function PaymentManagement() {
                           </tr>
                         </thead>
                         <tbody>
-                          {listPurchasedItems.length > 0 && listPurchasedItems.map((itemPurchased, indexItem) => {
-                            return <tr key={indexItem}>
-                              <td className="p-2 border">{itemPurchased.name}</td>
-                              <td className="p-2 border">{itemPurchased.quantity}</td>
-                              <td className="p-2 border">{itemPurchased.size}</td>
-                              <td className="p-2 border">{`${itemPurchased.price}$`}</td>
-                            </tr>
-                          })}
+                          {listPurchasedItems.length > 0 &&
+                            listPurchasedItems.map(
+                              (itemPurchased, indexItem) => {
+                                return (
+                                  <tr key={indexItem}>
+                                    <td className="p-2 border">
+                                      {itemPurchased.name}
+                                    </td>
+                                    <td className="p-2 border">
+                                      {itemPurchased.quantity}
+                                    </td>
+                                    <td className="p-2 border">
+                                      {itemPurchased.size}
+                                    </td>
+                                    <td className="p-2 border">{`${itemPurchased.price}$`}</td>
+                                  </tr>
+                                );
+                              }
+                            )}
                         </tbody>
                       </table>
                     </div>
-                  )
+                  );
                 }
 
-                if (item.name === "deliveryAddress" || item.name === "contactInfo") {
+                if (
+                  item.name === "deliveryAddress" ||
+                  item.name === "contactInfo"
+                ) {
                   return (
                     <InputField
                       key={index}
@@ -901,15 +948,15 @@ function PaymentManagement() {
                       onChange={onChangeInputUpdate}
                       {...item}
                     />
-                  )
+                  );
                 }
 
                 return (
                   <InputField
                     key={index}
                     value={valuesUpdate[item.name]}
-                    onClick={() => { }}
-                    onChange={() => { }}
+                    onClick={() => {}}
+                    onChange={() => {}}
                     onlyRead={"true"}
                     {...item}
                   />
@@ -919,7 +966,10 @@ function PaymentManagement() {
 
             <div className="flex justify-end">
               <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
-              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalUpdate}>
+              <Button
+                variant={TBUTTON_VARIANT.PRIMARY}
+                onClick={handleCloseModalUpdate}
+              >
                 Cancel
               </Button>
             </div>
@@ -943,13 +993,16 @@ function PaymentManagement() {
                 name="id"
                 hidden="true"
                 value={idPaymentDelete}
-                onChange={() => { }}
+                onChange={() => {}}
               />
             </div>
             {/* footer */}
             <div className="flex justify-end">
               <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
-              <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalDelete}>
+              <Button
+                variant={TBUTTON_VARIANT.PRIMARY}
+                onClick={handleCloseModalDelete}
+              >
                 Cancel
               </Button>
             </div>
