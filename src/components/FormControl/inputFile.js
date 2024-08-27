@@ -31,17 +31,17 @@ function InputFile({ ...props }) {
       >
         {label}
       </label>
-      <label
-        htmlFor={id}
-        className={clsx(
-          "bg-[#00b4d7] inline-block px-5 py-3 uppercase text-base font-medium text-white cursor-pointer rounded-xl shadow-black-b-0.35 transition-all"
-        )}
-      >
-        Choose a image
-      </label>
 
       {!onlyRead ? (
         <Fragment>
+          <label
+            htmlFor={id}
+            className={clsx(
+              "bg-[#00b4d7] inline-block px-5 py-3 uppercase text-base font-medium text-white cursor-pointer rounded-xl shadow-black-b-0.35 transition-all"
+            )}
+          >
+            Choose a image
+          </label>
           <input
             id={id}
             placeholder={inputProps.placeholder}

@@ -5,6 +5,7 @@ import {
   ExcelIcon,
   PencilIcon,
   PlusIcon,
+  SearchIcon,
   TrashIcon,
 } from "../Icons";
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
@@ -18,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
 import toast from "react-hot-toast";
 import { TBUTTON_VARIANT } from "../../types/button";
+import InputField from "../FormControl/InputField";
 
 function DataTable({
   data,
@@ -88,6 +90,11 @@ function DataTable({
   // pages
   const [postPerPage, setPostPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPostv2, setCurrentPostv2] = useState([]);
+
+  // useEffect(() => {
+  //   setCurrentPostv2(data.slice(indexOfFirstPost, indexOfLastPost));
+  // }, [data, valueFilter]);
 
   let indexOfLastPost = 0;
   let indexOfFirstPost = 0;
@@ -149,6 +156,12 @@ function DataTable({
     setTransformedData(newDataTransformedData);
   }, [data]);
 
+  const [valueFilter, setValueFilter] = useState();
+
+  const onFilterChange = (e) => {
+    setValueFilter(e.target.value);
+  }
+
   return (
     <Fragment>
       <div className="flex justify-end my-2">
@@ -162,6 +175,20 @@ function DataTable({
         )}
         {listPermission && listPermissionCurrentInPage && permissionCreate ? (
           <Fragment>
+            <div className="w-96 flex">
+              <InputField
+                onChange={onFilterChange}
+                clear={() => setValueFilter("")}
+                value={valueFilter}
+                onClick={() => {}}
+                type="text"
+                placeholder="Filter items here"
+              />
+              <Button
+                variant={TBUTTON_VARIANT.PRIMARY}
+                iconLeft={<SearchIcon className={"!w-6 !h-6"} />}
+              />
+            </div>
             <Button
               variant={TBUTTON_VARIANT.EXCEL}
               onClick={() => {}}

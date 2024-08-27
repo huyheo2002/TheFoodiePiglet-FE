@@ -339,14 +339,14 @@ function Cart() {
               Total: {`${Math.round(listItemInCart.reduce((total, item) => total + item.price, 0) * 100) / 100}$`}
             </h2>
             <div className="flex">
-              <Button variant={"success"}
+              <Button variant={TBUTTON_VARIANT.SUCCESS}
                 onClick={() => handleRefreshCart()}
               >Refresh Card</Button>
-              <Button variant={"success"} to={"/menu"} onClick={() => WindowScrollTop()}>Mua tiếp</Button>
-              <Button variant={"success"}
+              <Button variant={TBUTTON_VARIANT.SUCCESS} to={"/menu"} onClick={() => WindowScrollTop()}>Mua tiếp</Button>
+              <Button variant={TBUTTON_VARIANT.SUCCESS}
                 onClick={() => setOpenModalOrders(true)}
               >Order</Button>
-              <Button variant={"success"}
+              <Button variant={TBUTTON_VARIANT.SUCCESS}
                 onClick={() => setOpenModalPaymentOnline(true)}
               >Pay now</Button>
             </div>

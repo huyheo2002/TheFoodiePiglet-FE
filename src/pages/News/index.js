@@ -7,6 +7,7 @@ import * as newsServices from "../../services/newsServices";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import getRandomListItem from "../../utils/getRandomItem";
+import { TBUTTON_VARIANT } from "../../types/button";
 
 function News() {
   const { t } = useTranslation(["home", "header"]);
@@ -85,7 +86,7 @@ function News() {
 
         <div className="flex justify-center items-center mb-3">
           {listGenres.length > 0 && listGenres.map((item, index) => {
-            return <Button key={index} variant={"primary"}
+            return <Button key={index} variant={TBUTTON_VARIANT.PRIMARY}
               onClick={() => setCategoryCurrent(item.name)}
             >{item.name}</Button>
           })}

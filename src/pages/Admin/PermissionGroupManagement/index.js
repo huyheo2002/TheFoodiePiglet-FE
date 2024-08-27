@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 function PermissionGroupManagement() {
   const currentPermissionGroup = "quan-ly-nhom-quyen";
   const { dataUser } = useAuth();
+  console.log("dataUser permission group", dataUser);
   const [listPermissionOfUser, setListPermissionOfUser] = useState([]);
   const [listPermissionCurrentInPage, setListPermissionCurrentInPage] =
     useState([]);

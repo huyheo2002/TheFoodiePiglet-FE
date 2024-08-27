@@ -20,6 +20,8 @@ function Menu({ data }) {
     }
   };
 
+  console.log("dataUser in sidebar admin", dataUser);
+
   const loadCurrentActive = () => {
     if (data) {
       data.forEach((group) => {
@@ -60,7 +62,8 @@ function Menu({ data }) {
                   listPermissionOfUser &&
                   listPermissionOfUser.filter((itemPermission) => {
                     return (
-                      itemPermission.Permission.permissionGroupId === item.id
+                      // itemPermission?.Permission?.permissionGroupId === item.id
+                      itemPermission?.Permission?.permissionGroupId === item.id || itemPermission?.permissionGroupId  === item.id
                     );
                   });
 
@@ -161,11 +164,14 @@ function Menu({ data }) {
             listPermissionGroup.reduce((filtered, item, index) => {
               const listPermissionOfUser = dataUser && dataUser.permissions;
 
+              console.log("listPermissionOfUser", listPermissionOfUser);
               const checkPermission =
-                listPermissionOfUser &&
+                listPermissionOfUser.length > 0 &&
                 listPermissionOfUser.filter((itemPermission) => {
+                  // console.log("itemPermission.Permission.permissionGroupId", itemPermission?.Permission?.permissionGroupId)
+                  // console.log("itemPermission.permissionGroupId", itemPermission?.permissionGroupId)
                   return (
-                    itemPermission.Permission.permissionGroupId === item.id
+                    itemPermission?.Permission?.permissionGroupId === item.id || itemPermission?.permissionGroupId  === item.id
                   );
                 });
 
