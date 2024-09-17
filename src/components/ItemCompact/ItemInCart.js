@@ -13,14 +13,12 @@ import {
 } from "../Icons";
 import Image from "../Image";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   handleAddToCartRedux,
   handleRemoveItemInCartRedux,
 } from "../../redux/actions/cartAction";
 import { useDispatch } from "react-redux";
-import useLocalStorage from "../../hooks/useLocalStorage";
-import * as commonServices from "../../services/commonServices";
 import toast from "react-hot-toast";
 import { TBUTTON_VARIANT } from "../../types/button";
 import { useAuth } from "../../contexts/authContext";

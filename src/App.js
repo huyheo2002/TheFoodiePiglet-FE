@@ -10,66 +10,69 @@ import "./i18n";
 import ContextWrapper from "./contexts/contextWrapper";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./contexts/authContext";
+import { MenuSelectedProvider } from "./contexts/menuSelectedContext";
 
 function App() {
   return (
     <AuthProvider>
-      <ContextWrapper>
-        <Router>
-          <div className="app">
-            <Routes>
-              {privateRoutes.map((route, index) => {
-                let Layout = DefaultLayout;
-                const Page = route.component;
+      <MenuSelectedProvider>
+        <ContextWrapper>
+          <Router>
+            <div className="app">
+              <Routes>
+                {privateRoutes.map((route, index) => {
+                  let Layout = DefaultLayout;
+                  const Page = route.component;
 
-                if (route.layout) {
-                  Layout = route.layout;
-                } else if (route.layout === null) {
-                  Layout = Fragment;
-                }
+                  if (route.layout) {
+                    Layout = route.layout;
+                  } else if (route.layout === null) {
+                    Layout = Fragment;
+                  }
 
-                return (
-                  <Route
-                    path={route.path}
-                    key={index}
-                    element={
-                      <Layout>
-                        <Page />
-                      </Layout>
-                    }
-                  />
-                );
-              })}
+                  return (
+                    <Route
+                      path={route.path}
+                      key={index}
+                      element={
+                        <Layout>
+                          <Page />
+                        </Layout>
+                      }
+                    />
+                  );
+                })}
 
-              {publicRoutes.map((route, index) => {
-                let Layout = DefaultLayout;
-                const Page = route.component;
+                {publicRoutes.map((route, index) => {
+                  let Layout = DefaultLayout;
+                  const Page = route.component;
 
-                if (route.layout) {
-                  Layout = route.layout;
-                } else if (route.layout === null) {
-                  Layout = Fragment;
-                }
+                  if (route.layout) {
+                    Layout = route.layout;
+                  } else if (route.layout === null) {
+                    Layout = Fragment;
+                  }
 
-                return (
-                  <Route
-                    path={route.path}
-                    key={index}
-                    element={
-                      <Layout>
-                        <Page />
-                      </Layout>
-                    }
-                  />
-                );
-              })}
-            </Routes>
-          </div>
-        </Router>
-        <Toaster position="top-right" reverseOrder={false} toastOptions={{
-          style: { zIndex: 10000 }
-        }} />
-      </ContextWrapper>
+                  return (
+                    <Route
+                      path={route.path}
+                      key={index}
+                      element={
+                        <Layout>
+                          <Page />
+                        </Layout>
+                      }
+                    />
+                  );
+                })}
+              </Routes>
+            </div>
+          </Router>
+          <Toaster position="top-right" reverseOrder={false} toastOptions={{
+            style: { zIndex: 10000 }
+          }} />
+        </ContextWrapper>
+      </MenuSelectedProvider>
     </AuthProvider>
   );
 }

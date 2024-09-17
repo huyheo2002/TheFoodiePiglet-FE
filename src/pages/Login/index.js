@@ -6,7 +6,7 @@ import logoGoogle from "../../assets/images/Base/logo-google.png";
 import logoTwitter from "../../assets/images/Base/logo-twitter.png";
 import logoIos from "../../assets/images/Base/logo-ios.png";
 import InputField from "../../components/FormControl/InputField";
-import { Fragment, useEffect, useLayoutEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
@@ -17,18 +17,16 @@ import {
 } from "../../redux/actions/userAction";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { LoadingIcon } from "../../components/Icons";
-import * as commonServices from "../../services/commonServices";
 import Modal from "../../components/Modal";
 import * as authServices from "../../services/authServices";
 import { TBUTTON_VARIANT } from "../../types/button";
 import toast from "react-hot-toast";
-import { useAuth } from "../../contexts/authContext";
+import * as commonServices from "../../services/commonServices";
 
 function Login() {
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { dataUser } = useAuth();
 
   const [values, setValues] = useState({
     username: "",
@@ -89,6 +87,18 @@ function Login() {
     navigate("/");
   };
 
+  const decodeToken = async (accessToken) => {
+    try {
+      const respon = await commonServices.handleDecoded(accessToken);
+      if (respon?.errCode === 0) {
+
+        return respon.decoded;
+      }
+    } catch (error) {
+      console.error("Failed to decode token", error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       if (isError) {
@@ -97,10 +107,15 @@ function Login() {
 
       if (dataUserRedux && dataUserRedux.token && dataUserRedux.auth === true) {
         setValueLocal(dataUserRedux);
-        if (dataUser.user.roleName === "User") {
-          navigate("/");
-        } else {
-          navigate("/system");
+        const dataUser = await decodeToken(dataUserRedux.token);
+
+        console.log("dataUser", dataUser);
+        if (dataUser) {
+          if (dataUser.user.roleName === "User") {
+            navigate("/");
+          } else {
+            navigate("/system");
+          }
         }
       }
     };

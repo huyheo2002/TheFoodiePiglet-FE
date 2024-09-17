@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import GlobalContext from "./globalContext";
-import useLocalStorage from "../hooks/useLocalStorage";
-import * as cartServices from "../services/cartServices";
-import * as commonServices from "../services/commonServices";
 
 function ContextWrapper(props) {
   const [testContext, setTestContext] = useState(false);
@@ -20,26 +17,6 @@ function ContextWrapper(props) {
   const [idChatRoom, setIdChatRoom] = useState(null);
   const [imageChatRoom, setImageChatRoom] = useState(null);
   const [reloadSidebarChat, setReloadSidebarChat] = useState(false);
-
-  // const fetchListUser = async () => {
-  //   if (dataUser) {
-  //     let dataUser = dataUser.user.id ?? null;
-  //     const respon = await cartServices.getAllCartItemOfUser(dataUser);
-  //     if (respon && respon.errCode === 0) {
-  //       if (Array.isArray(respon.listItem) && respon.listItem.length > 0) {
-  //         setReloadCart(true);
-  //       } else {
-  //         setReloadCart(false);
-  //       }
-  //     }
-  //   } else {
-  //     setReloadCart(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchListUser();
-  // }, [dataUser]);
 
   return (
     <GlobalContext.Provider

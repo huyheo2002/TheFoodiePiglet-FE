@@ -29,7 +29,7 @@ export const handleLoginRedux = (username, password) => {
         });
       }
     } catch (error) {
-      console.log("error", error);
+      console.error("error", error);
     }
   };
 };
@@ -58,7 +58,6 @@ export const handleLoginGoogleRedux = (userId) => {
 
     try {
       const res = await authServices.handleLoginGoogle(userId);
-      console.log("respon redux google", res);
       if (res && res.errCode === 0) {
         dispatch({
           type: FETCH_USER_SUCCESS,
@@ -72,7 +71,7 @@ export const handleLoginGoogleRedux = (userId) => {
         });
       }
     } catch (error) {
-      console.log("error", error);
+      console.error("error", error);
     }
   }
 }

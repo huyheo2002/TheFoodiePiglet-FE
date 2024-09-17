@@ -22,7 +22,6 @@ function PaymentManagement() {
 
   const [listPayments, setListPayments] = useState([]);
   const [listPaymentsCompact, setListPaymentsCompact] = useState([]);
-  const [valuesCreate, setValuesCreate] = useState({});
 
   // inputs products
   const inputs = [
@@ -243,14 +242,6 @@ function PaymentManagement() {
 
   const handleCloseModalCreate = () => {
     setOpenModalCreate(false);
-  };
-
-  const onChangeInputCreate = (e) => {
-    setValuesCreate({ ...valuesCreate, [e.target.name]: e.target.value });
-  };
-
-  const inputCreateClear = (getKey) => {
-    setValuesCreate({ ...valuesCreate, [getKey]: "" });
   };
 
   const onChangeInputUpdate = (e) => {

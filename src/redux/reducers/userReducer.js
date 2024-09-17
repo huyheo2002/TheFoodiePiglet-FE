@@ -10,7 +10,7 @@ import {
 const INITIAL_STATE = {
   user: {
     dataUser: {},
-    permission: [],    
+    permission: [],
     auth: false,
   },
   isLoading: false,
@@ -46,7 +46,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         user: {
           // dataUser: action.data.dataUser,
           token: action.data.token,
-          auth: true,          
+          auth: true,
         },
         isLoading: false,
         isError: false,

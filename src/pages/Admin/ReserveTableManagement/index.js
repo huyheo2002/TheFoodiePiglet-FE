@@ -8,8 +8,6 @@ import InputField from "../../../components/FormControl/InputField";
 import InputRadio from "../../../components/FormControl/inputRadio";
 import TimePicker from "../../../components/FormControl/timePicker";
 import DatePicker from "../../../components/FormControl/datePicker";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import * as commonServices from "../../../services/commonServices";
 import * as permissionServices from "../../../services/permissionServices";
 import { TBUTTON_VARIANT } from "../../../types/button";
 import { useAuth } from "../../../contexts/authContext";
@@ -140,13 +138,10 @@ function ReserveTableManagement() {
 
     const handleGetAllPermissionInPage = async () => {
         const respon = await permissionServices.getAllPermissionGroup();
-        // console.log("respon permission group", respon);
         if (respon && respon.errCode == 0) {
             const dataPermissionGroup = respon.permissionGroup || [];
 
             const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
-            // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
-
             if (filterCurrentPermissionGroup.length > 0) {
                 const responPermission = await permissionServices.getAllPermission();
                 if (responPermission && responPermission.errCode == 0) {
@@ -162,20 +157,15 @@ function ReserveTableManagement() {
         }
     }
 
-    // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
-
     useEffect(() => {
         handlePermission();
         handleGetAllPermissionInPage();
     }, [])
 
-    // console.log("listPermissionOfUser", listPermissionOfUser);
-
     const handleGetAllReserveTable = async () => {
         const respon = await tableServices.getAllReserveTable();
         if (respon && respon.errCode == 0) {
             const dataReserveTable = respon.reserveTable;
-            // console.log("respon reserve Table", respon.reserveTable)
             let splitFields =
                 dataReserveTable.length > 0 &&
                 dataReserveTable.map((item) => {
@@ -198,7 +188,7 @@ function ReserveTableManagement() {
                     if (item.dateStart) {
                         const date = new Date(item.dateStart);
 
-                        // Lấy ngày, tháng, năm
+                        // Lấy ngày, tháng, 
                         const day = date.getDate();
                         const month = date.getMonth() + 1; // Tháng trong JavaScript là 0-11, nên cộng thêm 1
                         const year = date.getFullYear();
@@ -643,8 +633,6 @@ function ReserveTableManagement() {
                                         return currentTime < timeEnd;
                                     })
 
-                                    // console.log("filterListTimeStart", filterListTimeStart)
-
                                     return <TimePicker
                                         key={index}
                                         onValueInpChange={handleTimeStartChange}
@@ -661,8 +649,6 @@ function ReserveTableManagement() {
 
                                         return currentTime > timeStart;
                                     })
-
-                                    // console.log("filterListTimeEnd", filterListTimeEnd)
 
                                     return <TimePicker
                                         key={index}
@@ -745,18 +731,13 @@ function ReserveTableManagement() {
                                 }
 
                                 if (item.type === "date") {
-                                    // Chuỗi ngày ban đầu
                                     const dateStr = valuesUpdate[item.name];
 
                                     const dateParts = dateStr.split("-");
                                     const day = dateParts[0];
                                     const month = dateParts[1];
                                     const year = dateParts[2];
-
-                                    // Định dạng lại thành chuỗi "YYYY/MM/DD"
                                     const formattedDateStr = `${year}-${month}-${day}`;
-                                    // console.log("formattedDateStr", formattedDateStr)
-                                    // console.log("currentDateStr", currentDateStr)
 
                                     return <DatePicker
                                         key={index}
@@ -775,16 +756,10 @@ function ReserveTableManagement() {
                                         return currentTime < timeEnd;
                                     })
 
-                                    // console.log("filterListTimeStart", filterListTimeStart)
                                     const timeUse = valuesUpdate && valuesUpdate.timeUse;
-
-                                    // Phân tách chuỗi theo dấu "=>"
                                     const timeParts = timeUse.split(" => ");
-
-                                    // Lấy hai phần tử sau khi đã phân tách
-                                    const startTime = timeParts[0].trim().replace("h", ":"); // "08:00"
-                                    const endTime = timeParts[1].trim().replace("h", ":");   // "09:00"
-
+                                    const startTime = timeParts[0].trim().replace("h", ":");
+                                    const endTime = timeParts[1].trim().replace("h", ":");
 
                                     if (!selectedTimeStart) {
                                         handleTimeStartChange(startTime)
@@ -807,20 +782,10 @@ function ReserveTableManagement() {
                                         return currentTime > timeStart;
                                     })
 
-                                    // console.log("filterListTimeEnd", filterListTimeEnd)
-                                    // console.log("filterListTimeStart", filterListTimeStart)
                                     const timeUse = valuesUpdate && valuesUpdate.timeUse;
-
-                                    // Phân tách chuỗi theo dấu "=>"
                                     const timeParts = timeUse.split(" => ");
-
-                                    // Lấy hai phần tử sau khi đã phân tách
-                                    const startTime = timeParts[0].trim().replace("h", ":"); // "08:00"
-                                    const endTime = timeParts[1].trim().replace("h", ":");   // "09:00"
-
-                                    console.log("startTime", startTime);
-                                    console.log("endTime", endTime);
-
+                                    const startTime = timeParts[0].trim().replace("h", ":");
+                                    const endTime = timeParts[1].trim().replace("h", ":");
 
                                     if (!selectedTimeEnd) {
                                         handleTimeEndChange(endTime)

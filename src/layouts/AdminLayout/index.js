@@ -4,9 +4,7 @@ import Header from "../components/Admin/Header";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
 import GlobalContext from "../../contexts/globalContext";
-import useLocalStorage from "../../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
-import * as commonServices from "../../services/commonServices";
 import { useAuth } from "../../contexts/authContext";
 
 const AdminLayout = ({ children }) => {
@@ -16,14 +14,16 @@ const AdminLayout = ({ children }) => {
   const { dataUser } = useAuth();
 
   useEffect(() => {
-    if (!dataUser) {
+    if (dataUser === null) return;
+
+    if (!dataUser || dataUser.user.roleName === "User") {
       navigate("/");
-    } else {
-      if (dataUser.user.roleName === "User") {
-        navigate("/");
-      }
     }
-  }, []);
+  }, [dataUser, navigate]);
+
+  if (dataUser === null) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div

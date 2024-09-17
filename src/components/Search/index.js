@@ -3,14 +3,12 @@ import clsx from "clsx";
 import { useEffect, useState, useRef, useContext } from "react";
 import { SearchIcon, CloseCircleIcon, SpinnerIcon } from "../Icons";
 import useDebounce from "../../hooks/useDebounce";
-import useLocalStorage from "../../hooks/useLocalStorage";
-import * as commonServices from "../../services/commonServices";
 import * as chatServices from "../../services/chatServices";
 import GlobalContext from "../../contexts/globalContext";
 import { useAuth } from "../../contexts/authContext";
 
 function Search({ ItemSearchResult, type, listData }) {
-  const { setIdChatRoom, idChatRoom } = useContext(GlobalContext);
+  const { setIdChatRoom } = useContext(GlobalContext);
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [showResult, setShowResult] = useState(true);
@@ -81,7 +79,7 @@ function Search({ ItemSearchResult, type, listData }) {
         setIdChatRoom(respon.room.id);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

@@ -13,8 +13,6 @@ export const handleAddToCartRedux = (data) => {
 
         try {
             const respon = await cartServices.handleAddToCart(data);
-            console.log("respon add to cart redux", respon);
-
             if (respon && respon.errCode === 0) {
                 dispatch({
                     type: ADD_TO_CART,
@@ -30,7 +28,7 @@ export const handleAddToCartRedux = (data) => {
                 })
             }
         } catch (error) {
-            console.log("error", error);
+            console.error("error", error);
         }
     }
 }
@@ -41,8 +39,6 @@ export const handleRemoveItemInCartRedux = (id) => {
 
         try {
             const respon = await cartServices.handleDeleteItemInCart(id);
-            console.log("respon remove item in cart redux", respon);
-
             if (respon && respon.errCode === 0) {
                 dispatch({
                     type: REMOVE_ITEM_IN_CART,
@@ -57,7 +53,7 @@ export const handleRemoveItemInCartRedux = (id) => {
                 })
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 }
@@ -68,8 +64,6 @@ export const handleRefreshCartRedux = (userId) => {
 
         try {
             const respon = await cartServices.handleRefreshCart(userId);
-            console.log("respon refresh cart redux", respon);
-
             if (respon && respon.errCode === 0) {
                 dispatch({
                     type: REFRESH_CART,
@@ -84,7 +78,7 @@ export const handleRefreshCartRedux = (userId) => {
                 })
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 }

@@ -6,7 +6,6 @@ import FullScreenLayout from "../layouts/FullScreenLayout";
 // pages client
 import Home from "../pages/Home";
 import Login from "../pages/Login";
-import Test from "../pages/Test";
 import Menu from "../pages/Menu";
 import LoginSuccess from "../pages/Login/LoginSuccess";
 import Error from "../pages/Error";
@@ -44,9 +43,6 @@ const publicRoutes = [
   { path: "/menu", component: Menu, layout: FullScreenLayout },
   { path: "/login-success/:userId", component: LoginSuccess, layout: null },
   { path: "/reset-password/:token", component: ResetPassword, layout: null },
-  // { path: "/test", component: Test, layout: null },
-
-  { path: "/test", component: Test, layout: null },
   { path: "/news", component: News, layout: DefaultLayout },
   { path: "/order", component: Orders, layout: DefaultLayout },
   { path: "/product-detail/:prodId", component: ProductDetail, layout: DefaultLayout },

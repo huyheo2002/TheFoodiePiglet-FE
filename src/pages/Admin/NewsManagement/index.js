@@ -240,11 +240,7 @@ function NewsManagement() {
 
   const handleCloseModalCreate = () => {
     setOpenModalCreate(false);
-
-    // reset input radio
     setCategoryIndex(-1);
-
-    // reset image
     setImage("");
   };
 
@@ -275,11 +271,7 @@ function NewsManagement() {
 
   const handleCloseModalUpdate = () => {
     setOpenModalUpdate(false);
-
-    // reset input radio
     setCategoryIndex(-1);
-
-    // reset image
     setImage("");
   };
 

@@ -2,13 +2,10 @@ import { DotHorizontalIcon, PlusIcon } from "../Icons";
 import Search from "../Search";
 import ItemSearchResult from "../ItemSearchResult";
 import clsx from "clsx";
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ChatBoxCompact from "./ChatBoxCompact";
 import * as userServices from "../../services/userServices";
-import * as commonServices from "../../services/commonServices";
 import * as chatServices from "../../services/chatServices";
-
-import useLocalStorage from "../../hooks/useLocalStorage";
 import GlobalContext from "../../contexts/globalContext";
 import toast from "react-hot-toast";
 import { useAuth } from "../../contexts/authContext";

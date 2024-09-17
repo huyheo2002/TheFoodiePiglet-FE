@@ -7,10 +7,9 @@ import Modal from "../../../components/Modal";
 import Heading from "../../../components/Heading";
 import InputField from "../../../components/FormControl/InputField";
 import InputCheckbox from "../../../components/FormControl/inputCheckBox";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import * as commonServices from "../../../services/commonServices";
 import { TBUTTON_VARIANT } from "../../../types/button";
 import { useAuth } from "../../../contexts/authContext";
+import toast from "react-hot-toast";
 
 function RoleManagement() {
     const currentPermissionGroup = "quan-ly-vai-tro";
@@ -49,16 +48,13 @@ function RoleManagement() {
 
     const handleGetAllPermissionInPage = async () => {
         const respon = await permissionServices.getAllPermissionGroup();
-        // console.log("respon permission group", respon);
-        if (respon && respon.errCode == 0) {
+        if (respon && respon.errCode === 0) {
             const dataPermissionGroup = respon.permissionGroup || [];
 
             const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
-            // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
-
             if (filterCurrentPermissionGroup.length > 0) {
                 const responPermission = await permissionServices.getAllPermission();
-                if (responPermission && responPermission.errCode == 0) {
+                if (responPermission && responPermission.errCode === 0) {
                     const dataPermission = responPermission.permission || [];
 
                     const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
@@ -71,19 +67,14 @@ function RoleManagement() {
         }
     }
 
-    // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
-
     useEffect(() => {
         handlePermission();
         handleGetAllPermissionInPage();
     }, [])
 
-    // console.log("listPermissionOfUser", listPermissionOfUser);
-
     const handleGetAllPermission = async () => {
         const respon = await permissionServices.getAllPermission();
-        // console.log("respon permission", respon)
-        if (respon && respon.errCode == 0) {
+        if (respon && respon.errCode === 0) {
             const dataPermission = respon.permission || [];
             let splitFields =
                 dataPermission.length > 0 &&
@@ -101,7 +92,6 @@ function RoleManagement() {
                     return item;
                 })
 
-            // console.log("splitFields", splitFields)
             if (splitFields.length > 0) {
                 setListPermission(splitFields);
             }
@@ -114,7 +104,7 @@ function RoleManagement() {
     const [openModalUpdate, setOpenModalUpdate] = useState(false);
     const [openModalDelete, setOpenModalDelete] = useState(false);
 
-    // INPUT 
+    // INPUT
     const inputs = [
         {
             id: 1,
@@ -142,11 +132,9 @@ function RoleManagement() {
         const respon = await roleServices.getAllRolesWithPermission();
 
         const responPermission = await permissionServices.getAllPermission();
-        // console.log("respon role", respon);
-        if (respon && respon.errCode == 0 && responPermission && responPermission.errCode === 0) {
+        if (respon && respon.errCode === 0 && responPermission && responPermission.errCode === 0) {
             const listPermission = responPermission.permission || [];
             const dataRole = respon.roles || [];
-            // setListRole(dataRole);
             let splitFields =
                 dataRole.length > 0 &&
                 dataRole.map((item) => {
@@ -196,7 +184,7 @@ function RoleManagement() {
         handleGetAllPermissionGroup();
     }, []);
 
-    // -- modal read
+    // modal read
     const handleOpenModalRead = (id) => {
         setOpenModalRead(true);
         let filterRole =
@@ -235,7 +223,6 @@ function RoleManagement() {
 
     const handleCloseModalCreate = () => {
         setOpenModalCreate(false);
-        // reset checkbox
         setListPermissionSelected([]);
         setListPermissionIdSelected([]);
     };
@@ -264,7 +251,6 @@ function RoleManagement() {
         if (filterRole.length > 0) {
             setValuesUpdate(filterRole[0]);
             setListPermissionSelected(filterRole[0].listPermission);
-            console.log("filterRole", filterRole[0].listPermission);
 
             const listPermissionId = listPermission.length > 0 && listPermission.reduce((filtered, item) => {
                 const getAllPermissionCurrent = filterRole[0].listPermission || [];
@@ -277,18 +263,14 @@ function RoleManagement() {
                 return filtered;
             }, [])
 
-            // console.log("listPermissionId", listPermissionId)
             if (listPermissionId.length > 0) {
                 setListPermissionIdSelected(listPermissionId)
             }
         }
     };
 
-    // console.log("listPermission", listPermission);
-
     const handleCloseModalUpdate = () => {
         setOpenModalUpdate(false);
-        // reset checkbox
         setListPermissionSelected([]);
         setListPermissionIdSelected([]);
     };
@@ -300,13 +282,10 @@ function RoleManagement() {
 
     const handleCloseModalDelete = () => {
         setOpenModalDelete(false);
-
-        // reset checkbox
         setListPermissionSelected([]);
         setListPermissionIdSelected([]);
     };
 
-    // console.log("listPermissionIdSelected", listPermissionIdSelected)
     // handle INPUT
     // -- input create
     const onChangeInputCreate = (e) => {
@@ -327,20 +306,16 @@ function RoleManagement() {
     };
 
     const handleGetValuePermissionCheckbox = (currentValue) => {
-        // console.log("check box currentValue", currentValue)
         let filterPermission = listPermission.length > 0 && listPermission.filter(item => item.id === currentValue);
-        // console.log("filterPermission", filterPermission);
         if (filterPermission.length > 0) {
             let nameToAdd = filterPermission[0].name;
 
             if (listPermissionSelected.length > 0 && listPermissionSelected.includes(nameToAdd)) {
-                // Nếu nameToAdd đã tồn tại trong mảng, thì xóa nó đi.
                 const updatedList = listPermissionSelected.filter(name => name !== nameToAdd);
                 setListPermissionSelected(updatedList);
                 const updatedListWithId = listPermissionIdSelected.filter(id => id !== currentValue);
                 setListPermissionIdSelected(updatedListWithId);
             } else {
-                // Nếu nameToAdd chưa tồn tại trong mảng, thêm nó vào.
                 setListPermissionSelected([...listPermissionSelected, nameToAdd]);
                 setListPermissionIdSelected([...listPermissionIdSelected, currentValue]);
             }
@@ -354,26 +329,22 @@ function RoleManagement() {
 
         data.set("permission", listPermissionIdSelected);
 
-        // console.log("data:", data);
-        // console.log("data entry:", Object.fromEntries(data.entries()));
-
-
         try {
             const respon = await roleServices.handleCreateNewRole(data);
 
             if (respon && respon.errCode === 0) {
                 handleCloseModalCreate();
-                // reset data
                 handleGetAllRole();
                 handleGetAllPermission();
                 handleGetAllPermissionGroup();
+                toast.success("Create role successfully");
             } else if (respon.errCode !== 0) {
-                alert(respon.message);
+                toast.error(respon.message);
             } else {
-                alert("Tạo vai trò thất bại");
+                toast.error("Create role failed");
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -391,17 +362,17 @@ function RoleManagement() {
 
             if (respon && respon.errCode === 0) {
                 handleCloseModalUpdate();
-                // reset data
                 handleGetAllRole();
                 handleGetAllPermission();
                 handleGetAllPermissionGroup();
+                toast.success("Edit role successfully");
             } else if (respon.errCode !== 0) {
-                alert(respon.message);
+                toast.error(respon.message);
             } else {
-                alert("Sửa vai trò thất bại");
+                toast.error("Edit role failed");
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -412,17 +383,17 @@ function RoleManagement() {
             const respon = await roleServices.handleDeleteRole(idRoleDelete);
             if (respon && respon.errCode === 0) {
                 handleCloseModalDelete();
-                // reset data
                 handleGetAllRole();
                 handleGetAllPermission();
                 handleGetAllPermissionGroup();
+                toast.success("Deleted role successfully");
             } else if (respon.errCode !== 0) {
-                alert(respon.message);
+                toast.error(respon.message);
             } else {
-                alert("Xóa vai trò thất bại");
+                toast.error("Deleted role failed");
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -455,7 +426,6 @@ function RoleManagement() {
                     <Heading variant={"primary"}>Information role detail</Heading>
                     <div className="">
                         {inputs.map((item, index) => {
-
                             if (item.type === "checkbox") {
                                 const getDataFromPermissionGroup =
                                     listPermissionGroup.length > 0 &&

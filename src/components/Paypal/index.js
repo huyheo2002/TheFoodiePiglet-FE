@@ -51,7 +51,6 @@ const ButtonWrapper = ({ currency, showSpinner, totalPrice, payload }) => {
         onApprove={(data, actions) => {
           return actions.order.capture().then(async (respon) => {
             if (respon.status === "COMPLETED") {
-              console.log("payload paypal", payload);
               const dataSend = {
                 ...payload,
                 paymentMethod: "Thanh toán online",

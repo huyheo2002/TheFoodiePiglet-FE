@@ -5,7 +5,7 @@ import adminReducer from "./adminReducer";
 import cartReducer from "./cartReducer";
 
 const rootReducer = combineReducers({
-  user: userReducer,  
+  user: userReducer,
   admin: adminReducer,
   cart: cartReducer,
 });

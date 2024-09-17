@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from "swiper";
@@ -55,11 +55,7 @@ function SlideShow({ className, data }) {
         grabCursor
         autoplay={{
           delay: 3000,
-          // disableOnInteraction: false,
-          // pauseOnMouseEnter: true,
         }}
-        // onSwiper={(swiper) => console.log(swiper)}
-        // onSlideChange={() => console.log("slide change")}
       >
         {data.length > 0 &&
           data.map((item, index) => {

@@ -8,8 +8,6 @@ import InputRadio from "../../../components/FormControl/inputRadio";
 import Button from "../../../components/Button";
 import Heading from "../../../components/Heading";
 import replaceNullUndefinedWithEmptyString from "../../../utils/replaceDataToEmptyString";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import * as commonServices from "../../../services/commonServices";
 import * as permissionServices from "../../../services/permissionServices";
 import { TBUTTON_VARIANT } from "../../../types/button";
 import { useAuth } from "../../../contexts/authContext";
@@ -94,13 +92,10 @@ function VariantManagement() {
 
     const handleGetAllPermissionInPage = async () => {
         const respon = await permissionServices.getAllPermissionGroup();
-        // console.log("respon permission group", respon);
         if (respon && respon.errCode == 0) {
             const dataPermissionGroup = respon.permissionGroup || [];
 
             const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
-            // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
-
             if (filterCurrentPermissionGroup.length > 0) {
                 const responPermission = await permissionServices.getAllPermission();
                 if (responPermission && responPermission.errCode == 0) {
@@ -116,14 +111,10 @@ function VariantManagement() {
         }
     }
 
-    // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
-
     useEffect(() => {
         handlePermission();
         handleGetAllPermissionInPage();
     }, [])
-
-    // console.log("listPermissionOfUser", listPermissionOfUser);
 
     const fetchDataVariantInProduct = async () => {
         let respon = await variantServices.findVariantInProduct(params.id) ?? null;
@@ -183,12 +174,10 @@ function VariantManagement() {
         setSize(-1);
     };
 
-    // modal read 
+    // modal read
     const handleOpenModalRead = async (id) => {
-        // console.log("id modal read", id);
         setOpenModalRead(true);
         let respon = await variantServices.findOneVariantInProduct(id) ?? null;
-        console.log("respon data read", respon.variant)
         if (respon) {
             let filterVariant = replaceNullUndefinedWithEmptyString(respon.variant);
             if (filterVariant) {
@@ -247,7 +236,7 @@ function VariantManagement() {
                 alert(respon.message);
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -269,7 +258,7 @@ function VariantManagement() {
                 alert(respon.message);
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -284,7 +273,7 @@ function VariantManagement() {
                 alert(respon.message);
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -378,7 +367,6 @@ function VariantManagement() {
                     <Heading variant={"primary"}>Information product detail</Heading>
                     <div className="">
                         {inputVariant.map((item, index) => {
-                            console.log("dataRead[item.name]", dataRead[item.name])
                             const optionsSize = [
                                 { value: "S", label: "S" },
                                 { value: "M", label: "M" },

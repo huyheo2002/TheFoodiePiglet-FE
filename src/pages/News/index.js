@@ -18,16 +18,16 @@ function News() {
   const [categoryCurrent, setCategoryCurrent] = useState("");
 
   const fetchDataGenres = async () => {
-    let respon = await genresServices.getAllGenres() ?? null;
+    let respon = (await genresServices.getAllGenres()) ?? null;
 
     if (respon) {
-      setListGenres(respon.genres)
-      setCategoryCurrent(respon.genres[0].name)
+      setListGenres(respon.genres);
+      setCategoryCurrent(respon.genres[0].name);
     }
-  }
+  };
 
   const fetchAllNews = async () => {
-    const respon = await newsServices.getAllNews("all") ?? null;
+    const respon = (await newsServices.getAllNews("all")) ?? null;
 
     if (respon && respon.errCode === 0) {
       const dataListNews = respon.news || [];
@@ -44,26 +44,27 @@ function News() {
 
       // show full info
       if (splitFields.length > 0) {
-        setListNews(splitFields)
+        setListNews(splitFields);
         const randomNews = getRandomListItem(splitFields, 3);
-        setRandomNews(randomNews)
+        setRandomNews(randomNews);
       }
     }
-  }
+  };
 
   useEffect(() => {
     fetchDataGenres();
     fetchAllNews();
-  }, [])
+  }, []);
 
   return (
     <div className="w-full relative">
       {/* sidebar */}
       <div className="w-full relative overflow-hidden">
         <div className="relative inset-0 z-10 flex flex-row flex-wrap w-full justify-around my-6">
-          {randomNews.length > 0 && randomNews.map((item, index) => {
-            return <ItemNews itemCompact key={index} data={item} />
-          })}
+          {randomNews.length > 0 &&
+            randomNews.map((item, index) => {
+              return <ItemNews itemCompact key={index} data={item} />;
+            })}
         </div>
 
         {/* overlay */}
@@ -85,19 +86,27 @@ function News() {
         </Heading>
 
         <div className="flex justify-center items-center mb-3">
-          {listGenres.length > 0 && listGenres.map((item, index) => {
-            return <Button key={index} variant={TBUTTON_VARIANT.PRIMARY}
-              onClick={() => setCategoryCurrent(item.name)}
-            >{item.name}</Button>
-          })}
+          {listGenres.length > 0 &&
+            listGenres.map((item, index) => {
+              return (
+                <Button
+                  key={index}
+                  variant={TBUTTON_VARIANT.PRIMARY}
+                  onClick={() => setCategoryCurrent(item.name)}
+                >
+                  {item.name}
+                </Button>
+              );
+            })}
         </div>
         {/* main content */}
         <div className="flex flex-row flex-wrap">
-          {listNews.length > 0 && listNews.map((item, index) => {
-            if (item.categoryName === categoryCurrent) {
-              return <ItemNews itemCompact data={item} key={index} />
-            }
-          })}
+          {listNews.length > 0 &&
+            listNews.map((item, index) => {
+              if (item.categoryName === categoryCurrent) {
+                return <ItemNews itemCompact data={item} key={index} />;
+              }
+            })}
         </div>
       </div>
     </div>

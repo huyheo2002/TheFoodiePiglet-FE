@@ -14,6 +14,7 @@ import * as permissionServices from "../../../services/permissionServices";
 import GlobalContext from "../../../contexts/globalContext";
 import { TBUTTON_VARIANT } from "../../../types/button";
 import { useAuth } from "../../../contexts/authContext";
+import toast from "react-hot-toast";
 
 function UserManagement() {
   const currentPermissionGroup = "quan-ly-nguoi-dung";
@@ -163,15 +164,13 @@ function UserManagement() {
 
   const handleGetAllPermissionInPage = async () => {
     const respon = await permissionServices.getAllPermissionGroup();
-    if (respon && respon.errCode == 0) {
+    if (respon && respon.errCode === 0) {
       const dataPermissionGroup = respon.permissionGroup || [];
 
       const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
-      // console.log("filterCurrentPermissionGroup", filterCurrentPermissionGroup);
-
       if (filterCurrentPermissionGroup.length > 0) {
         const responPermission = await permissionServices.getAllPermission();
-        if (responPermission && responPermission.errCode == 0) {
+        if (responPermission && responPermission.errCode === 0) {
           const dataPermission = responPermission.permission || [];
 
           const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
@@ -184,14 +183,10 @@ function UserManagement() {
     }
   }
 
-  // console.log("listPermissionCurrentInPage", listPermissionCurrentInPage);
-
   useEffect(() => {
     handlePermission();
     handleGetAllPermissionInPage();
   }, [])
-
-  // console.log("listPermissionOfUser", listPermissionOfUser);
 
   // get list roles
   const handleGetlistRoles = async () => {
@@ -287,8 +282,6 @@ function UserManagement() {
 
   const handleCloseModalRead = () => {
     setOpenModalRead(false);
-
-    // reset input radio
     setGender(-1);
     setRoleIndex(-1);
   };
@@ -300,12 +293,8 @@ function UserManagement() {
 
   const handleCloseModalCreate = () => {
     setOpenModalCreate(false);
-
-    // reset input radio
     setGender(-1);
     setRoleIndex(-1);
-
-    // reset image
     setImage("");
   };
 
@@ -338,12 +327,8 @@ function UserManagement() {
 
   const handleCloseModalUpdate = () => {
     setOpenModalUpdate(false);
-
-    // reset input radio
     setGender(-1);
     setRoleIndex(-1);
-
-    // reset image
     setImage("");
   };
 
@@ -355,7 +340,7 @@ function UserManagement() {
   const handleCloseModalDelete = () => {
     setOpenModalDelete(false);
   };
-  // handle create user
+
   const onChangeInputCreate = (e) => {
     setValuesCreate({ ...valuesCreate, [e.target.name]: e.target.value });
   };
@@ -375,16 +360,12 @@ function UserManagement() {
   // handle preview image
   const handlePreviewImage = (e) => {
     const file = e.target.files[0];
-    // console.log(URL.createObjectURL(file))
-    // tự thêm attribute
     file.preview = URL.createObjectURL(file);
     setImage(file);
   };
 
   useEffect(() => {
-    // cleanup
     return () => {
-      // xóa ảnh cũ
       image && URL.revokeObjectURL(image.preview);
     };
   }, [image]);
@@ -408,18 +389,17 @@ function UserManagement() {
 
     try {
       const respon = await userServices.handleCreateUser(data);
-      // console.log("respon", respon);
-
       if (respon && respon.errCode === 0) {
         handleCloseModalCreate();
         handleGetAllUsers();
         handleGetAllUsersCompact();
         setReloadNotify(!reloadNotify);
+        toast.success("Created user successfully");
       } else if (respon.errCode === 1) {
-        alert(respon.message);
+        toast.error(respon.message);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -435,7 +415,6 @@ function UserManagement() {
       data.set("originatorId", dataUser.user.id)
     }
 
-    console.log("data entry:", Object.fromEntries(data.entries()));
     try {
       const respon = await userServices.handleUpdateUser(data);
 
@@ -444,11 +423,12 @@ function UserManagement() {
         handleGetAllUsers();
         handleGetAllUsersCompact();
         setReloadNotify(!reloadNotify);
+        toast.success("Updated user successfully");
       } else if (respon.errCode === 1) {
-        alert(respon.message);
+        toast.error("Failed when updated user");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -462,11 +442,12 @@ function UserManagement() {
         handleGetAllUsers();
         handleGetAllUsersCompact();
         setReloadNotify(!reloadNotify);
+        toast.success("Deleted user successfully");
       } else if (respon.errCode === 1) {
-        alert(respon.message);
+        toast.error("Failed when deleted user");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -525,7 +506,6 @@ function UserManagement() {
               }
 
               if (item.type === "file") {
-                // console.log("image", dataRead[item.name])
                 return (
                   <InputFile
                     key={index}
@@ -635,7 +615,6 @@ function UserManagement() {
                     <InputRadio
                       key={index}
                       options={optionsGender}
-                      // handleSelected={handleGetValueGender}
                       onChange={handleGetValueGender}
                       {...item}
                       id={Math.floor(Math.random() * 10)}
@@ -723,7 +702,6 @@ function UserManagement() {
                     <InputFile
                       key={index}
                       onChange={handlePreviewImage}
-                      // value={valuesUpdate[item.name]}
                       imagePreview={image.preview ?? valuesUpdate[item.name]}
                       {...item}
                     />
