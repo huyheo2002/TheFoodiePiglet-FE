@@ -16,7 +16,7 @@ const AdminLayout = ({ children }) => {
   useEffect(() => {
     if (dataUser === null) return;
 
-    if (!dataUser || dataUser.user.roleName === "User") {
+    if (dataUser && dataUser.user.roleName === "User") {
       navigate("/");
     }
   }, [dataUser, navigate]);

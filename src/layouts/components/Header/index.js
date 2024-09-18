@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Menu from "./Menu";
 import {
   BellIcon,
@@ -10,6 +10,7 @@ import {
 import logo from "../../../assets/images/Base/logo-transparent.png";
 import Image from "../../../components/Image";
 import { useAuth } from "../../../contexts/authContext";
+import { useEffect } from "react";
 
 const NAVBAR_ITEM = [
   {
@@ -107,7 +108,15 @@ const NAVBAR_RIGHT_ITEM = [
 ];
 
 function Header() {
+  // const navigate = useNavigate();
   const { dataUser } = useAuth();
+
+  // useEffect(() => {
+  //   if(dataUser && (dataUser.user.roleName !== null || dataUser.user.roleName !== undefined) && dataUser.user.roleName !== "User") {
+  //     navigate("/system");
+  //   }
+  // }, [dataUser])
+
 
   return (
     <header className="w-full h-16 shadow-bs-black-b-0.35 bg-rgba-black-0.75 flex justify-between px-8 fixed z-[9999] top-0 left-0 right-0">

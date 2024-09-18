@@ -1,10 +1,8 @@
 import { useTranslation } from "react-i18next";
 import Button from "../Button";
 import {
-  // DollarIcon,
-  // HeartFillIcon,
   StarFillIcon,
-  // StarHalfIcon,
+  StarHalfIcon,
   StarIcon,
 } from "../Icons";
 import Image from "../Image";
@@ -19,6 +17,7 @@ function ItemCompact({
   onhandleAddToCart,
   onHandleProductDetail,
   onHandleRefreshCart,
+  disabledBtnAdd = false,
 }) {
   const { t } = useTranslation(["home"]);
 
@@ -31,6 +30,43 @@ function ItemCompact({
       />
     );
   }
+
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+    return (
+      <span className="flex items-center mt-1">
+        {Array(fullStars)
+          .fill()
+          .map((_, i) => (
+            <StarFillIcon key={i} className="text-yellow-300" />
+          ))}
+        {hasHalfStar && <StarHalfIcon className="text-yellow-300" />}
+        {Array(emptyStars)
+          .fill()
+          .map((_, i) => (
+            <StarIcon key={i} className="text-yellow-300" />
+          ))}
+        <span className="text-xs ml-2 text-gray-400">{getRandomReviews(10, 50)} reviews</span>
+      </span>
+    );
+  };
+
+  const getRandomReviews = (min, max) => {
+    return `${Math.floor(Math.random() * (max - min + 1)) + min}k`;
+  };
+
+  const getRandomRating = () => {
+    const random = Math.random() * 4.5 + 0.5;
+    return Math.round(random * 2) / 2;
+  };
+
+  const StarRatingComponent = () => {
+    const randomRating = getRandomRating();
+    return renderStars(randomRating);
+  };
 
   return (
     <div
@@ -78,30 +114,22 @@ function ItemCompact({
           </div>
         </div>
 
-        {/* pending -- waiting updarte */}
-        {/* rating */}
-        <span className="flex items-center mt-1">
-          <StarFillIcon className="text-yellow-300" />
-          <StarFillIcon className="text-yellow-300" />
-          <StarFillIcon className="text-yellow-300" />
-          <StarFillIcon className="text-yellow-300" />
-          {/* <StarHalfIcon className="text-yellow-300" /> */}
-          <StarIcon className="text-yellow-300" />
-          <span className="text-xs ml-2 text-gray-400">20k reviews</span>
-        </span>
+        {StarRatingComponent()}
 
         {/* button action */}
-        <div className="mt-5 flex">
-          <Button
-            variant={TBUTTON_VARIANT.PRIMARY}
-            onClick={() => {
-              if (onhandleAddToCart) {
-                onhandleAddToCart();
-              }
-            }}
-          >
-            {t("button.addToCart")}
-          </Button>
+        <div className="mt-5 flex justify-end">
+          {!disabledBtnAdd && (
+            <Button
+              variant={TBUTTON_VARIANT.PRIMARY}
+              onClick={() => {
+                if (onhandleAddToCart) {
+                  onhandleAddToCart();
+                }
+              }}
+            >
+              {t("button.addToCart")}
+            </Button>
+          )}
           <Button
             variant={TBUTTON_VARIANT.PRIMARY}
             onClick={() => {

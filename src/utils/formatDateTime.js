@@ -6,7 +6,7 @@ function FormatDateTime(dateTimeString) {
         hour: '2-digit',
         minute: '2-digit',
     };
-    
+
     const dateTime = new Date(dateTimeString);
     return dateTime.toLocaleString(undefined, options);
 }

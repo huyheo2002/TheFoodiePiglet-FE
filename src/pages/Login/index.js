@@ -22,6 +22,7 @@ import * as authServices from "../../services/authServices";
 import { TBUTTON_VARIANT } from "../../types/button";
 import toast from "react-hot-toast";
 import * as commonServices from "../../services/commonServices";
+import { useAuth } from "../../contexts/authContext";
 
 function Login() {
   const { t } = useTranslation(["auth"]);
@@ -60,6 +61,7 @@ function Login() {
   const dataUserRedux = useSelector((state) => state.user.user);
   const isError = useSelector((state) => state.user.isError);
   const [checkError, setCheckError] = useState(false);
+  const { setDataUser } = useAuth();
 
   const [valueLocal, setValueLocal] = useLocalStorage("dataUser", "");
 
@@ -109,8 +111,8 @@ function Login() {
         setValueLocal(dataUserRedux);
         const dataUser = await decodeToken(dataUserRedux.token);
 
-        console.log("dataUser", dataUser);
         if (dataUser) {
+          setDataUser(dataUser)
           if (dataUser.user.roleName === "User") {
             navigate("/");
           } else {

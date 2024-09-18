@@ -4,9 +4,11 @@ import { useTranslation } from "react-i18next";
 import { handleLogoutRedux } from "../../../redux/actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { useAuth } from "../../../contexts/authContext";
 
 function SubMenu({ data, className, dataUserLogin }) {
   const { t, i18n } = useTranslation(["header"]);
+  const { setDataUser } = useAuth();
   const navigate = useNavigate();
 
   const changeLanguages = (lng = "vi" || "en") => {
@@ -18,6 +20,7 @@ function SubMenu({ data, className, dataUserLogin }) {
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(handleLogoutRedux());
+    // setDataUser(null);
   };
 
   useEffect(() => {

@@ -13,8 +13,6 @@ import clsx from "clsx";
 import * as paymentServices from "../../services/paymentServices";
 import cartEmpty from "../../assets/images/Base/cart-empty.png";
 import WindowScrollTop from "../../utils/windowScroll";
-import ExportToPNG from "../../utils/exportToPng";
-import html2canvas from "html2canvas";
 import FormatDateTime from "../../utils/formatDateTime";
 import GlobalContext from "../../contexts/globalContext";
 import Paypal from "../../components/Paypal";
@@ -22,11 +20,15 @@ import TextareaField from "../../components/FormControl/textAreaField";
 import Congrat from "../../components/Congrat";
 import imgShipper from "../../assets/images/Base/shipper_01.png";
 import * as authServices from "../../services/authServices";
+import * as productServices from "../../services/productServices";
 import { TBUTTON_VARIANT } from "../../types/button";
 import { useAuth } from "../../contexts/authContext";
 import toast from "react-hot-toast";
+import getRandomListItem from "../../utils/getRandomItem";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
+  const navigate = useNavigate();
   const { paymentOnlineSuccess, setPaymentOnlineSuccess, showCongrat } =
     useContext(GlobalContext);
   const [roleName, setRoleName] = useState("");
@@ -111,6 +113,7 @@ function Profile() {
   const [dataOrderDetail, setDataOrderDetail] = useState({});
   const [listPurchasedItems, setListPurchasedItems] = useState([]);
   const [refreshPayment, setRefreshPayment] = useState(false);
+  const [dataProducts, setDataProducts] = useState([]);
 
   // cancel order
   const [openModalCancelOrder, setOpenModalCancelOrder] = useState(false);
@@ -350,26 +353,6 @@ function Profile() {
     setValuesUpdate({ ...valuesUpdate, [getKey]: "" });
   };
 
-  // export to png
-  const handleExportClick = () => {
-    exportToPNG();
-  };
-
-  const exportToPNG = async () => {
-    const content = document.getElementById("export-content");
-
-    try {
-      const canvas = await html2canvas(content);
-      const imgData = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = imgData;
-      link.download = "exported-image.png";
-      link.click();
-    } catch (error) {
-      console.error("Error exporting to PNG:", error);
-    }
-  };
-
   const handleOpenModalOrderDetail = (dataItem) => {
     const dateOrder = FormatDateTime(dataItem.createdAt);
     let datePayment = null;
@@ -568,8 +551,6 @@ function Profile() {
     setValuesChangePassword({});
   };
 
-  console.log("dataUser", dataUser);
-
   const onhandleSubmitChangePassword = async (e) => {
     e.preventDefault();
 
@@ -589,6 +570,73 @@ function Profile() {
       toast.error(error);
     }
   };
+
+  const fetchListProductsCompact = async () => {
+    let respon = (await productServices.getAllProductCompact()) ?? null;
+    if (respon) {
+      const dataListProduct = respon.products || [];
+      let splitFields =
+        dataListProduct.length > 0 &&
+        dataListProduct.map((item) => {
+          if (item.Variants) {
+            if (item.Variants.length > 0) {
+              let minPrice = item.Variants[0].price;
+              let maxPrice = item.Variants[0].price;
+              let maxPriceOriginal = item.Variants[0].price;
+
+              let maxDiscountVariant = item.Variants[0].discountVariant;
+              for (const variant of item.Variants) {
+                let currentVariantPrice =
+                  variant.price -
+                  (variant.price * variant.discountVariant) / 100;
+                if (currentVariantPrice < minPrice) {
+                  minPrice = currentVariantPrice;
+                }
+                if (currentVariantPrice > maxPrice) {
+                  maxPrice = currentVariantPrice;
+                }
+
+                if (variant.price > maxPriceOriginal) {
+                  maxPriceOriginal = variant.price;
+                  item.originalPrice = `${maxPriceOriginal} $`;
+                }
+                if (variant.discountVariant > maxDiscountVariant) {
+                  maxDiscountVariant = variant.discountVariant;
+                  item.discount = `${maxDiscountVariant} %` ?? `0 %`;
+                }
+              }
+
+              if (minPrice === maxPrice) {
+                item.price = `${Math.round(minPrice * 100) / 100} $` ?? `0 $`;
+              } else {
+                item.price =
+                  `${Math.round(minPrice * 100) / 100} ~ ${
+                    Math.round(maxPrice * 100) / 100
+                  } $` ?? `0 $`;
+              }
+
+              delete item.Variants;
+            }
+          }
+
+          if (item.Category) {
+            item.categoryName = item.Category.name;
+            delete item.Category;
+          }
+
+          return item;
+        });
+
+      if (splitFields.length > 0) {
+        const randomItem = getRandomListItem(splitFields, 8);
+        setDataProducts(randomItem);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchListProductsCompact();
+  }, []);
 
   return (
     <Fragment>
@@ -645,12 +693,23 @@ function Profile() {
 
         <div className="relative w-full">
           <div className="relative px-4 mx-8 shadow rounded-3xl">
-            <Heading line>Món ăn yêu thích</Heading>
+            <Heading line>Đề xuất cho bạn</Heading>
             <div className="flex flex-row flex-wrap">
-              <ItemCompact size={"fourItems-onRows"} />
-              <ItemCompact size={"fourItems-onRows"} />
-              <ItemCompact size={"fourItems-onRows"} />
-              <ItemCompact size={"fourItems-onRows"} />
+              {dataProducts.length > 0 &&
+                dataProducts.map((item, index) => {
+                  return (
+                    <ItemCompact
+                      key={index}
+                      data={item}
+                      disabledBtnAdd
+                      onHandleProductDetail={() => {
+                        WindowScrollTop();
+                        navigate(`/product-detail/${item.id}`);
+                      }}
+                    />
+                  );
+                })}
+
             </div>
 
             <Heading line>Đơn hàng đã mua</Heading>
@@ -937,136 +996,134 @@ function Profile() {
       {openModalOrdersDetail && (
         <Modal open={openModalOrdersDetail} close={handleCloseModalOrderDetail}>
           <div className="bg-white p-4 rounded shadow-lg mb-4">
-            <ExportToPNG onExportClick={handleExportClick}>
-              <div className="px-4 py-6">
-                <Heading variant={"primary"}>Chi tiết đơn hàng</Heading>
-                <div className="mb-4 mt-3">
-                  <div className="mb-4 flex">
-                    <h3 className="text-lg font-semibold mb-2 mr-6">
-                      Mã order:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        #
-                        {dataOrderDetail && dataOrderDetail.id
-                          ? dataOrderDetail.id
-                          : Math.floor(Math.random() * 999)}
-                      </span>
-                    </h3>
-                    <h3 className="text-lg font-semibold mb-2">
-                      Ngày đặt hàng:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        {dataOrderDetail && dataOrderDetail.createdAt}
-                      </span>
-                    </h3>
-                  </div>
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Phí dịch vụ:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        {dataOrderDetail && dataOrderDetail.servicesFee
-                          ? `${dataOrderDetail.servicesFee}$`
-                          : "0$"}
-                      </span>
-                    </h3>
-                  </div>
-                  <div className="mb-4 flex-col">
-                    <h3 className="text-lg font-semibold mb-2 mr-6">
-                      Địa chỉ nhận hàng:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        {dataOrderDetail && dataOrderDetail.deliveryAddress}
-                      </span>
-                    </h3>
-                    <h3 className="text-lg font-semibold mb-2">
-                      Thông tin liên hệ:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        {dataOrderDetail && dataOrderDetail.contactInfo}
-                      </span>
-                    </h3>
-                  </div>
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Trạng thái đơn hàng:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        {dataOrderDetail && dataOrderDetail.orderStatus}
-                      </span>
-                    </h3>
-                  </div>
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Phương thức thanh toán:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        {dataOrderDetail && dataOrderDetail.paymentMethod}
-                      </span>
-                    </h3>
-                  </div>
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Trạng thái đơn hàng:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        {dataOrderDetail && dataOrderDetail.paymentStatus}
-                      </span>
-                    </h3>
-                  </div>
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Ngày thanh toán:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        {dataOrderDetail && dataOrderDetail.paymentDate
-                          ? dataOrderDetail.paymentDate
-                          : "Chưa thanh toán"}
-                      </span>
-                    </h3>
-                  </div>
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Thông tin shipper:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        Huệ hay hát
-                      </span>
-                    </h3>
-                  </div>
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">Ghi chú</h3>
-                    <p>{dataOrderDetail && dataOrderDetail.note}</p>
-                  </div>
-
-                  <h3 className="text-lg font-semibold mb-2">
-                    Chi tiết sản phẩm
+            <div className="px-4 py-6 order-detail">
+              <Heading variant={"primary"}>Chi tiết đơn hàng</Heading>
+              <div className="mb-4 mt-3">
+                <div className="mb-4 flex">
+                  <h3 className="text-lg font-semibold mb-2 mr-6">
+                    Mã order:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      #
+                      {dataOrderDetail && dataOrderDetail.id
+                        ? dataOrderDetail.id
+                        : Math.floor(Math.random() * 999)}
+                    </span>
                   </h3>
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr>
-                        <th className="p-2 border">Tên món ăn</th>
-                        <th className="p-2 border">Số lượng</th>
-                        <th className="p-2 border">Kích cỡ</th>
-                        <th className="p-2 border">Giá</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {listPurchasedItems.length > 0 &&
-                        listPurchasedItems.map((item, index) => {
-                          return (
-                            <tr key={index}>
-                              <td className="p-2 border">{item.name}</td>
-                              <td className="p-2 border">{item.quantity}</td>
-                              <td className="p-2 border">{item.size}</td>
-                              <td className="p-2 border">{`${item.price}$`}</td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                  </table>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Ngày đặt hàng:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      {dataOrderDetail && dataOrderDetail.createdAt}
+                    </span>
+                  </h3>
+                </div>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Phí dịch vụ:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      {dataOrderDetail && dataOrderDetail.servicesFee
+                        ? `${dataOrderDetail.servicesFee}$`
+                        : "0$"}
+                    </span>
+                  </h3>
+                </div>
+                <div className="mb-4 flex-col">
+                  <h3 className="text-lg font-semibold mb-2 mr-6">
+                    Địa chỉ nhận hàng:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      {dataOrderDetail && dataOrderDetail.deliveryAddress}
+                    </span>
+                  </h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Thông tin liên hệ:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      {dataOrderDetail && dataOrderDetail.contactInfo}
+                    </span>
+                  </h3>
+                </div>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Trạng thái đơn hàng:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      {dataOrderDetail && dataOrderDetail.orderStatus}
+                    </span>
+                  </h3>
+                </div>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Phương thức thanh toán:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      {dataOrderDetail && dataOrderDetail.paymentMethod}
+                    </span>
+                  </h3>
+                </div>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Trạng thái đơn hàng:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      {dataOrderDetail && dataOrderDetail.paymentStatus}
+                    </span>
+                  </h3>
+                </div>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Ngày thanh toán:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      {dataOrderDetail && dataOrderDetail.paymentDate
+                        ? dataOrderDetail.paymentDate
+                        : "Chưa thanh toán"}
+                    </span>
+                  </h3>
+                </div>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Thông tin shipper:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      Huệ hay hát
+                    </span>
+                  </h3>
+                </div>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">Ghi chú</h3>
+                  <p>{dataOrderDetail && dataOrderDetail.note}</p>
+                </div>
 
-                  <div className="my-4 flex justify-end">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Tổng hóa đơn:{" "}
-                      <span className="text-base text-gray-600 font-medium">
-                        {dataOrderDetail && `${dataOrderDetail.totalPrice}$`}
-                      </span>
-                    </h3>
-                  </div>
+                <h3 className="text-lg font-semibold mb-2">
+                  Chi tiết sản phẩm
+                </h3>
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr>
+                      <th className="p-2 border">Tên món ăn</th>
+                      <th className="p-2 border">Số lượng</th>
+                      <th className="p-2 border">Kích cỡ</th>
+                      <th className="p-2 border">Giá</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {listPurchasedItems.length > 0 &&
+                      listPurchasedItems.map((item, index) => {
+                        return (
+                          <tr key={index}>
+                            <td className="p-2 border">{item.name}</td>
+                            <td className="p-2 border">{item.quantity}</td>
+                            <td className="p-2 border">{item.size}</td>
+                            <td className="p-2 border">{`${item.price}$`}</td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+
+                <div className="my-4 flex justify-end">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Tổng hóa đơn:{" "}
+                    <span className="text-base text-gray-600 font-medium">
+                      {dataOrderDetail && `${dataOrderDetail.totalPrice}$`}
+                    </span>
+                  </h3>
                 </div>
               </div>
-            </ExportToPNG>
+            </div>
 
             <div className="flex justify-end">
               {dataOrderDetail &&
@@ -1095,7 +1152,7 @@ function Profile() {
                 )}
               <Button
                 variant={TBUTTON_VARIANT.PRIMARY}
-                onClick={handleExportClick}
+                onClick={() => {}}
               >
                 Xuất bill
               </Button>

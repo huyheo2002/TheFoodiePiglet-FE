@@ -35,7 +35,7 @@ function Header() {
     listNotify.length > 0 && listNotify.slice(0, numberOfItemsToShow);
 
   const listLanguages = ["languages-vi", "languages-en"];
-  const { dataUser } = useAuth();
+  const { dataUser, setDataUser } = useAuth();
   useEffect(() => {
     handleGetAllNotify();
   }, []);
@@ -65,6 +65,7 @@ function Header() {
 
   const handleLogout = () => {
     dispatch(handleLogoutRedux());
+    // setDataUser(null);
   };
 
   return (
