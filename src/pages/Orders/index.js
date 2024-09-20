@@ -13,6 +13,9 @@ import WindowScrollTop from "../../utils/windowScroll";
 import GlobalContext from "../../contexts/globalContext";
 import { TBUTTON_VARIANT } from "../../types/button";
 import toast from "react-hot-toast";
+import Heading from "../../components/Heading";
+import Map from "../../components/Map";
+import SearchCommon from "../../components/Search/SearchCommon";
 
 function Orders() {
   const { showCongrat, setShowCongrat } = useContext(GlobalContext);
@@ -222,6 +225,17 @@ function Orders() {
 
     return slots;
   }, []);
+
+  // new map
+  const [openModalMap, setOpenModalMap] = useState(false);
+
+  const handleOpenModalMap = () => {
+    setOpenModalMap(true);
+  };
+
+  const handleCloseModalMap = () => {
+    setOpenModalMap(false);
+  };
 
   return (
     <Fragment>
@@ -483,6 +497,10 @@ function Orders() {
         </div>
       </form>
 
+      <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleOpenModalMap}>
+        Test Open Map
+      </Button>
+
       {openModalOrders && (
         <Modal open={openModalOrders} close={handleCloseModalOrders}>
           <form className="bg-white p-6 rounded-lg shadow-lg w-80 mx-auto">
@@ -593,6 +611,29 @@ function Orders() {
               </Button>
             </div>
           </div>
+        </div>
+      </Modal>
+
+      <Modal
+        open={openModalMap}
+        close={handleCloseModalMap}
+        className={"w-[calc(100%-32px)]"}
+      >
+        <Heading variant={"primary"}>Mapping</Heading>
+        <SearchCommon listData={[
+          "Hà nội", "Thái lan", "Hàn quốc", "8 Phạm hùng", "Đông anh", "Sóc sơn"
+        ]}/>
+        <div className="w-full h-[34rem]">
+          <Map/>
+        </div>
+        <div className="flex justify-end">
+          <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
+          <Button
+            variant={TBUTTON_VARIANT.PRIMARY}
+            onClick={handleCloseModalMap}
+          >
+            Cancel
+          </Button>
         </div>
       </Modal>
     </Fragment>

@@ -34,9 +34,7 @@ function Modal({ children, onClick, open, close, className, custom }) {
       <div
         className={clsx(
           "bg-white w-[800px] max-w-[calc(100%-32px)] flex justify-between flex-col rounded-xl px-4 py-3 max-h-[calc(100vh-65px)] overflow-y-scroll scrollbar",
-          {
-            className: className,
-          }
+          className
         )}
         onClick={(e) => e.stopPropagation()}
       >

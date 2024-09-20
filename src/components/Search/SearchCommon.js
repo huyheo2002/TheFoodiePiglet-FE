@@ -1,20 +1,14 @@
 import HeadlessTippy from "@tippyjs/react/headless";
 import clsx from "clsx";
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useRef } from "react";
 import { SearchIcon, CloseCircleIcon, SpinnerIcon } from "../Icons";
 import useDebounce from "../../hooks/useDebounce";
-import * as chatServices from "../../services/chatServices";
-import GlobalContext from "../../contexts/globalContext";
-import { useAuth } from "../../contexts/authContext";
 
-function Search({ ItemSearchResult, type, listData }) {
-  const { setIdChatRoom } = useContext(GlobalContext);
+function SearchCommon({ listData, handleOnClick }) {
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [showResult, setShowResult] = useState(true);
   const [loading, setLoading] = useState(false);
-
-  const { dataUser } = useAuth();
 
   const inputRef = useRef();
 
@@ -54,33 +48,15 @@ function Search({ ItemSearchResult, type, listData }) {
       Array.isArray(listData) &&
       listData.length > 0 &&
       listData.filter((item) => {
-        return item.name.toLowerCase().includes(debounced.toLowerCase());
+        return item.toLowerCase().includes(debounced.toLowerCase());
       });
 
+    console.log("filteredData", filteredData);
     if (filteredData.length > 0) {
       setSearchResult(filteredData);
       setLoading(false);
     }
   }, [debounced]);
-
-  // USER
-  const handleSubmitCreateChatRoom = async (dataItem) => {
-    const data = new FormData();
-    data.set("name", `${dataItem.name} (${dataItem.Role.name})`);
-    data.set("participantId", dataItem.id);
-    if (dataUser) {
-      data.set("roomCreatorId", dataUser.user.id);
-    }
-
-    try {
-      const respon = await chatServices.handleCreateChatroom(data);
-      if (respon) {
-        setIdChatRoom(respon.room.id);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <HeadlessTippy
@@ -89,7 +65,7 @@ function Search({ ItemSearchResult, type, listData }) {
       render={(attrs) => (
         <div
           className={clsx(
-            "relative top-0 left-0 right-0 min-w-[280px] bg-white p-2 shadow-md"
+            "relative top-0 left-0 min-w-[280px] bg-white p-2 shadow-md"
           )}
           tabIndex="-1"
           {...attrs}
@@ -103,26 +79,26 @@ function Search({ ItemSearchResult, type, listData }) {
             )}
           >
             {searchResult.map((result, index) => {
-              if (ItemSearchResult && type === "User") {
-                return (
-                  <ItemSearchResult
-                    key={index}
-                    type={"User"}
-                    data={result}
-                    onClick={() => {
-                      handleClickItem();
-                      handleSubmitCreateChatRoom(result);
-                    }}
-                  />
-                );
-              } else {
-                return null;
-              }
+              return (
+                <li
+                  key={index}
+                  className={clsx(
+                    "flex items-center justify-between p-2 cursor-pointer transition-all duration-150 ease-in-out"
+                  )}
+                  onClick={() => {
+                    handleClickItem();
+                    handleOnClick && handleOnClick();
+                  }}
+                >
+                  <span className="text-gray-800 font-medium">{result}</span>
+                </li>
+              );
             })}
           </ul>
         </div>
       )}
       onClickOutside={handleHideResult}
+      placement="bottom-start"
     >
       <div
         className={
@@ -176,4 +152,4 @@ function Search({ ItemSearchResult, type, listData }) {
   );
 }
 
-export default Search;
+export default SearchCommon;
