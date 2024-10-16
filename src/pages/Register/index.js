@@ -9,6 +9,8 @@ import { useState } from "react";
 import * as userServices from "../../services/userServices";
 import { TBUTTON_VARIANT } from "../../types/button";
 import toast from "react-hot-toast";
+import logo from "../../assets/images/Base/logo-transparent.png";
+import intro1 from "../../assets/images/introduce/intro-3.jpg";
 
 function Register() {
   const { t } = useTranslation(["auth"]);
@@ -98,13 +100,18 @@ function Register() {
   };
 
   return (
-    <div className="flex justify-center items-center w-full h-[100vh] relative">
+    <div className="flex justify-center items-center w-full h-[100vh] relative bg-center bg-cover bg-no-repeat"
+      style={{
+        backgroundImage: `url('${intro1}')`,
+      }}
+    >
       <div className="w-1/3 absolute z-20">
         <form
           autoComplete="off"
-          className="flex justify-between flex-col w-full min-h-fit max-h-[calc(100vh-64px)] px-4 py-3 rounded-lg bg-white shadow-black-b-0.75"
+          className="flex justify-between flex-col w-full min-h-fit max-h-[calc(100vh-64px)] px-4 py-3 rounded-lg bg-white shadow-black-b-0.75 relative"
           onSubmit={handleSubmit}
         >
+          <img src={logo} className="h-20 h-20 absolute z-20 top-0 right-0 hidden xl:block"/>
           <div className="w-full h-full">
             <Heading variant={"modal"}>{t("login.heading.register")}</Heading>
             <div className="px-4 py-2">

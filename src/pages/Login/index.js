@@ -24,6 +24,9 @@ import toast from "react-hot-toast";
 import * as commonServices from "../../services/commonServices";
 import { useAuth } from "../../contexts/authContext";
 
+import intro1 from "../../assets/images/introduce/intro-3.jpg";
+import logo from "../../assets/images/Base/logo-transparent.png";
+
 function Login() {
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
@@ -93,7 +96,6 @@ function Login() {
     try {
       const respon = await commonServices.handleDecoded(accessToken);
       if (respon?.errCode === 0) {
-
         return respon.decoded;
       }
     } catch (error) {
@@ -112,7 +114,7 @@ function Login() {
         const dataUser = await decodeToken(dataUserRedux.token);
 
         if (dataUser) {
-          setDataUser(dataUser)
+          setDataUser(dataUser);
           if (dataUser.user.roleName === "User") {
             navigate("/");
           } else {
@@ -123,19 +125,22 @@ function Login() {
     };
 
     fetchData();
-  }, [dataUserRedux])
+  }, [dataUserRedux]);
 
   // LOGIN GOOGLE
   const handleLoginGoogle = async () => {
-    window.open(`${process.env.REACT_APP_BACKEND_URL}/api/auth/google`, "_self")
-  }
+    window.open(
+      `${process.env.REACT_APP_BACKEND_URL}/api/auth/google`,
+      "_self"
+    );
+  };
 
   // handle forgot password
   const handleCloseModalForgotPassword = () => {
     setIsForgotPassword(false);
     inputClearFP();
     inputClearUsernameFP();
-  }
+  };
 
   const onChangeInputFP = (e) => {
     setValueEmailFP(e.target.value);
@@ -170,25 +175,29 @@ function Login() {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const handleCloseModalSendRequest = () => {
     setOpenModalSendRequest(false);
-  }
+  };
 
   return (
     <Fragment>
-      <div className="flex justify-center items-center w-full h-[100vh] relative">
+      <div
+        className="flex justify-center items-center w-full h-[100vh] relative bg-center bg-cover bg-no-repeat"
+        style={{
+          backgroundImage: `url('${intro1}')`,
+        }}
+      >
         <div className="w-1/3 absolute z-20">
           <form
             autoComplete="off"
-            className="flex justify-between flex-col w-full min-h-fit max-h-[calc(100vh-64px)] px-4 py-3 rounded-lg bg-white shadow-black-b-0.75"
+            className="flex justify-between flex-col w-full min-h-fit max-h-[calc(100vh-64px)] px-4 py-3 rounded-lg bg-white shadow-black-b-0.75 relative"
             onSubmit={handleSubmit}
           >
+            <img src={logo} className="h-20 h-20 absolute z-20 top-0 right-0 hidden xl:block"/>
             <div className="w-full h-full">
-              <Heading variant={"modal"}>
-                {t("login.heading.login")}
-              </Heading>
+              <Heading variant={"modal"}>{t("login.heading.login")}</Heading>
               <div className="px-4 py-2">
                 {inputs.map((item, index) => {
                   return (
@@ -229,17 +238,23 @@ function Login() {
                 >
                   {t("login.button.login")}
                 </Button>
-                <Button to={"/"} variant={TBUTTON_VARIANT.PRIMARY} onClick={() => handleBackHome()}>
+                <Button
+                  to={"/"}
+                  variant={TBUTTON_VARIANT.PRIMARY}
+                  onClick={() => handleBackHome()}
+                >
                   {t("login.button.back")}
                 </Button>
               </div>
               <div className="flex justify-between px-3 py-2">
-                <a className="text-primary font-normal text-base capitalize cursor-pointer hover:text-primary-hover transition-all"
+                <a
+                  className="text-primary font-normal text-base capitalize cursor-pointer hover:text-primary-hover transition-all"
                   onClick={() => setIsForgotPassword(true)}
                 >
                   {t("login.other.support")}
                 </a>
-                <Link className="text-primary font-normal text-base capitalize cursor-pointer hover:text-primary-hover transition-all"
+                <Link
+                  className="text-primary font-normal text-base capitalize cursor-pointer hover:text-primary-hover transition-all"
                   to={"/register"}
                 >
                   {t("login.other.register")}
@@ -308,7 +323,10 @@ function Login() {
           </div>
           <div className="flex justify-end">
             <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>
-            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalForgotPassword}>
+            <Button
+              variant={TBUTTON_VARIANT.PRIMARY}
+              onClick={handleCloseModalForgotPassword}
+            >
               Cancel
             </Button>
           </div>
@@ -327,7 +345,10 @@ function Login() {
         </div>
 
         <div className="flex justify-end">
-          <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleCloseModalSendRequest}>
+          <Button
+            variant={TBUTTON_VARIANT.PRIMARY}
+            onClick={handleCloseModalSendRequest}
+          >
             Cancel
           </Button>
         </div>

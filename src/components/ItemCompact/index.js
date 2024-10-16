@@ -1,10 +1,6 @@
 import { useTranslation } from "react-i18next";
 import Button from "../Button";
-import {
-  StarFillIcon,
-  StarHalfIcon,
-  StarIcon,
-} from "../Icons";
+import { StarFillIcon, StarHalfIcon, StarIcon } from "../Icons";
 import Image from "../Image";
 import clsx from "clsx";
 import ItemInCart from "./ItemInCart";
@@ -49,7 +45,9 @@ function ItemCompact({
           .map((_, i) => (
             <StarIcon key={i} className="text-yellow-300" />
           ))}
-        <span className="text-xs ml-2 text-gray-400">{getRandomReviews(10, 50)} reviews</span>
+        <span className="text-xs ml-2 text-gray-400">
+          {getRandomReviews(10, 50)} reviews
+        </span>
       </span>
     );
   };
@@ -70,11 +68,19 @@ function ItemCompact({
 
   return (
     <div
-      className={clsx("productCompact group", {
+      className={clsx("productCompact group relative", {
         "w-[calc(25%-1.5rem)]": size === "fourItems-onRows",
         "w-[calc(33.33%-1.5rem)]": size === "threeItems-onRows",
       })}
     >
+      {!data?.isAvailable && (
+        <span className="absolute min-w-[140px] max-w-[140px] text-center top-0 left-0 bg-red-500 text-white text-lg font-semibold px-4 py-2 rotate-[-45deg] translate-x-[-30%] translate-y-[30%]">
+          Close
+        </span>
+      )}
+
+      {data.isAvailable === false && <div className="absolute inset-0 bg-black opacity-50 z-10"></div>}
+
       <Image
         src={data ? data.image : "https://www.koreandxb.com/images/food1.jpg"}
         effectScale
@@ -122,10 +128,11 @@ function ItemCompact({
             <Button
               variant={TBUTTON_VARIANT.PRIMARY}
               onClick={() => {
-                if (onhandleAddToCart) {
+                if (onhandleAddToCart && data.isAvailable !== false) {
                   onhandleAddToCart();
                 }
               }}
+              disabled
             >
               {t("button.addToCart")}
             </Button>
@@ -133,10 +140,11 @@ function ItemCompact({
           <Button
             variant={TBUTTON_VARIANT.PRIMARY}
             onClick={() => {
-              if (onHandleProductDetail) {
+              if (onHandleProductDetail && data.isAvailable !== false) {
                 onHandleProductDetail();
               }
             }}
+            disabled
           >
             {t("button.detail")}
           </Button>

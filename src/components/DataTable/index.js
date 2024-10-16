@@ -44,7 +44,6 @@ function DataTable({
   const [permissionRead, setPermissionRead] = useState(false);
   const [permissionUpdate, setPermissionUpdate] = useState(false);
   const [permissionDelete, setPermissionDelete] = useState(false);
-
   // csv
   const [transformedData, setTransformedData] = useState([]);
 
@@ -156,12 +155,6 @@ function DataTable({
     setTransformedData(newDataTransformedData);
   }, [data]);
 
-  const [valueFilter, setValueFilter] = useState();
-
-  const onFilterChange = (e) => {
-    setValueFilter(e.target.value);
-  }
-
   return (
     <Fragment>
       <div className="flex justify-end my-2">
@@ -175,20 +168,6 @@ function DataTable({
         )}
         {listPermission && listPermissionCurrentInPage && permissionCreate ? (
           <Fragment>
-            <div className="w-96 flex">
-              <InputField
-                onChange={onFilterChange}
-                clear={() => setValueFilter("")}
-                value={valueFilter}
-                onClick={() => {}}
-                type="text"
-                placeholder="Filter items here"
-              />
-              <Button
-                variant={TBUTTON_VARIANT.PRIMARY}
-                iconLeft={<SearchIcon className={"!w-6 !h-6"} />}
-              />
-            </div>
             <Button
               variant={TBUTTON_VARIANT.EXCEL}
               onClick={() => {}}
@@ -284,7 +263,7 @@ function DataTable({
                               }}
                             />
                           ) : (
-                            valueItem
+                            typeof valueItem === "boolean" ? valueItem.toString().charAt(0).toUpperCase() + valueItem.toString().slice(1) : valueItem
                           )}
                         </td>
                       );

@@ -128,7 +128,7 @@ function Header() {
               }
             )}
           >
-            {listNotify.length <= 0 ? (
+            {listNotify.length === 0 ? (
               <div className="flex flex-col">
                 <Image src="" />
                 <p className="font-bold text-center">Thông báo!</p>

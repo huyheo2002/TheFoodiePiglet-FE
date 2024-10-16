@@ -2,14 +2,14 @@ import React from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import logo from "../../assets/images/Base/logo.jpg";
+import currentPositionImg from "../../assets/images/Base/current-position.png";
 
 const position = [51.58, -0.09];
 
 export default function Map() {
   // https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
   const icon = L.icon({
-    iconUrl: logo,
+    iconUrl: currentPositionImg,
     iconSize: [38, 38],
   });
   return (

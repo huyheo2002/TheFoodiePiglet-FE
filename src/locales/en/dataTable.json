@@ -25,7 +25,8 @@
         "phone": "Phone",
         "tableCode": "Table Code",
         "date": "Date",
-        "timeUse": "Time Use"
+        "timeUse": "Time Use",
+        "isAvailable": "Available"
     },
     
     "btnUserAction": {

@@ -15,7 +15,7 @@ function ExportToPNG({ children, onExportClick }) {
     //     } catch (error) {
     //         console.error('Error exporting to PNG:', error);
     //     }
-    // };   
+    // };
 
     return (
         <div className="">

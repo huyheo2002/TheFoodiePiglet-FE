@@ -26,6 +26,11 @@ function ProductManagement() {
   const [listProducts, setListProducts] = useState([]);
   const [listProductsCompact, setListProductsCompact] = useState([]);
   const [optionCategory, setOptionCategory] = useState([]);
+  const [optionProdAvaiable] = useState([
+    { label: "Avaiable", value: true },
+    { label: "Unavaiable", value: false },
+  ]);
+
   const [valuesCreate, setValuesCreate] = useState({});
 
   const manyFeatures = [
@@ -89,6 +94,13 @@ function ProductManagement() {
     },
     {
       id: 6,
+      name: "isAvailable",
+      type: "radio",
+      label: "isAvailable",
+      required: true,
+    },
+    {
+      id: 7,
       name: "image",
       type: "file",
       placeholder: "Enter your image",
@@ -105,6 +117,7 @@ function ProductManagement() {
   const [image, setImage] = useState("");
   const [categoryId, setCategoryId] = useState(-1);
   const [size, setSize] = useState(-1);
+  const [isAvailable, setIsAvailable] = useState(-1);
 
   // data CURD
   const [dataRead, setDataRead] = useState({});
@@ -272,6 +285,7 @@ function ProductManagement() {
   const handleCloseModalCreate = () => {
     setOpenModalCreate(false);
     setCategoryId(-1);
+    setIsAvailable(-1);
     setImage("");
   };
 
@@ -349,10 +363,6 @@ function ProductManagement() {
     if (filterProduct.length > 0) {
       setDataRead(filterProduct[0]);
     }
-    // if (permissionRead) {
-    // } else {
-    //     alert("Bạn chưa được cấp quyền để thực hiện chức năng này")
-    // }
   };
 
   const handleCloseModalRead = () => {
@@ -360,6 +370,7 @@ function ProductManagement() {
 
     // reset input radio
     setCategoryId(-1);
+    setIsAvailable(-1);
   };
 
   // modal update
@@ -391,6 +402,7 @@ function ProductManagement() {
   const handleCloseModalUpdate = () => {
     setOpenModalUpdate(false);
     setCategoryId(-1);
+    setIsAvailable(-1);
     setImage("");
   };
 
@@ -444,6 +456,10 @@ function ProductManagement() {
   // radio
   const handleGetValueCategory = (currentValue) => {
     setCategoryId(currentValue);
+  };
+
+  const handleGetValueProdAvaialbe = (currentValue) => {
+    setIsAvailable(currentValue);
   };
 
   const handleGetValueSize = (currentValue) => {
@@ -507,6 +523,7 @@ function ProductManagement() {
     }
   };
 
+  console.log("listProductsCompact", listProductsCompact);
   return (
     <Fragment>
       <div className="pl-3 w-[calc(100%-1rem)]">
@@ -568,15 +585,33 @@ function ProductManagement() {
                 }
 
                 if (item.type === "radio") {
-                  return (
-                    <InputRadio
-                      key={index}
-                      options={optionCategory}
-                      onChange={handleGetValueCategory}
-                      {...item}
-                      id={Math.floor(Math.random() * 10)}
-                    />
-                  );
+                  switch (item.name) {
+                    case "isAvailable": {
+                      return (
+                        <InputRadio
+                          key={index}
+                          options={optionProdAvaiable}
+                          onChange={handleGetValueProdAvaialbe}
+                          {...item}
+                          id={Math.floor(Math.random() * 10)}
+                        />
+                      );
+                    }
+
+                    case "categoryId": {
+                      return (
+                        <InputRadio
+                          key={index}
+                          options={optionCategory}
+                          onChange={handleGetValueCategory}
+                          {...item}
+                          id={Math.floor(Math.random() * 10)}
+                        />
+                      );
+                    }
+                    default:
+                      return null;
+                  }
                 }
 
                 return (
@@ -635,19 +670,54 @@ function ProductManagement() {
                 );
               }
 
+              // if (item.type === "radio") {
+              //   return (
+              //     <InputRadio
+              //       key={index}
+              //       options={optionCategory}
+              //       onChange={() => {}}
+              //       checked={dataRead.categoryId ?? 1}
+              //       disable
+              //       {...item}
+              //       id={Math.floor(Math.random() * 10)}
+              //     />
+              //   );
+              // }
+
               if (item.type === "radio") {
-                return (
-                  <InputRadio
-                    key={index}
-                    options={optionCategory}
-                    onChange={() => {}}
-                    checked={dataRead.categoryId ?? 1}
-                    disable
-                    {...item}
-                    id={Math.floor(Math.random() * 10)}
-                  />
-                );
+                switch (item.name) {
+                  case "isAvailable": {
+                    return (
+                      <InputRadio
+                        key={index}
+                        options={optionProdAvaiable}
+                        onChange={() => {}}
+                        checked={dataRead.isAvailable ?? 1}
+                        disable
+                        {...item}
+                        id={Math.floor(Math.random() * 10)}
+                      />
+                    );
+                  }
+
+                  case "categoryId": {
+                    return (
+                      <InputRadio
+                        key={index}
+                        options={optionCategory}
+                        onChange={() => {}}
+                        checked={dataRead.categoryId ?? 1}
+                        disable
+                        {...item}
+                        id={Math.floor(Math.random() * 10)}
+                      />
+                    );
+                  }
+                  default:
+                    return null;
+                }
               }
+              //
 
               return (
                 <InputField
@@ -713,20 +783,62 @@ function ProductManagement() {
                 }
 
                 if (item.type === "radio") {
-                  return (
-                    <InputRadio
-                      key={index}
-                      options={optionCategory}
-                      checked={
-                        categoryId !== -1 ? categoryId : valuesUpdate.categoryId
-                      }
-                      onChange={handleGetValueCategory}
-                      edit
-                      {...item}
-                      id={Math.floor(Math.random() * 10)}
-                    />
-                  );
+                  switch (item.name) {
+                    case "isAvailable": {
+                      return (
+                        <InputRadio
+                          key={index}
+                          options={optionProdAvaiable}
+                          checked={
+                            isAvailable !== -1
+                              ? isAvailable
+                              : valuesUpdate.isAvailable
+                          }
+                          onChange={handleGetValueProdAvaialbe}
+                          edit
+                          {...item}
+                          id={Math.floor(Math.random() * 10)}
+                        />
+                      );
+                    }
+
+                    case "categoryId": {
+                      return (
+                        <InputRadio
+                          key={index}
+                          options={optionCategory}
+                          checked={
+                            categoryId !== -1
+                              ? categoryId
+                              : valuesUpdate.categoryId
+                          }
+                          onChange={handleGetValueCategory}
+                          edit
+                          {...item}
+                          id={Math.floor(Math.random() * 10)}
+                        />
+                      );
+                    }
+                    default:
+                      return null;
+                  }
                 }
+
+                // if (item.type === "radio") {
+                //   return (
+                //     <InputRadio
+                //       key={index}
+                //       options={optionCategory}
+                //       checked={
+                //         categoryId !== -1 ? categoryId : valuesUpdate.categoryId
+                //       }
+                //       onChange={handleGetValueCategory}
+                //       edit
+                //       {...item}
+                //       id={Math.floor(Math.random() * 10)}
+                //     />
+                //   );
+                // }
 
                 return (
                   <InputField

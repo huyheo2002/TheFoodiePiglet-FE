@@ -25,7 +25,8 @@
         "phone": "Số điện thoại",
         "tableCode": "Mã bàn",
         "date": "Ngày sử dụng",
-        "timeUse": "Thời gian sử dụng"
+        "timeUse": "Thời gian sử dụng",
+        "isAvailable": "Trạng thái sản phẩm"
     },
     
     "btnUserAction": {
