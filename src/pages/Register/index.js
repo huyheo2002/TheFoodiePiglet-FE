@@ -111,7 +111,7 @@ function Register() {
           className="flex justify-between flex-col w-full min-h-fit max-h-[calc(100vh-64px)] px-4 py-3 rounded-lg bg-white shadow-black-b-0.75 relative"
           onSubmit={handleSubmit}
         >
-          <img src={logo} className="h-20 h-20 absolute z-20 top-0 right-0 hidden xl:block"/>
+          {/* <img src={logo} className="h-20 h-20 absolute z-20 top-0 right-0 hidden xl:block"/> */}
           <div className="w-full h-full">
             <Heading variant={"modal"}>{t("login.heading.register")}</Heading>
             <div className="px-4 py-2">

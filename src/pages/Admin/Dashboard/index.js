@@ -1,47 +1,16 @@
 import { useEffect, useState } from "react";
-import NotificationCard from "../../../components/NotificationCard";
 import StatisticelCard from "../../../components/StatisticelCard";
 import clsx from "clsx";
-import * as notificationServices from "../../../services/notificationServices";
+import * as productServices from "../../../services/productServices";
+import * as paymentServices from "../../../services/paymentServices";
 import { useNavigate } from "react-router-dom";
 import RevenueChart from "../../../components/Chart/RevenueChart";
 import OrderDistributionChart from "../../../components/Chart/OrderDistributionChart";
 import OrdersPerHourChart from "../../../components/Chart/OrdersPerHourChart";
-import EmployeePerformanceChart from "../../../components/Chart/EmployeePerformanceChart";
 import FoodTypeDistributionChart from "../../../components/Chart/FoodTypeDistributionChart";
 import RevenueByFoodCategoryChart from "../../../components/Chart/RevenueByFoodCategoryChart ";
 import WindowScrollTop from "../../../utils/windowScroll";
 
-const revenueData = {
-  labels: ["Tháng 1", "Tháng 2", "Tháng 3"],
-  values: [500000, 700000, 600000],
-};
-
-const orderDistributionData = {
-  labels: ["Fast Food", "Dessert", "Drink"],
-  values: [40, 25, 35],
-};
-
-const ordersPerHourData = {
-  labels: ["8h", "10h", "12h", "14h", "16h"],
-  values: [10, 20, 30, 15, 25],
-};
-
-const employeePerformanceData = [
-  {
-    name: "Nhân viên A",
-    performance: [80, 90, 70, 85],
-  },
-  {
-    name: "Nhân viên B",
-    performance: [70, 80, 75, 80],
-  },
-];
-
-const foodTypeDistributionData = {
-  labels: ["Món chính", "Món phụ", "Đồ uống", "Tráng miệng"],
-  values: [300, 150, 100, 80],
-};
 const revenueByCategoryData = {
   labels: ["Đồ uống", "Món tráng miệng", "Món chính"],
   values: [200000, 150000, 400000],
@@ -49,26 +18,47 @@ const revenueByCategoryData = {
 
 function DashBoard() {
   const navigate = useNavigate();
-  const [listNotify, setListNotify] = useState([]);
-  const numberOfItemsToShow = 4;
-  const visibleList =
-    listNotify.length > 0 && listNotify.slice(0, numberOfItemsToShow);
+  const [categoriesProduct, setCategoriesProduct] = useState({
+    labels: [],
+    values: []
+  });
 
-  const handleGetAllNotify = async () => {
-    const respon = await notificationServices.handleGetAllNotification();
-    if (respon && respon.errCode === 0) {
-      setListNotify(respon.notify);
+  const [revenueData, setRevenueData] = useState();
+  const [ordersPerHourData, setOrdersPerHourData] = useState();
+
+  const fetchGetProductCountByCategories = async () => {
+    let response = await productServices.handleGetProductCountByCategories();
+    if (response && response?.errCode === 0) {
+      const updatedCategories = { ...categoriesProduct };
+
+      response.countProductOfCategories.forEach((item) => {
+        if (!updatedCategories.labels.includes(item.category)) {
+          updatedCategories.labels.push(item.category);
+          updatedCategories.values.push(item.count);
+        }
+      });
+
+      setCategoriesProduct(updatedCategories);
+    }
+  };
+
+  const fetchListPayments = async () => {
+    const response = (await paymentServices.getRevenueData()) ?? null;
+    if (response && response?.errCode === 0) {
+      setRevenueData(response.revenueData.revenueDataByMonth);
+      setOrdersPerHourData(response.revenueData.revenueDataByHour);
     }
   };
 
   useEffect(() => {
-    handleGetAllNotify();
+    fetchGetProductCountByCategories();
+    fetchListPayments();
   }, []);
 
   return (
     <div className="pl-3 w-[calc(100%-1rem)]">
       <div className="flex justify-between">
-        <div className="w-[calc(75%-1rem)] pr-4 ">
+        <div className="w-full">
           <div className="w-full h-auto bg-white rounded-lg px-3 py-4">
             <h1 className="mb-3 text-2xl font-semibold capitalize">
               Dashboard
@@ -142,35 +132,33 @@ function DashBoard() {
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">
                     Revenue Chart
                   </h2>
-                  <RevenueChart data={revenueData} />
+                  {revenueData &&
+                    <RevenueChart data={revenueData} />
+                  }
                 </div>
 
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">
                     Order Distribution Chart
                   </h2>
-                  <OrderDistributionChart data={orderDistributionData} />
+                  {categoriesProduct &&
+                    <OrderDistributionChart data={categoriesProduct} />
+                  }
                 </div>
 
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">
                     Orders Per Hour Chart
                   </h2>
-                  <OrdersPerHourChart data={ordersPerHourData} />
+                  {ordersPerHourData &&
+                    <OrdersPerHourChart data={ordersPerHourData} />
+                  }
                 </div>
-
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                    Employee Performance Chart
-                  </h2>
-                  <EmployeePerformanceChart data={employeePerformanceData} />
-                </div>
-
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">
                     Food Type Distribution Chart
                   </h2>
-                  <FoodTypeDistributionChart data={foodTypeDistributionData} />
+                  <FoodTypeDistributionChart data={categoriesProduct} />
                 </div>
 
                 <div className="bg-white p-6 rounded-lg shadow-md">
@@ -180,37 +168,6 @@ function DashBoard() {
                   <RevenueByFoodCategoryChart data={revenueByCategoryData} />
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* right */}
-        <div className="w-1/4">
-          <div className="bg-white rounded-lg px-3 py-4 ">
-            <h1 className="mb-3 text-2xl font-semibold capitalize">Update</h1>
-            <div className="">
-              {visibleList.length > 0 ? (
-                visibleList.map((item, index) => {
-                  return (
-                    <NotificationCard
-                      data={item}
-                      key={index}
-                      onClick={() => navigate("/system/notify-detail")}
-                    />
-                  );
-                })
-              ) : (
-                <div className="flex flex-col items-center justify-center p-4 bg-white">
-                  <img
-                    src="https://via.placeholder.com/100"
-                    alt="No notifications"
-                    className="w-full h-fit mb-3 opacity-50"
-                  />
-                  <p className="text-gray-600 mb-4 text-center">
-                    Hiện bạn chưa có thông báo nào.
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </div>

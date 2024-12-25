@@ -523,7 +523,6 @@ function ProductManagement() {
     }
   };
 
-  console.log("listProductsCompact", listProductsCompact);
   return (
     <Fragment>
       <div className="pl-3 w-[calc(100%-1rem)]">

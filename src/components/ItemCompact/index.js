@@ -132,7 +132,7 @@ function ItemCompact({
                   onhandleAddToCart();
                 }
               }}
-              disabled
+              // disabled
             >
               {t("button.addToCart")}
             </Button>
@@ -144,7 +144,7 @@ function ItemCompact({
                 onHandleProductDetail();
               }
             }}
-            disabled
+            // disabled
           >
             {t("button.detail")}
           </Button>

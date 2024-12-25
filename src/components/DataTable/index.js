@@ -89,11 +89,6 @@ function DataTable({
   // pages
   const [postPerPage, setPostPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentPostv2, setCurrentPostv2] = useState([]);
-
-  // useEffect(() => {
-  //   setCurrentPostv2(data.slice(indexOfFirstPost, indexOfLastPost));
-  // }, [data, valueFilter]);
 
   let indexOfLastPost = 0;
   let indexOfFirstPost = 0;
@@ -263,7 +258,8 @@ function DataTable({
                               }}
                             />
                           ) : (
-                            typeof valueItem === "boolean" ? valueItem.toString().charAt(0).toUpperCase() + valueItem.toString().slice(1) : valueItem
+                            typeof valueItem === "boolean" ? "Có sẵn" : valueItem
+                            // typeof valueItem === "boolean" ? valueItem.toString().charAt(0).toUpperCase() + valueItem.toString().slice(1) : valueItem
                           )}
                         </td>
                       );

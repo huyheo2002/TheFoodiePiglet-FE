@@ -10,6 +10,12 @@ export const getAllReserveTable = () => {
   return res;
 };
 
+export const getReserveTableAvailable = (dateStart, dateEnd) => {
+  return axios.get(`/api/get-reserve-tables-available`, {
+    params: { dateStart, dateEnd },
+  });
+};
+
 export const createReserveTable = (data) => {
   let res = axios.post("/api/create-reserve-tables", data)
 

@@ -112,19 +112,14 @@ function Orders() {
     handleGetAllTable();
   }, []);
 
-  // get table with cate
-  const getTableDC =
-    dataTable.length > 0 &&
-    dataTable.filter((item) => item.name.includes("DC"));
-  const getTableDR =
-    dataTable.length > 0 &&
-    dataTable.filter((item) => item.name.includes("DR"));
-  const getTableFR =
-    dataTable.length > 0 &&
-    dataTable.filter((item) => item.name.includes("FR"));
-  const getTableSV =
-    dataTable.length > 0 &&
-    dataTable.filter((item) => item.name.includes("SV"));
+  const filterTableByType = (type) => {
+    return dataTable?.length > 0 ? dataTable.filter((item) => item.name.includes(type)) : [];
+  };
+
+  const getTableDC = filterTableByType("DC");
+  const getTableDR = filterTableByType("DR");
+  const getTableFR = filterTableByType("FR");
+  const getTableSV = filterTableByType("SV");
 
   // handle create user
   const onChangeInput = (e) => {
@@ -237,269 +232,338 @@ function Orders() {
     setOpenModalMap(false);
   };
 
+  // handle table
+  useEffect(() => {
+    if (selectedDate && selectedTimeEnd && selectedTimeStart) {
+      const getNewDateStart = `${selectedDate}T${selectedTimeStart}:00`;
+      const getNewDateEnd = `${selectedDate}T${selectedTimeEnd}:00`;
+
+      const callApi = async () => {
+        try {
+          const response = await tableServices.getReserveTableAvailable(getNewDateStart, getNewDateEnd);
+
+          if (response?.errCode === 0 && dataTable?.length > 0) {
+            const updatedDataTable = dataTable.map((item) => ({
+              ...item,
+              taken: response.tablesAvaialbeByTime.some(
+                (tableAvailable) => tableAvailable.idTable === item.id
+              ),
+            }));
+
+            setDataTable(updatedDataTable);
+          }
+        } catch (error) {
+          console.error("Error fetching available tables:", error);
+        }
+      };
+
+      callApi();
+    }
+  }, [selectedDate, selectedTimeEnd, selectedTimeStart]);
+
   return (
     <Fragment>
       <div className="container my-6 p-4 flex flex-col bg-gray-400 rounded-md mx-auto relative">
-        <h1 className="text-xl font-semibold text-white my-2">Tầng 1</h1>
-        <div className="mx-auto">
-          <div className="bg-white w-[1280px] p-2 h-[calc(600px+1rem)] flex items-center flex-wrap border-2 border-black">
-            <div className="w-[33.33%] h-[200px] relative border-l-4 border-t-4 border-black ">
-              <div className="absolute left-0 bottom-0 top-0 w-1/5">
-                <div className="w-full h-[40px] border-[1px] border-black"></div>
-                <div className="w-full h-[20px] border-[1px] border-black"></div>
-                <div className="w-full h-[20px] border-[1px] border-black"></div>
-                <div className="w-full h-[40px] border-[1px] border-black"></div>
-                <div className="w-full h-[20px] border-[1px] border-black"></div>
-                <div className="w-full h-[20px] border-[1px] border-black"></div>
-                <div className="w-full h-[20px] border-[1px] border-black"></div>
-                <div className="w-full h-[20px] border-[1px] border-black"></div>
-              </div>
+        <h1 className="text-2xl font-semibold text-white my-2">Đặt bàn</h1>
+        <h3 className="text-lg font-semibold text-white my-2">Vui lòng chọn ngày và giờ sử dụng để chúng tôi có thể gợi ý bàn phù hợp nhất cho bạn.</h3>
+        <form
+          className="w-full mb-6 rounded-lg bg-white px-2 py-3 border-2 border-black flex flex-wrap justify-between"
+          autoComplete="off"
+          onSubmit={handleOnSubmitBooking}
+        >
+          {inputs.map((item, index) => {
+            if (item.name === "idTable") {
+              return (
+                <InputField
+                  key={index}
+                  className={"!w-2/5 mx-8"}
+                  onChange={onChangeInput}
+                  clear={() => inputClear(item.name)}
+                  value={chooseIdTable ? chooseIdTable : ""}
+                  onClick={() => { }}
+                  hidden
+                  {...item}
+                />
+              );
+            }
 
-              <div className="absolute top-0 left-[20%] flex">
-                <div className="w-[20px] h-[40px] border-[1px] border-black"></div>
-                <div className="w-[20px] h-[40px] border-[1px] border-black"></div>
-                <div className="w-[20px] h-[40px] border-[1px] border-black"></div>
-              </div>
+            if (item.type === "date") {
+              return (
+                <DatePicker
+                  key={index}
+                  className={"!w-2/5 mx-8"}
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  minDate={currentDateStr}
+                  {...item}
+                />
+              );
+            }
 
-              <div className="absolute top-[60px] left-[calc(20%+20px)] bottom-0 w-[60px] border-l-4 border-t-2 border-b-0 border-r-2 flex justify-center items-center border-black text-sm font-semibold text-black">
-                <span className="-rotate-90">{t("other.Reception")}</span>
-              </div>
+            if (item.type === "time" && item.name === "timeStart") {
+              const filterListTimeStart = timeSlots.filter((item) => {
+                let currentTime =
+                  parseInt(item.split(":")[0]) * 60 +
+                  parseInt(item.split(":")[1]);
+                let timeEnd =
+                  selectedTimeEnd &&
+                  parseInt(selectedTimeEnd.split(":")[0]) * 60 +
+                  parseInt(selectedTimeEnd.split(":")[1]);
 
-              <div className="absolute top-0 right-[40px] w-[40px] h-[60px] border-4 border-t-0 border-black rounded-es-full"></div>
-              <div className="absolute top-0 right-[80px] w-[40px] h-[60px] border-4 border-t-0 border-black rounded-ee-full"></div>
-            </div>
-            <div className="bg-amber-300 w-[33.33%] h-[200px] relative border-t-4 border-black">
-              <div className="absolute top-[10px] left-0 right-0 flex h-[40px] justify-around items-center">
-                {getTableDC.length > 0 &&
-                  getTableDC.map((item) => {
-                    return (
-                      <div
-                        key={item.id}
-                        onClick={() => handleChooseTable(item.id)}
-                        className={clsx(
-                          "bg-green-400 font-medium text-white border-4 border-green-600 w-[80px] h-[40px] flex justify-center items-center rounded-md cursor-pointer transition-primary hover:shadow-black-b-0.75",
-                          {
-                            "bg-red-400 border-red-600":
-                              chooseIdTable === item.id,
-                          }
-                        )}
-                      >
-                        {t(`table.${item.name.slice(0, 2)}`)}
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-            <div className="bg-amber-500 w-[33.33%] h-[200px] relative border-t-4 border-r-4 border-b-4 border-black">
-              <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-around flex-wrap">
-                {getTableDR.length > 0 &&
-                  getTableDR.map((item) => {
-                    return (
-                      <div
-                        key={item.id}
-                        onClick={() => handleChooseTable(item.id)}
-                        className={clsx(
-                          "relative w-[40px] h-[80px] border-4 flex justify-center items-center my-[5px] mx-[25px] text-sm text-center after:absolute after:w-[2px] after:top-0 after:bottom-0 after:bg-black after:left-[-25px] rounded-md cursor-pointer border-green-600 bg-green-400 font-medium text-white transition-primary hover:shadow-black-b-0.75",
-                          {
-                            "bg-red-400 border-red-600":
-                              chooseIdTable === item.id,
-                          }
-                        )}
-                      >
-                        {t(`table.${item.name.slice(0, 2)}`)}
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-            <div className="bg-gray-400 w-[33.33%] h-[200px] relative border-t-4 border-r-4 border-l-4 border-black">
-              <div className="w-full absolute z-20 left-1/2 top-1/2 flex justify-center items-center -translate-x-1/2 text-xl font-semibold text-white">
-                {t("other.Kitchen")}
-              </div>
+                return currentTime < timeEnd;
+              });
 
-              <div className="absolute top-[80px] right-[0] w-[45px] h-[70px] border-4 border-r-0 border-black flex text-center items-center text-sm font-semibold text-white">
-                {t("other.takeAway")}
-              </div>
+              return (
+                <TimePicker
+                  key={index}
+                  onValueInpChange={handleTimeStartChange}
+                  value={selectedTimeStart}
+                  listOptions={selectedTimeEnd ? filterListTimeStart : timeSlots}
+                  className={"!w-2/5 mx-8"}
+                  {...item}
+                />
+              );
+            }
 
-              <div className="absolute top-0 right-[40px] w-[40px] h-[60px] border-4 border-t-0 border-black rounded-es-full"></div>
-            </div>
-            <div className="bg-amber-300 w-[33.33%] h-[200px] relative"></div>
-            <div className="bg-amber-400 w-[33.33%] h-[200px] relative">
-              <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-around items-center flex-wrap py-5 border-r-4 border-black">
-                {getTableFR.length > 0 &&
-                  getTableFR.map((item) => {
-                    return (
-                      <div
-                        key={item.id}
-                        onClick={() => handleChooseTable(item.id)}
-                        className={clsx(
-                          "w-[80px] mx-5 h-[40px] border-4 flex justify-center items-center rounded-md cursor-pointer border-green-600 bg-green-400 font-medium text-white transition-primary hover:shadow-black-b-0.75",
-                          {
-                            "bg-red-400 border-red-600":
-                              chooseIdTable === item.id,
-                          }
-                        )}
-                      >
-                        {t(`table.${item.name.slice(0, 2)}`)}
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-            <div className="bg-sky-400 w-[33.33%] h-[200px] relative border-b-4 border-r-4 border-l-4 border-black">
-              <div className="absolute top-0 bottom-0 left-0 w-full h-full border-black border-t-4">
-                <div className="w-full h-full flex justify-center items-center text-xl font-semibold text-white">
-                  {t("other.WC")}
-                </div>
-              </div>
-              <div className="absolute top-[30px] right-0 w-[60px] h-[40px] border-4 border-r-0 border-black rounded-ss-full"></div>
-            </div>
-            <div className="bg-amber-300 w-[33.33%] h-[200px] relative border-black border-b-4"></div>
-            <div className="bg-amber-500 w-[33.33%] h-[200px] relative border-black border-4">
-              <div className="absolute top-[30px] left-0 w-[60px] h-[40px] border-4 border-l-0 border-black rounded-ee-full"></div>
-              <div className="absolute top-0 left-[40px] right-0 bottom-0 flex justify-around items-center flex-wrap py-5">
-                {getTableSV.length > 0 &&
-                  getTableSV.map((item) => {
-                    return (
-                      <div
-                        key={item.id}
-                        onClick={() => handleChooseTable(item.id)}
-                        className={clsx(
-                          "w-[80px] mx-8 h-[40px] border-4 flex justify-center items-center rounded-md cursor-pointer border-green-600 bg-green-400 font-medium text-white transition-primary hover:shadow-black-b-0.75",
-                          {
-                            "bg-red-400 border-red-600":
-                              chooseIdTable === item.id,
-                          }
-                        )}
-                      >
-                        {t(`table.${item.name.slice(0, 2)}`)}
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            if (item.type === "time" && item.name === "timeEnd") {
+              const filterListTimeEnd = timeSlots.filter((item) => {
+                let currentTime =
+                  parseInt(item.split(":")[0]) * 60 +
+                  parseInt(item.split(":")[1]);
+                let timeStart =
+                  selectedTimeStart &&
+                  parseInt(selectedTimeStart.split(":")[0]) * 60 +
+                  parseInt(selectedTimeStart.split(":")[1]);
 
-      <form
-        className="w-full mb-6 rounded-lg bg-white px-2 py-3 border-2 border-black flex flex-wrap justify-between"
-        autoComplete="off"
-        onSubmit={handleOnSubmitBooking}
-      >
-        {inputs.map((item, index) => {
-          if (item.name === "idTable") {
+                return currentTime > timeStart;
+              });
+
+              return (
+                <TimePicker
+                  key={index}
+                  onValueInpChange={handleTimeEndChange}
+                  value={selectedTimeEnd}
+                  listOptions={selectedTimeStart ? filterListTimeEnd : timeSlots}
+                  className={"!w-2/5 mx-8"}
+                  {...item}
+                />
+              );
+            }
+
             return (
               <InputField
                 key={index}
                 className={"!w-2/5 mx-8"}
                 onChange={onChangeInput}
+                value={values && values[item.name]}
                 clear={() => inputClear(item.name)}
-                value={chooseIdTable ? chooseIdTable : ""}
-                onClick={() => {}}
+                onClick={() => { }}
                 {...item}
               />
             );
+          })}
+
+          {selectedTimeStart && selectedTimeEnd && selectedDate &&
+            <div className="mx-auto mt-8">
+              <div className="mx-auto">
+                <div className="bg-white w-[1280px] p-2 h-[calc(600px+1rem)] flex items-center flex-wrap border-2 border-black">
+                  <div className="w-[33.33%] h-[200px] relative border-l-4 border-t-4 border-black ">
+                    <div className="absolute left-0 bottom-0 top-0 w-1/5">
+                      <div className="w-full h-[40px] border-[1px] border-black"></div>
+                      <div className="w-full h-[20px] border-[1px] border-black"></div>
+                      <div className="w-full h-[20px] border-[1px] border-black"></div>
+                      <div className="w-full h-[40px] border-[1px] border-black"></div>
+                      <div className="w-full h-[20px] border-[1px] border-black"></div>
+                      <div className="w-full h-[20px] border-[1px] border-black"></div>
+                      <div className="w-full h-[20px] border-[1px] border-black"></div>
+                      <div className="w-full h-[20px] border-[1px] border-black"></div>
+                    </div>
+
+                    <div className="absolute top-0 left-[20%] flex">
+                      <div className="w-[20px] h-[40px] border-[1px] border-black"></div>
+                      <div className="w-[20px] h-[40px] border-[1px] border-black"></div>
+                      <div className="w-[20px] h-[40px] border-[1px] border-black"></div>
+                    </div>
+
+                    <div className="absolute top-[60px] left-[calc(20%+20px)] bottom-0 w-[60px] border-l-4 border-t-2 border-b-0 border-r-2 flex justify-center items-center border-black text-sm font-semibold text-black">
+                      <span className="-rotate-90">{t("other.Reception")}</span>
+                    </div>
+
+                    <div className="absolute top-0 right-[40px] w-[40px] h-[60px] border-4 border-t-0 border-black rounded-es-full"></div>
+                    <div className="absolute top-0 right-[80px] w-[40px] h-[60px] border-4 border-t-0 border-black rounded-ee-full"></div>
+                  </div>
+                  <div className="bg-amber-300 w-[33.33%] h-[200px] relative border-t-4 border-black">
+                    <div className="absolute top-[10px] left-0 right-0 flex h-[40px] justify-around items-center">
+                      {getTableDC.length > 0 &&
+                        getTableDC.map((item) => {
+                          return (
+                            <div
+                              key={item.id}
+                              onClick={() => {
+                                if (!item.taken) {
+                                  handleChooseTable(item.id)
+                                }
+                              }}
+                              className={clsx(
+                                "bg-green-400 font-medium text-white border-4 border-green-600 w-[80px] h-[40px] flex justify-center items-center rounded-md cursor-pointer transition-primary hover:shadow-black-b-0.75",
+                                {
+                                  "bg-red-400 border-red-600":
+                                    chooseIdTable === item.id,
+                                },
+                                {
+                                  "!bg-gray-400 !border-gray-600 cursor-not-allowed":
+                                    item.taken,
+                                }
+                              )}
+                            >
+                              {t(`table.${item.name.slice(0, 2)}`)}
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+                  <div className="bg-amber-500 w-[33.33%] h-[200px] relative border-t-4 border-r-4 border-b-4 border-black">
+                    <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-around flex-wrap">
+                      {getTableDR.length > 0 &&
+                        getTableDR.map((item) => {
+                          return (
+                            <div
+                              key={item.id}
+                              onClick={() => {
+                                if (!item.taken) {
+                                  handleChooseTable(item.id)
+                                }
+                              }}
+                              className={clsx(
+                                "relative w-[40px] h-[80px] border-4 flex justify-center items-center my-[5px] mx-[25px] text-sm text-center after:absolute after:w-[2px] after:top-0 after:bottom-0 after:bg-black after:left-[-25px] rounded-md cursor-pointer border-green-600 bg-green-400 font-medium text-white transition-primary hover:shadow-black-b-0.75",
+                                {
+                                  "bg-red-400 border-red-600":
+                                    chooseIdTable === item.id,
+                                },
+                                {
+                                  "!bg-gray-400 !border-gray-600 cursor-not-allowed":
+                                    item.taken,
+                                }
+                              )}
+                            >
+                              {t(`table.${item.name.slice(0, 2)}`)}
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+                  <div className="bg-gray-400 w-[33.33%] h-[200px] relative border-t-4 border-r-4 border-l-4 border-black">
+                    <div className="w-full absolute z-20 left-1/2 top-1/2 flex justify-center items-center -translate-x-1/2 text-xl font-semibold text-white">
+                      {t("other.Kitchen")}
+                    </div>
+
+                    <div className="absolute top-[80px] right-[0] w-[45px] h-[70px] border-4 border-r-0 border-black flex text-center items-center text-sm font-semibold text-white">
+                      {t("other.takeAway")}
+                    </div>
+
+                    <div className="absolute top-0 right-[40px] w-[40px] h-[60px] border-4 border-t-0 border-black rounded-es-full"></div>
+                  </div>
+                  <div className="bg-amber-300 w-[33.33%] h-[200px] relative"></div>
+                  <div className="bg-amber-400 w-[33.33%] h-[200px] relative">
+                    <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-around items-center flex-wrap py-5 border-r-4 border-black">
+                      {getTableFR.length > 0 &&
+                        getTableFR.map((item) => {
+                          return (
+                            <div
+                              key={item.id}
+                              onClick={() => {
+                                if (!item.taken) {
+                                  handleChooseTable(item.id)
+                                }
+                              }}
+                              className={clsx(
+                                "w-[80px] mx-5 h-[40px] border-4 flex justify-center items-center rounded-md cursor-pointer border-green-600 bg-green-400 font-medium text-white transition-primary hover:shadow-black-b-0.75",
+                                {
+                                  "bg-red-400 border-red-600":
+                                    chooseIdTable === item.id,
+                                },
+                                {
+                                  "!bg-gray-400 !border-gray-600 cursor-not-allowed":
+                                    item.taken,
+                                }
+                              )}
+                            >
+                              {t(`table.${item.name.slice(0, 2)}`)}
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+                  <div className="bg-sky-400 w-[33.33%] h-[200px] relative border-b-4 border-r-4 border-l-4 border-black">
+                    <div className="absolute top-0 bottom-0 left-0 w-full h-full border-black border-t-4">
+                      <div className="w-full h-full flex justify-center items-center text-xl font-semibold text-white">
+                        {t("other.WC")}
+                      </div>
+                    </div>
+                    <div className="absolute top-[30px] right-0 w-[60px] h-[40px] border-4 border-r-0 border-black rounded-ss-full"></div>
+                  </div>
+                  <div className="bg-amber-300 w-[33.33%] h-[200px] relative border-black border-b-4"></div>
+                  <div className="bg-amber-500 w-[33.33%] h-[200px] relative border-black border-4">
+                    <div className="absolute top-[30px] left-0 w-[60px] h-[40px] border-4 border-l-0 border-black rounded-ee-full"></div>
+                    <div className="absolute top-0 left-[40px] right-0 bottom-0 flex justify-around items-center flex-wrap py-5">
+                      {getTableSV.length > 0 &&
+                        getTableSV.map((item) => {
+                          return (
+                            <div
+                              key={item.id}
+                              onClick={() => {
+                                if (!item.taken) {
+                                  handleChooseTable(item.id)
+                                }
+                              }}
+                              className={clsx(
+                                "w-[80px] mx-8 h-[40px] border-4 flex justify-center items-center rounded-md cursor-pointer border-green-600 bg-green-400 font-medium text-white transition-primary hover:shadow-black-b-0.75",
+                                {
+                                  "bg-red-400 border-red-600":
+                                    chooseIdTable === item.id,
+                                },
+                                {
+                                  "!bg-gray-400 !border-gray-600 cursor-not-allowed":
+                                    item.taken,
+                                }
+                              )}
+                            >
+                              {t(`table.${item.name.slice(0, 2)}`)}
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           }
 
-          if (item.type === "date") {
-            return (
-              <DatePicker
-                key={index}
-                className={"!w-2/5 mx-8"}
-                value={selectedDate}
-                onChange={handleDateChange}
-                minDate={currentDateStr}
-                {...item}
-              />
-            );
-          }
-
-          if (item.type === "time" && item.name === "timeStart") {
-            const filterListTimeStart = timeSlots.filter((item) => {
-              let currentTime =
-                parseInt(item.split(":")[0]) * 60 +
-                parseInt(item.split(":")[1]);
-              let timeEnd =
-                selectedTimeEnd &&
-                parseInt(selectedTimeEnd.split(":")[0]) * 60 +
-                  parseInt(selectedTimeEnd.split(":")[1]);
-
-              return currentTime < timeEnd;
-            });
-
-            return (
-              <TimePicker
-                key={index}
-                onValueInpChange={handleTimeStartChange}
-                value={selectedTimeStart}
-                listOptions={selectedTimeEnd ? filterListTimeStart : timeSlots}
-                className={"!w-2/5 mx-8"}
-                {...item}
-              />
-            );
-          }
-
-          if (item.type === "time" && item.name === "timeEnd") {
-            const filterListTimeEnd = timeSlots.filter((item) => {
-              let currentTime =
-                parseInt(item.split(":")[0]) * 60 +
-                parseInt(item.split(":")[1]);
-              let timeStart =
-                selectedTimeStart &&
-                parseInt(selectedTimeStart.split(":")[0]) * 60 +
-                  parseInt(selectedTimeStart.split(":")[1]);
-
-              return currentTime > timeStart;
-            });
-
-            return (
-              <TimePicker
-                key={index}
-                onValueInpChange={handleTimeEndChange}
-                value={selectedTimeEnd}
-                listOptions={selectedTimeStart ? filterListTimeEnd : timeSlots}
-                className={"!w-2/5 mx-8"}
-                {...item}
-              />
-            );
-          }
-
-          return (
-            <InputField
-              key={index}
-              className={"!w-2/5 mx-8"}
-              onChange={onChangeInput}
-              value={values && values[item.name]}
-              clear={() => inputClear(item.name)}
-              onClick={() => {}}
-              {...item}
-            />
-          );
-        })}
-
-        <div className="flex justify-end mt-3 w-full">
-          <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => {}}>
-            Submit
-          </Button>
-          <Button
-            variant={TBUTTON_VARIANT.PRIMARY}
-            onClick={() => {
-              setValues({});
-              setSelectedTimeStart("");
-              setSelectedTimeEnd("");
-              setSelectedDate("");
-              setChooseIdTable(null);
-            }}
-          >
-            Cancel
-          </Button>
-        </div>
-      </form>
-
-      <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={handleOpenModalMap}>
-        Test Open Map
-      </Button>
+          <div className="flex justify-end mt-3 w-full">
+            {selectedTimeStart && selectedTimeEnd && selectedDate && chooseIdTable ?
+              <Button variant={TBUTTON_VARIANT.PRIMARY}>
+                Submit
+              </Button>
+              :
+              <Button disabled>
+                Submit
+              </Button>
+            }
+            <Button
+              variant={TBUTTON_VARIANT.PRIMARY}
+              onClick={() => {
+                setValues({});
+                setSelectedTimeStart("");
+                setSelectedTimeEnd("");
+                setSelectedDate("");
+                setChooseIdTable(null);
+              }}
+            >
+              Remove
+            </Button>
+          </div>
+        </form>
+      </div>
 
       {openModalOrders && (
         <Modal open={openModalOrders} close={handleCloseModalOrders}>
@@ -622,9 +686,9 @@ function Orders() {
         <Heading variant={"primary"}>Mapping</Heading>
         <SearchCommon listData={[
           "Hà nội", "Thái lan", "Hàn quốc", "8 Phạm hùng", "Đông anh", "Sóc sơn"
-        ]}/>
+        ]} />
         <div className="w-full h-[34rem]">
-          <Map/>
+          <Map />
         </div>
         <div className="flex justify-end">
           <Button variant={TBUTTON_VARIANT.PRIMARY}>Submit</Button>

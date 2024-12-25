@@ -6,14 +6,29 @@ import Button from "../../components/Button";
 import { useEffect } from "react";
 import { TBUTTON_VARIANT } from "../../types/button";
 import { useAuth } from "../../contexts/authContext";
+import * as commonServices from "../../services/commonServices";
 
 function ResetPassword() {
   const { dataUser } = useAuth();
   const params = useParams();
   const navigate = useNavigate();
+  const decoded = async () => {
+    if (params.token) {
+      console.log("params.token", params.token);
+      const respon = await commonServices.handleDecoded(params.token);
+      console.log("respon.decoded", respon)
+      if (respon && respon.errCode === 0) {
+          console.log("okok");
+          return respon.decoded.infoUser;
+        } else {
+          navigate("/not-found")
+      }
+    }
+  }
 
   const checkAuth = async () => {
     if (params.token) {
+      console.log("dataUser", dataUser);
       if (dataUser) {
         return dataUser.infoUser;
       } else {
@@ -22,16 +37,17 @@ function ResetPassword() {
 
       return null;
     } else {
-      navigate("/not-found");
+      // navigate("/not-found");
     }
   };
 
   useEffect(() => {
-    checkAuth();
+    // checkAuth();
+    decoded();
   }, []);
 
   const handleSubmit = async () => {
-    await checkAuth().then(async (result) => {
+    await decoded().then(async (result) => {
       const data = new FormData();
       data.set("username", result.username);
       data.set("email", result.email);

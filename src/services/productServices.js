@@ -1,18 +1,23 @@
 import axios from "../utils/axios";
 
 export const getAllProduct = () => {
-  const respon = axios.get("/api/get-all-product");
-  return respon;
+  const response = axios.get("/api/get-all-product");
+  return response;
 }
 
 export const getAllProductCompact = () => {
-  const respon = axios.get("/api/get-all-product-compact");
-  return respon;
+  const response = axios.get("/api/get-all-product-compact");
+  return response;
 }
 
 export const findOneProduct = (id) => {
-  const respon = axios.get(`/api/find-one-product?id=${id}`);
-  return respon;
+  const response = axios.get(`/api/find-one-product?id=${id}`);
+  return response;
+}
+
+export const handleGetProductCountByCategories = () => {
+  const response = axios.get(`/api/get-product-count-by-categories`);
+  return response;
 }
 
 export const handleCreateProduct = (data) => {
