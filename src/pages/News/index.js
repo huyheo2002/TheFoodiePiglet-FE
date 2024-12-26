@@ -18,19 +18,19 @@ function News() {
   const [categoryCurrent, setCategoryCurrent] = useState("");
 
   const fetchDataGenres = async () => {
-    let respon = (await genresServices.getAllGenres()) ?? null;
+    let response = (await genresServices.getAllGenres()) ?? null;
 
-    if (respon) {
-      setListGenres(respon.genres);
-      setCategoryCurrent(respon.genres[0].name);
+    if (response) {
+      setListGenres(response.genres);
+      setCategoryCurrent(response.genres[0].name);
     }
   };
 
   const fetchAllNews = async () => {
-    const respon = (await newsServices.getAllNews("all")) ?? null;
+    const response = (await newsServices.getAllNews("all")) ?? null;
 
-    if (respon && respon.errCode === 0) {
-      const dataListNews = respon.news || [];
+    if (response && response.errCode === 0) {
+      const dataListNews = response.news || [];
       let splitFields =
         dataListNews.length > 0 &&
         dataListNews.map((item) => {

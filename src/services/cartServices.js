@@ -1,13 +1,13 @@
 import axios from "../utils/axios";
 
 export const getAllCart = () => {
-    const respon = axios.get("/api/get-all-cart");
-    return respon;
+    const response = axios.get("/api/get-all-cart");
+    return response;
 }
 
 export const getAllCartItemOfUser = (userId) => {
-    const respon = axios.get(`/api/get-all-cartItem-of-user?userId=${userId}`);
-    return respon;
+    const response = axios.get(`/api/get-all-cartItem-of-user?userId=${userId}`);
+    return response;
 }
 
 export const handleAddToCart = (data) => {

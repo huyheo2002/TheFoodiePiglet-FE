@@ -73,9 +73,9 @@ function ChatWindow() {
   const [openModalPromoteLeader, setOpenModalPromoteLeader] = useState(false);
   const [listMessage, setListMessage] = useState([]);
   const handleFindChatRoomWithID = async (id) => {
-    const respon = await chatServices.findChatRoom(id);
-    if (respon && respon.errCode === 0) {
-      setDataChatRoom(respon.room);
+    const response = await chatServices.findChatRoom(id);
+    if (response && response.errCode === 0) {
+      setDataChatRoom(response.room);
     }
   };
 
@@ -89,13 +89,13 @@ function ChatWindow() {
 
   const handleOpenModalListMember = async () => {
     if (idChatRoom) {
-      const respon = await chatServices.getAllMemberInRoom(idChatRoom);
+      const response = await chatServices.getAllMemberInRoom(idChatRoom);
 
-      if (respon && respon.errCode === 0) {
-        if (Array.isArray(respon.room)) {
-          setListMember(respon.room);
-        } else if (typeof respon.room === "object") {
-          setListMember([respon.room]);
+      if (response && response.errCode === 0) {
+        if (Array.isArray(response.room)) {
+          setListMember(response.room);
+        } else if (typeof response.room === "object") {
+          setListMember([response.room]);
         }
       }
     }
@@ -107,9 +107,9 @@ function ChatWindow() {
   };
 
   const handleGetAllRole = async () => {
-    const respon = await roleServices.getAllRoles("all");
-    if (respon && respon.errCode === 0) {
-      setListRole(respon.roles);
+    const response = await roleServices.getAllRoles("all");
+    if (response && response.errCode === 0) {
+      setListRole(response.roles);
     }
   };
 
@@ -118,22 +118,22 @@ function ChatWindow() {
   }, []);
 
   const handleOpenModalAddMember = async () => {
-    const responUsers = await userServices.getAllUsers("all");
+    const responseUsers = await userServices.getAllUsers("all");
     let listUsers = [];
-    if (responUsers && responUsers.errCode === 0) {
-      listUsers = responUsers.users;
+    if (responseUsers && responseUsers.errCode === 0) {
+      listUsers = responseUsers.users;
     }
 
     let listMemberRoom = [];
     if (idChatRoom) {
-      const responMemberInRoom = await chatServices.getAllMemberInRoom(
+      const responseMemberInRoom = await chatServices.getAllMemberInRoom(
         idChatRoom
       );
-      if (responMemberInRoom && responMemberInRoom.errCode === 0) {
-        if (Array.isArray(responMemberInRoom.room)) {
-          listMemberRoom = responMemberInRoom.room;
-        } else if (typeof responMemberInRoom.room === "object") {
-          listMemberRoom = [responMemberInRoom.room];
+      if (responseMemberInRoom && responseMemberInRoom.errCode === 0) {
+        if (Array.isArray(responseMemberInRoom.room)) {
+          listMemberRoom = responseMemberInRoom.room;
+        } else if (typeof responseMemberInRoom.room === "object") {
+          listMemberRoom = [responseMemberInRoom.room];
         }
       }
     }
@@ -167,13 +167,13 @@ function ChatWindow() {
 
     if (listMemberSelected.length > 0) {
       try {
-        const respon = await chatServices.handleAddMember(data);
-        if (respon && respon.errCode === 0) {
+        const response = await chatServices.handleAddMember(data);
+        if (response && response.errCode === 0) {
           handleFindChatRoomWithID(idChatRoom);
           handleCloseModalAddMember();
           toast.success("Add member successfully");
         } else {
-          toast.error(`Error when add member ${respon.message} `);
+          toast.error(`Error when add member ${response.message} `);
           handleCloseModalAddMember();
         }
       } catch (error) {
@@ -192,13 +192,13 @@ function ChatWindow() {
     data.set("userId", dataUser && dataUser.user.id);
 
     try {
-      const respon = await chatServices.handleChangeNameGroup(data);
+      const response = await chatServices.handleChangeNameGroup(data);
 
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         toast.success("Rename group successfully");
         handleFindChatRoomWithID(idChatRoom);
         handleCloseModalGroupName();
-      } else if (respon.errCode !== 0) {
+      } else if (response.errCode !== 0) {
         toast.error("Rename group failed");
       }
     } catch (error) {
@@ -223,22 +223,22 @@ function ChatWindow() {
   };
 
   const handleOpenModalRemoveMember = async () => {
-    const responUsers = await userServices.getAllUsers("all");
+    const responseUsers = await userServices.getAllUsers("all");
     let listUsers = [];
-    if (responUsers && responUsers.errCode === 0) {
-      listUsers = responUsers.users;
+    if (responseUsers && responseUsers.errCode === 0) {
+      listUsers = responseUsers.users;
     }
 
     let listMemberRoom = [];
     if (idChatRoom) {
-      const responMemberInRoom = await chatServices.getAllMemberInRoom(
+      const responseMemberInRoom = await chatServices.getAllMemberInRoom(
         idChatRoom
       );
-      if (responMemberInRoom && responMemberInRoom.errCode === 0) {
-        if (Array.isArray(responMemberInRoom.room)) {
-          listMemberRoom = responMemberInRoom.room;
-        } else if (typeof responMemberInRoom.room === "object") {
-          listMemberRoom = [responMemberInRoom.room];
+      if (responseMemberInRoom && responseMemberInRoom.errCode === 0) {
+        if (Array.isArray(responseMemberInRoom.room)) {
+          listMemberRoom = responseMemberInRoom.room;
+        } else if (typeof responseMemberInRoom.room === "object") {
+          listMemberRoom = [responseMemberInRoom.room];
         }
       }
     }
@@ -273,8 +273,8 @@ function ChatWindow() {
 
     if (listMemberSelected.length > 0) {
       try {
-        const respon = await chatServices.handleRemoveMember(data);
-        if (respon && respon.errCode === 0) {
+        const response = await chatServices.handleRemoveMember(data);
+        if (response && response.errCode === 0) {
           handleFindChatRoomWithID(idChatRoom);
           handleCloseModalRemoveMember();
           toast.success("Deleted member successfully");
@@ -297,24 +297,24 @@ function ChatWindow() {
     data.set("userId", dataUser && dataUser.user.id);
 
     if (idChatRoom) {
-      const respon = await chatServices.getAllMemberInRoom(idChatRoom);
+      const response = await chatServices.getAllMemberInRoom(idChatRoom);
       let arrListMember = [];
-      if (respon && respon.errCode === 0) {
-        if (Array.isArray(respon.room)) {
-          arrListMember = respon.room;
-        } else if (typeof respon.room === "object") {
-          arrListMember = [respon.room];
+      if (response && response.errCode === 0) {
+        if (Array.isArray(response.room)) {
+          arrListMember = response.room;
+        } else if (typeof response.room === "object") {
+          arrListMember = [response.room];
         }
       }
 
       if (arrListMember.length === 1) {
-        const respon = await chatServices.handleLeaveRoom(data);
-        if (respon && respon.errCode === 0) {
+        const response = await chatServices.handleLeaveRoom(data);
+        if (response && response.errCode === 0) {
           setIdChatRoom(null);
           handleFindChatRoomWithID(idChatRoom);
           toast.success("You had leave room successfully");
-        } else if (respon.errCode !== 0) {
-          toast.error(`Error when leave room ${respon.message}`);
+        } else if (response.errCode !== 0) {
+          toast.error(`Error when leave room ${response.message}`);
         }
       } else if (arrListMember.length > 1) {
         if (
@@ -327,13 +327,13 @@ function ChatWindow() {
           );
           return;
         } else if (dataChatRoom.roomCreatorId !== dataUser.user.id) {
-          const respon = await chatServices.handleLeaveRoom(data);
-          if (respon && respon.errCode === 0) {
+          const response = await chatServices.handleLeaveRoom(data);
+          if (response && response.errCode === 0) {
             setIdChatRoom(null);
             handleFindChatRoomWithID(idChatRoom);
             toast.success("You had leave room successfully");
-          } else if (respon.errCode !== 0) {
-            toast.error(`Error when leave room ${respon.message}`);
+          } else if (response.errCode !== 0) {
+            toast.error(`Error when leave room ${response.message}`);
           }
         }
       }
@@ -351,16 +351,16 @@ function ChatWindow() {
     data.set("userId", idUserPromoteToLeader && idUserPromoteToLeader);
 
     try {
-      const respon = await chatServices.handlePromoteToLeader(data);
+      const response = await chatServices.handlePromoteToLeader(data);
 
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         toast.success(
           "You had tranfer permission leader group for other successfully"
         );
         handleFindChatRoomWithID(idChatRoom);
         handleCloseModalPromoteToLeader();
         handleCloseModalListMember();
-      } else if (respon.errCode !== 0) {
+      } else if (response.errCode !== 0) {
         toast.success("Error when tranfer permission leader group for other");
       }
     } catch (error) {
@@ -375,9 +375,9 @@ function ChatWindow() {
     data.set("content", text);
 
     try {
-      const respon = await chatServices.handleCreateMessage(data);
+      const response = await chatServices.handleCreateMessage(data);
 
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         setShowEmoji(false);
         setText("");
         handleGetAllMessage();
@@ -414,9 +414,9 @@ function ChatWindow() {
   // };
 
   const handleGetAllMessage = async () => {
-    const respon = await chatServices.getAllMessage();
-    if (respon && respon.errCode === 0) {
-      let messages = respon.messages;
+    const response = await chatServices.getAllMessage();
+    if (response && response.errCode === 0) {
+      let messages = response.messages;
       const findMessagesInRoom =
         (idChatRoom &&
           messages.length > 0 &&
@@ -463,8 +463,8 @@ function ChatWindow() {
     data.set("id", id);
 
     try {
-      const respon = await chatServices.handleRecallMessage(data);
-      if (respon && respon.errCode === 0) {
+      const response = await chatServices.handleRecallMessage(data);
+      if (response && response.errCode === 0) {
         handleGetAllMessage();
         setReloadSidebarChat(!reloadSidebarChat);
       }
@@ -478,8 +478,8 @@ function ChatWindow() {
     data.set("id", id);
 
     try {
-      const respon = await chatServices.handleDeleteMessage(data);
-      if (respon && respon.errCode === 0) {
+      const response = await chatServices.handleDeleteMessage(data);
+      if (response && response.errCode === 0) {
         handleGetAllMessage();
       }
     } catch (error) {

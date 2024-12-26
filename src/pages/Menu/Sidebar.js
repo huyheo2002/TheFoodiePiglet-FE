@@ -13,14 +13,14 @@ function Sidebar({ getCategorySelected }) {
   const { currentCategory, setCurrentCategory } = useMenuSelected();
 
   const fetchDataTypeOfProduct = async () => {
-    let respon = (await category.getAllorOneCategoryOfProduct("all")) ?? null;
-    if (respon) {
-      setTypeOfFoods(respon.categories);
+    let response = (await category.getAllorOneCategoryOfProduct("all")) ?? null;
+    if (response) {
+      setTypeOfFoods(response.categories);
 
       if (currentCategory) {
         let filterDataCategory =
-          respon.categories.length > 0
-            ? respon.categories.filter((item) => item.id === currentCategory)
+          response.categories.length > 0
+            ? response.categories.filter((item) => item.id === currentCategory)
             : [];
         if (filterDataCategory.length > 0) {
           getCategorySelected(filterDataCategory);

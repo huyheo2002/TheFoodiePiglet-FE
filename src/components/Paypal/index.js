@@ -49,8 +49,8 @@ const ButtonWrapper = ({ currency, showSpinner, totalPrice, payload }) => {
             });
         }}
         onApprove={(data, actions) => {
-          return actions.order.capture().then(async (respon) => {
-            if (respon.status === "COMPLETED") {
+          return actions.order.capture().then(async (response) => {
+            if (response.status === "COMPLETED") {
               const dataSend = {
                 ...payload,
                 paymentMethod: "Thanh toán online",
@@ -58,17 +58,17 @@ const ButtonWrapper = ({ currency, showSpinner, totalPrice, payload }) => {
               };
 
               if (payload.id) {
-                const responPayment = await paymentServices.handleUpdateOrder(
+                const responsePayment = await paymentServices.handleUpdateOrder(
                   dataSend
                 );
-                if (responPayment && responPayment.errCode === 0) {
+                if (responsePayment && responsePayment.errCode === 0) {
                   setPaymentOnlineSuccess(true);
                   setShowCongrat(true);
                 }
               } else {
-                const responPayment =
+                const responsePayment =
                   await paymentServices.handleCreateNewOrder(dataSend);
-                if (responPayment && responPayment.errCode === 0) {
+                if (responsePayment && responsePayment.errCode === 0) {
                   setPaymentOnlineSuccess(true);
                   setShowCongrat(true);
                   toast.success("Payment successfully")

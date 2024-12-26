@@ -160,9 +160,9 @@ function PaymentManagement() {
   };
 
   const handleGetAllPermissionInPage = async () => {
-    const respon = await permissionServices.getAllPermissionGroup();
-    if (respon && respon.errCode == 0) {
-      const dataPermissionGroup = respon.permissionGroup || [];
+    const response = await permissionServices.getAllPermissionGroup();
+    if (response && response.errCode == 0) {
+      const dataPermissionGroup = response.permissionGroup || [];
 
       const filterCurrentPermissionGroup =
         dataPermissionGroup.length > 0 &&
@@ -171,9 +171,9 @@ function PaymentManagement() {
         );
 
       if (filterCurrentPermissionGroup.length > 0) {
-        const responPermission = await permissionServices.getAllPermission();
-        if (responPermission && responPermission.errCode == 0) {
-          const dataPermission = responPermission.permission || [];
+        const responsePermission = await permissionServices.getAllPermission();
+        if (responsePermission && responsePermission.errCode == 0) {
+          const dataPermission = responsePermission.permission || [];
 
           const filterCurrentPermission =
             dataPermission.length > 0 &&
@@ -196,16 +196,16 @@ function PaymentManagement() {
   }, []);
 
   const fetchListPayments = async () => {
-    const respon = (await paymentServices.getAllPayment()) ?? null;
-    if (respon) {
-      setListPayments(respon.payments);
+    const response = (await paymentServices.getAllPayment()) ?? null;
+    if (response) {
+      setListPayments(response.payments);
     }
   };
 
   const fetchListPaymentsCompact = async () => {
-    const respon = (await paymentServices.getAllPaymentCompact()) ?? null;
-    if (respon && respon.errCode === 0) {
-      const dataListPayments = respon.payments || [];
+    const response = (await paymentServices.getAllPaymentCompact()) ?? null;
+    if (response && response.errCode === 0) {
+      const dataListPayments = response.payments || [];
       let splitFields =
         dataListPayments.length > 0 &&
         dataListPayments.map((item) => {
@@ -378,13 +378,13 @@ function PaymentManagement() {
     }
 
     try {
-      const respon = await paymentServices.handleUpdateOrder(data);
-      if (respon && respon.errCode === 0) {
+      const response = await paymentServices.handleUpdateOrder(data);
+      if (response && response.errCode === 0) {
         handleCloseModalUpdate();
         fetchListPayments();
         fetchListPaymentsCompact();
         toast.success("Change infomation order successfully");
-      } else if (respon.errCode !== 0) {
+      } else if (response.errCode !== 0) {
         toast.error("Error when change infomation order");
       }
     } catch (error) {
@@ -396,14 +396,14 @@ function PaymentManagement() {
     e.preventDefault();
 
     try {
-      const respon = await paymentServices.handleDeletePayment(idPaymentDelete);
-      if (respon && respon.errCode === 0) {
+      const response = await paymentServices.handleDeletePayment(idPaymentDelete);
+      if (response && response.errCode === 0) {
         handleCloseModalDelete();
         setIdPaymentDelete(-1);
         fetchListPayments();
         fetchListPaymentsCompact();
         toast.success("Cancel order successfully");
-      } else if (respon.errCode === 1) {
+      } else if (response.errCode === 1) {
         toast.error("Error when cancel order");
       }
     } catch (error) {

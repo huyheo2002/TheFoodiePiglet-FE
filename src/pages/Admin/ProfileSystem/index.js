@@ -194,13 +194,13 @@ function ProfileSystem() {
     }
 
     try {
-      const respon = await userServices.handleUpdateUser(data);
-      if (respon && respon.errCode === 0) {
-        dataUser.user = respon.user;
+      const response = await userServices.handleUpdateUser(data);
+      if (response && response.errCode === 0) {
+        dataUser.user = response.user;
         handleCloseModalUpdate();
         handleGetAllUsers();
-      } else if (respon.errCode === 1) {
-        toast.error(respon.message);
+      } else if (response.errCode === 1) {
+        toast.error(response.message);
       }
     } catch (error) {
       console.error(error);
@@ -238,13 +238,13 @@ function ProfileSystem() {
     data.set("id", dataUser.user.id);
 
     try {
-      const respon = await authServices.handleChangePassword(data);
+      const response = await authServices.handleChangePassword(data);
 
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         handleCloseModalChangePassword();
         toast.success("Change password successfully");
-      } else if (respon && respon.errCode !== 0) {
-        toast.error(respon.message);
+      } else if (response && response.errCode !== 0) {
+        toast.error(response.message);
       }
     } catch (error) {
       console.error(error);

@@ -26,10 +26,10 @@ function LoginSuccess() {
 
   const decodeToken = async (accessToken) => {
     try {
-      const respon = await commonServices.handleDecoded(accessToken);
-      if (respon?.errCode === 0) {
+      const response = await commonServices.handleDecoded(accessToken);
+      if (response?.errCode === 0) {
 
-        return respon.decoded;
+        return response.decoded;
       }
     } catch (error) {
       console.error("Failed to decode token", error);

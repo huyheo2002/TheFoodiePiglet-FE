@@ -30,8 +30,6 @@ ChartJS.register(
 );
 
 const RevenueChart = ({ data }) => {
-
-    console.log("data RevenueChart", data);
     const chartData = {
         labels: data.labels,
         datasets: [

@@ -73,9 +73,9 @@ function Search({ ItemSearchResult, type, listData }) {
     }
 
     try {
-      const respon = await chatServices.handleCreateChatroom(data);
-      if (respon) {
-        setIdChatRoom(respon.room.id);
+      const response = await chatServices.handleCreateChatroom(data);
+      if (response) {
+        setIdChatRoom(response.room.id);
       }
     } catch (error) {
       console.error(error);

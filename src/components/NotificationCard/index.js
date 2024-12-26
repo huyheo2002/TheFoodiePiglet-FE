@@ -8,9 +8,9 @@ function NotificationCard({ data, page, onClick }) {
   const [listUser, setListUser] = useState([]);
 
   const handleGetInfoUser = async () => {
-    const respon = await userServices.getAllUsers("all");
-    if (respon && respon.errCode === 0) {
-      setListUser(respon.users);
+    const response = await userServices.getAllUsers("all");
+    if (response && response.errCode === 0) {
+      setListUser(response.users);
     }
   };
 

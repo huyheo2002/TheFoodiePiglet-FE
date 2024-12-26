@@ -47,15 +47,15 @@ function RoleManagement() {
     };
 
     const handleGetAllPermissionInPage = async () => {
-        const respon = await permissionServices.getAllPermissionGroup();
-        if (respon && respon.errCode === 0) {
-            const dataPermissionGroup = respon.permissionGroup || [];
+        const response = await permissionServices.getAllPermissionGroup();
+        if (response && response.errCode === 0) {
+            const dataPermissionGroup = response.permissionGroup || [];
 
             const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
             if (filterCurrentPermissionGroup.length > 0) {
-                const responPermission = await permissionServices.getAllPermission();
-                if (responPermission && responPermission.errCode === 0) {
-                    const dataPermission = responPermission.permission || [];
+                const responsePermission = await permissionServices.getAllPermission();
+                if (responsePermission && responsePermission.errCode === 0) {
+                    const dataPermission = responsePermission.permission || [];
 
                     const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
 
@@ -73,9 +73,9 @@ function RoleManagement() {
     }, [])
 
     const handleGetAllPermission = async () => {
-        const respon = await permissionServices.getAllPermission();
-        if (respon && respon.errCode === 0) {
-            const dataPermission = respon.permission || [];
+        const response = await permissionServices.getAllPermission();
+        if (response && response.errCode === 0) {
+            const dataPermission = response.permission || [];
             let splitFields =
                 dataPermission.length > 0 &&
                 dataPermission.map((item) => {
@@ -129,12 +129,12 @@ function RoleManagement() {
     const [idRoleDelete, setIdRoleDelete] = useState(-1);
 
     const handleGetAllRole = async () => {
-        const respon = await roleServices.getAllRolesWithPermission();
+        const response = await roleServices.getAllRolesWithPermission();
 
-        const responPermission = await permissionServices.getAllPermission();
-        if (respon && respon.errCode === 0 && responPermission && responPermission.errCode === 0) {
-            const listPermission = responPermission.permission || [];
-            const dataRole = respon.roles || [];
+        const responsePermission = await permissionServices.getAllPermission();
+        if (response && response.errCode === 0 && responsePermission && responsePermission.errCode === 0) {
+            const listPermission = responsePermission.permission || [];
+            const dataRole = response.roles || [];
             let splitFields =
                 dataRole.length > 0 &&
                 dataRole.map((item) => {
@@ -172,9 +172,9 @@ function RoleManagement() {
     }
 
     const handleGetAllPermissionGroup = async () => {
-        const respon = await permissionServices.getAllPermissionGroup();
-        if (respon && respon.errCode == 0) {
-            setListPermissionGroup(respon.permissionGroup);
+        const response = await permissionServices.getAllPermissionGroup();
+        if (response && response.errCode == 0) {
+            setListPermissionGroup(response.permissionGroup);
         }
     }
 
@@ -330,16 +330,16 @@ function RoleManagement() {
         data.set("permission", listPermissionIdSelected);
 
         try {
-            const respon = await roleServices.handleCreateNewRole(data);
+            const response = await roleServices.handleCreateNewRole(data);
 
-            if (respon && respon.errCode === 0) {
+            if (response && response.errCode === 0) {
                 handleCloseModalCreate();
                 handleGetAllRole();
                 handleGetAllPermission();
                 handleGetAllPermissionGroup();
                 toast.success("Create role successfully");
-            } else if (respon.errCode !== 0) {
-                toast.error(respon.message);
+            } else if (response.errCode !== 0) {
+                toast.error(response.message);
             } else {
                 toast.error("Create role failed");
             }
@@ -358,16 +358,16 @@ function RoleManagement() {
         data.set("permission", listPermissionIdSelected);
 
         try {
-            const respon = await roleServices.handleUpdateRole(data);
+            const response = await roleServices.handleUpdateRole(data);
 
-            if (respon && respon.errCode === 0) {
+            if (response && response.errCode === 0) {
                 handleCloseModalUpdate();
                 handleGetAllRole();
                 handleGetAllPermission();
                 handleGetAllPermissionGroup();
                 toast.success("Edit role successfully");
-            } else if (respon.errCode !== 0) {
-                toast.error(respon.message);
+            } else if (response.errCode !== 0) {
+                toast.error(response.message);
             } else {
                 toast.error("Edit role failed");
             }
@@ -380,15 +380,15 @@ function RoleManagement() {
         e.preventDefault();
 
         try {
-            const respon = await roleServices.handleDeleteRole(idRoleDelete);
-            if (respon && respon.errCode === 0) {
+            const response = await roleServices.handleDeleteRole(idRoleDelete);
+            if (response && response.errCode === 0) {
                 handleCloseModalDelete();
                 handleGetAllRole();
                 handleGetAllPermission();
                 handleGetAllPermissionGroup();
                 toast.success("Deleted role successfully");
-            } else if (respon.errCode !== 0) {
-                toast.error(respon.message);
+            } else if (response.errCode !== 0) {
+                toast.error(response.message);
             } else {
                 toast.error("Deleted role failed");
             }

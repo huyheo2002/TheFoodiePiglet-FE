@@ -34,16 +34,16 @@ instance.interceptors.request.use(
 
 instance.defaults.withCredentials = true;
 
-// Add a response interceptor
+// Add a responsese interceptor
 instance.interceptors.response.use(
-  function (response) {
+  function (responsese) {
     // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-    return response.data;
+    // Do something with responsese data
+    return responsese.data;
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+    // Do something with responsese error
     return Promise.reject(error);
   }
 );

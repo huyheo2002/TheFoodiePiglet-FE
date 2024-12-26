@@ -104,9 +104,9 @@ function Home() {
   ];
 
   const fetchListProductsCompact = async () => {
-    let respon = (await productServices.getAllProductCompact()) ?? null;
-    if (respon) {
-      const dataListProduct = respon.products || [];
+    let response = (await productServices.getAllProductCompact()) ?? null;
+    if (response) {
+      const dataListProduct = response.products || [];
       let splitFields =
         dataListProduct.length > 0 &&
         dataListProduct.map((item) => {
@@ -167,9 +167,9 @@ function Home() {
   };
 
   const fetchDataTypeOfProduct = async () => {
-    let respon = (await getAllorOneCategoryOfProduct("all")) ?? null;
-    if (respon) {
-      setTypeOfProduct(respon.categories);
+    let response = (await getAllorOneCategoryOfProduct("all")) ?? null;
+    if (response) {
+      setTypeOfProduct(response.categories);
     }
   };
 
@@ -180,9 +180,9 @@ function Home() {
 
   // handle add to cart
   const handleOpenModalAddToCart = async (prodId) => {
-    let respon = (await variantServices.findVariantInProduct(prodId)) ?? null;
-    if (respon) {
-      const dataProductSelected = respon.variant ?? [];
+    let response = (await variantServices.findVariantInProduct(prodId)) ?? null;
+    if (response) {
+      const dataProductSelected = response.variant ?? [];
       let filterValue =
         dataProductSelected.length > 0 &&
         dataProductSelected.filter((item) => item.name === size);
@@ -269,9 +269,9 @@ function Home() {
 
     try {
       if (checkAllowAddToCart) {
-        let responAddToCartSubmit = null;
-        responAddToCartSubmit = dispatch(handleAddToCartRedux(data));
-        if (responAddToCartSubmit) {
+        let responseAddToCartSubmit = null;
+        responseAddToCartSubmit = dispatch(handleAddToCartRedux(data));
+        if (responseAddToCartSubmit) {
           handleCloseModalAddToCart();
           setOpenModalAddToCartSucess(true);
           setReloadCart(true);

@@ -61,9 +61,9 @@ function PermissionGroupManagement() {
   };
 
   const handleGetAllPermissionInPage = async () => {
-    const respon = await permissionServices.getAllPermissionGroup();
-    if (respon && respon.errCode == 0) {
-      const dataPermissionGroup = respon.permissionGroup || [];
+    const response = await permissionServices.getAllPermissionGroup();
+    if (response && response.errCode == 0) {
+      const dataPermissionGroup = response.permissionGroup || [];
 
       const filterCurrentPermissionGroup =
         dataPermissionGroup.length > 0 &&
@@ -71,9 +71,9 @@ function PermissionGroupManagement() {
           (item) => item.keyword === currentPermissionGroup
         );
       if (filterCurrentPermissionGroup.length > 0) {
-        const responPermission = await permissionServices.getAllPermission();
-        if (responPermission && responPermission.errCode == 0) {
-          const dataPermission = responPermission.permission || [];
+        const responsePermission = await permissionServices.getAllPermission();
+        if (responsePermission && responsePermission.errCode == 0) {
+          const dataPermission = responsePermission.permission || [];
 
           const filterCurrentPermission =
             dataPermission.length > 0 &&
@@ -96,9 +96,9 @@ function PermissionGroupManagement() {
   }, []);
 
   const handleGetAllPermissionGroup = async () => {
-    const respon = await permissionServices.getAllPermissionGroup();
-    if (respon && respon.errCode == 0) {
-      const dataPermissionGroup = respon.permissionGroup || [];
+    const response = await permissionServices.getAllPermissionGroup();
+    if (response && response.errCode == 0) {
+      const dataPermissionGroup = response.permissionGroup || [];
       let splitFields =
         dataPermissionGroup.length > 0 &&
         dataPermissionGroup.map((item) => {
@@ -216,9 +216,9 @@ function PermissionGroupManagement() {
     const data = new FormData(e.target);
 
     try {
-      const respon = await permissionServices.handleCreatePermissionGroup(data);
+      const response = await permissionServices.handleCreatePermissionGroup(data);
 
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         handleCloseModalCreate();
         handleGetAllPermissionGroup();
         toast.success("Create permission group successfully");
@@ -239,9 +239,9 @@ function PermissionGroupManagement() {
     }
 
     try {
-      const respon = await permissionServices.handleUpdatePermissionGroup(data);
+      const response = await permissionServices.handleUpdatePermissionGroup(data);
 
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         handleCloseModalUpdate();
         handleGetAllPermissionGroup();
         toast.success("Updating permission group successfully");
@@ -257,10 +257,10 @@ function PermissionGroupManagement() {
     e.preventDefault();
 
     try {
-      const respon = await permissionServices.handleDeletePermissionGroup(
+      const response = await permissionServices.handleDeletePermissionGroup(
         idPermissionGroupDelete
       );
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         handleCloseModalDelete();
         handleGetAllPermissionGroup();
         toast.success("Deleting permission group successfully");

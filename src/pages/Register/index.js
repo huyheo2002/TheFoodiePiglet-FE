@@ -9,7 +9,6 @@ import { useState } from "react";
 import * as userServices from "../../services/userServices";
 import { TBUTTON_VARIANT } from "../../types/button";
 import toast from "react-hot-toast";
-import logo from "../../assets/images/Base/logo-transparent.png";
 import intro1 from "../../assets/images/introduce/intro-3.jpg";
 
 function Register() {
@@ -78,16 +77,16 @@ function Register() {
     }
 
     try {
-      const respon = await userServices.handleCreateUser(data);
-      if (respon && respon.errCode === 0) {
+      const response = await userServices.handleCreateUser(data);
+      if (response && response.errCode === 0) {
         toast.success("Register successfully, currently you has login now");
         setValues({
           username: "",
           password: "",
           confirmPassword: "",
         });
-      } else if (respon.errCode === 1) {
-        toast.error(respon.message);
+      } else if (response.errCode === 1) {
+        toast.error(response.message);
       }
     } catch (error) {
       console.error(error);

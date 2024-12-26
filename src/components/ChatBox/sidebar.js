@@ -19,10 +19,10 @@ function Sidebar() {
   const [listChatroom, setListChatroom] = useState([]);
 
   const handleGetAllUsers = async () => {
-    const responUser = await userServices.getAllUsers("all");
-    if (responUser && responUser.errCode === 0 && responUser.users) {
+    const responseUser = await userServices.getAllUsers("all");
+    if (responseUser && responseUser.errCode === 0 && responseUser.users) {
       if (dataUser) {
-        const listUser = responUser.users || [];
+        const listUser = responseUser.users || [];
         const filterListUser =
           listUser.length > 0 &&
           listUser.filter(
@@ -36,9 +36,9 @@ function Sidebar() {
   };
 
   const handleGetAllRoomParticipant = async () => {
-    const respon = await chatServices.getAllRoomParticipant();
-    if (respon && respon.errCode === 0) {
-      return respon.room;
+    const response = await chatServices.getAllRoomParticipant();
+    if (response && response.errCode === 0) {
+      return response.room;
     }
 
     return;

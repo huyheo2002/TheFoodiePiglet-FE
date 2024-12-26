@@ -95,9 +95,9 @@ function NewsManagement() {
   };
 
   const handleGetAllPermissionInPage = async () => {
-    const respon = await permissionServices.getAllPermissionGroup();
-    if (respon && respon.errCode == 0) {
-      const dataPermissionGroup = respon.permissionGroup || [];
+    const response = await permissionServices.getAllPermissionGroup();
+    if (response && response.errCode == 0) {
+      const dataPermissionGroup = response.permissionGroup || [];
 
       const filterCurrentPermissionGroup =
         dataPermissionGroup.length > 0 &&
@@ -106,9 +106,9 @@ function NewsManagement() {
         );
 
       if (filterCurrentPermissionGroup.length > 0) {
-        const responPermission = await permissionServices.getAllPermission();
-        if (responPermission && responPermission.errCode == 0) {
-          const dataPermission = responPermission.permission || [];
+        const responsePermission = await permissionServices.getAllPermission();
+        if (responsePermission && responsePermission.errCode == 0) {
+          const dataPermission = responsePermission.permission || [];
 
           const filterCurrentPermission =
             dataPermission.length > 0 &&
@@ -324,16 +324,16 @@ function NewsManagement() {
     const data = new FormData(e.target);
 
     try {
-      const respon = await newsServices.handleCreateNews(data);
+      const response = await newsServices.handleCreateNews(data);
 
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         handleCloseModalCreate();
         handleGetlistNews();
         handleGetlistNewsFull();
         handleGetlistGenres();
         toast.success("Create news successfully");
-      } else if (respon.errCode !== 0) {
-        toast.error(`Error when create news ${respon.message}`);
+      } else if (response.errCode !== 0) {
+        toast.error(`Error when create news ${response.message}`);
       }
     } catch (error) {
       console.error(error);
@@ -349,16 +349,16 @@ function NewsManagement() {
     }
 
     try {
-      const respon = await newsServices.handleUpdateNews(data);
+      const response = await newsServices.handleUpdateNews(data);
 
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         handleCloseModalUpdate();
         handleGetlistNews();
         handleGetlistNewsFull();
         handleGetlistGenres();
         toast.success("Updating news successfully");
-      } else if (respon.errCode !== 0) {
-        toast.error(`Error when updating news ${respon.message}`)
+      } else if (response.errCode !== 0) {
+        toast.error(`Error when updating news ${response.message}`)
       }
     } catch (error) {
       console.error(error);
@@ -369,15 +369,15 @@ function NewsManagement() {
     e.preventDefault();
 
     try {
-      const respon = await newsServices.handleDeleteNews(idNewsDelete);
-      if (respon && respon.errCode === 0) {
+      const response = await newsServices.handleDeleteNews(idNewsDelete);
+      if (response && response.errCode === 0) {
         handleCloseModalDelete();
         handleGetlistNews();
         handleGetlistNewsFull();
         handleGetlistGenres();
         toast.success("Deleting news successfully");
-      } else if (respon.errCode === 1) {
-        toast.error(`Error when deleting news ${respon.message}`)
+      } else if (response.errCode === 1) {
+        toast.error(`Error when deleting news ${response.message}`)
       }
     } catch (error) {
       console.error(error);

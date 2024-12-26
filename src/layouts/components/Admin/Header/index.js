@@ -45,9 +45,9 @@ function Header() {
   }, [reloadNotify]);
 
   const handleGetAllNotify = async () => {
-    const respon = await notificationServices.handleGetAllNotification();
-    if (respon && respon.errCode === 0) {
-      setListNotify(respon.notify);
+    const response = await notificationServices.handleGetAllNotification();
+    if (response && response.errCode === 0) {
+      setListNotify(response.notify);
     }
   };
 

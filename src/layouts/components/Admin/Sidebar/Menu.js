@@ -13,10 +13,10 @@ function Menu({ data }) {
   const { dataUser } = useAuth();
 
   const handleCheckPermission = async () => {
-    const responPermissionGroup =
+    const responsePermissionGroup =
       await permissionServices.getAllPermissionGroup();
-    if (responPermissionGroup && responPermissionGroup.errCode === 0) {
-      setListPermissionGroup(responPermissionGroup.permissionGroup);
+    if (responsePermissionGroup && responsePermissionGroup.errCode === 0) {
+      setListPermissionGroup(responsePermissionGroup.permissionGroup);
     }
   };
 

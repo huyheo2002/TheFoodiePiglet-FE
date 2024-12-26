@@ -27,11 +27,11 @@ function DashBoard() {
   const [ordersPerHourData, setOrdersPerHourData] = useState();
 
   const fetchGetProductCountByCategories = async () => {
-    let response = await productServices.handleGetProductCountByCategories();
-    if (response && response?.errCode === 0) {
+    let responsese = await productServices.handleGetProductCountByCategories();
+    if (responsese && responsese?.errCode === 0) {
       const updatedCategories = { ...categoriesProduct };
 
-      response.countProductOfCategories.forEach((item) => {
+      responsese.countProductOfCategories.forEach((item) => {
         if (!updatedCategories.labels.includes(item.category)) {
           updatedCategories.labels.push(item.category);
           updatedCategories.values.push(item.count);
@@ -43,10 +43,10 @@ function DashBoard() {
   };
 
   const fetchListPayments = async () => {
-    const response = (await paymentServices.getRevenueData()) ?? null;
-    if (response && response?.errCode === 0) {
-      setRevenueData(response.revenueData.revenueDataByMonth);
-      setOrdersPerHourData(response.revenueData.revenueDataByHour);
+    const responsese = (await paymentServices.getRevenueData()) ?? null;
+    if (responsese && responsese?.errCode === 0) {
+      setRevenueData(responsese.revenueData.revenueDataByMonth);
+      setOrdersPerHourData(responsese.revenueData.revenueDataByHour);
     }
   };
 

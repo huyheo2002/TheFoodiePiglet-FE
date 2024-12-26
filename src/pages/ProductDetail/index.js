@@ -48,9 +48,9 @@ function ProductDetail() {
   ];
 
   const fetchApiVariantProduct = async (prodId) => {
-    let respon = (await variantServices.findVariantInProduct(prodId)) ?? null;
-    if (respon) {
-      const dataProductSelected = respon.variant ?? [];
+    let response = (await variantServices.findVariantInProduct(prodId)) ?? null;
+    if (response) {
+      const dataProductSelected = response.variant ?? [];
       let filterValue =
         dataProductSelected.length > 0 &&
         dataProductSelected.filter((item) => item.name === size);
@@ -72,9 +72,9 @@ function ProductDetail() {
   };
 
   const fetchApiProduct = async () => {
-    let respon = (await productServices.findOneProduct(params.prodId)) ?? null;
-    if (respon) {
-      setDataProduct(respon.products);
+    let response = (await productServices.findOneProduct(params.prodId)) ?? null;
+    if (response) {
+      setDataProduct(response.products);
     }
   };
 
@@ -135,9 +135,9 @@ function ProductDetail() {
 
     try {
       if (checkAllowAddToCart) {
-        let responAddToCartSubmit = null;
-        responAddToCartSubmit = dispatch(handleAddToCartRedux(data));
-        if (responAddToCartSubmit) {
+        let responseAddToCartSubmit = null;
+        responseAddToCartSubmit = dispatch(handleAddToCartRedux(data));
+        if (responseAddToCartSubmit) {
           setCurrentCount(1);
           setSize("M");
           if (dataProduct) {

@@ -14,7 +14,6 @@ export const handleLoginRedux = (username, password) => {
 
     try {
       const res = await authServices.handleLogin(username, password);
-      console.log("respon login redux", res);
       if (res && res.errCode === 0) {
         dispatch({
           type: FETCH_USER_SUCCESS,

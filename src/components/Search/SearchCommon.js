@@ -51,7 +51,6 @@ function SearchCommon({ listData, handleOnClick }) {
         return item.toLowerCase().includes(debounced.toLowerCase());
       });
 
-    console.log("filteredData", filteredData);
     if (filteredData.length > 0) {
       setSearchResult(filteredData);
       setLoading(false);

@@ -91,15 +91,15 @@ function VariantManagement() {
     };
 
     const handleGetAllPermissionInPage = async () => {
-        const respon = await permissionServices.getAllPermissionGroup();
-        if (respon && respon.errCode == 0) {
-            const dataPermissionGroup = respon.permissionGroup || [];
+        const response = await permissionServices.getAllPermissionGroup();
+        if (response && response.errCode == 0) {
+            const dataPermissionGroup = response.permissionGroup || [];
 
             const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
             if (filterCurrentPermissionGroup.length > 0) {
-                const responPermission = await permissionServices.getAllPermission();
-                if (responPermission && responPermission.errCode == 0) {
-                    const dataPermission = responPermission.permission || [];
+                const responsePermission = await permissionServices.getAllPermission();
+                if (responsePermission && responsePermission.errCode == 0) {
+                    const dataPermission = responsePermission.permission || [];
 
                     const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
 
@@ -117,9 +117,9 @@ function VariantManagement() {
     }, [])
 
     const fetchDataVariantInProduct = async () => {
-        let respon = await variantServices.findVariantInProduct(params.id) ?? null;
-        if (respon) {
-            const dataListVariantInProduct = respon.variant || [];
+        let response = await variantServices.findVariantInProduct(params.id) ?? null;
+        if (response) {
+            const dataListVariantInProduct = response.variant || [];
             let splitFields =
                 dataListVariantInProduct.length > 0 &&
                 dataListVariantInProduct.map((item) => {
@@ -177,9 +177,9 @@ function VariantManagement() {
     // modal read
     const handleOpenModalRead = async (id) => {
         setOpenModalRead(true);
-        let respon = await variantServices.findOneVariantInProduct(id) ?? null;
-        if (respon) {
-            let filterVariant = replaceNullUndefinedWithEmptyString(respon.variant);
+        let response = await variantServices.findOneVariantInProduct(id) ?? null;
+        if (response) {
+            let filterVariant = replaceNullUndefinedWithEmptyString(response.variant);
             if (filterVariant) {
                 setDataRead(filterVariant);
             }
@@ -196,9 +196,9 @@ function VariantManagement() {
     // modal update
     const handleOpenModalUpdate = async (id) => {
         setOpenModalUpdate(true);
-        let respon = await variantServices.findOneVariantInProduct(id) ?? null;
-        if (respon) {
-            let filterVariant = replaceNullUndefinedWithEmptyString(respon.variant);
+        let response = await variantServices.findOneVariantInProduct(id) ?? null;
+        if (response) {
+            let filterVariant = replaceNullUndefinedWithEmptyString(response.variant);
             if (filterVariant) {
                 let dataVariantUpdate = { ...filterVariant };
                 setValuesUpdate(dataVariantUpdate);
@@ -228,12 +228,12 @@ function VariantManagement() {
         const data = new FormData(e.target);
 
         try {
-            const respon = await variantServices.handleCreateVariant(data);
-            if (respon && respon.errCode === 0) {
+            const response = await variantServices.handleCreateVariant(data);
+            if (response && response.errCode === 0) {
                 handleCloseModalCreate();
                 fetchDataVariantInProduct();
-            } else if (respon.errCode === 1) {
-                alert(respon.message);
+            } else if (response.errCode === 1) {
+                alert(response.message);
             }
         } catch (error) {
             console.error(error);
@@ -249,13 +249,13 @@ function VariantManagement() {
         }
 
         try {
-            const respon = await variantServices.handleUpdateVariant(data);
+            const response = await variantServices.handleUpdateVariant(data);
 
-            if (respon && respon.errCode === 0) {
+            if (response && response.errCode === 0) {
                 handleCloseModalUpdate();
                 fetchDataVariantInProduct();
-            } else if (respon.errCode === 1) {
-                alert(respon.message);
+            } else if (response.errCode === 1) {
+                alert(response.message);
             }
         } catch (error) {
             console.error(error);
@@ -265,12 +265,12 @@ function VariantManagement() {
     const onhandleSubmitDeleteVariant = async (e) => {
         e.preventDefault();
         try {
-            const respon = await variantServices.handleDeleteVariant(idVariantInProductDelete);
-            if (respon && respon.errCode === 0) {
+            const response = await variantServices.handleDeleteVariant(idVariantInProductDelete);
+            if (response && response.errCode === 0) {
                 handleCloseModalDelete();
                 fetchDataVariantInProduct();
-            } else if (respon.errCode === 1) {
-                alert(respon.message);
+            } else if (response.errCode === 1) {
+                alert(response.message);
             }
         } catch (error) {
             console.error(error);

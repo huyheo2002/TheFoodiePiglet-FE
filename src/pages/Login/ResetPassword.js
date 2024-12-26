@@ -14,35 +14,16 @@ function ResetPassword() {
   const navigate = useNavigate();
   const decoded = async () => {
     if (params.token) {
-      console.log("params.token", params.token);
-      const respon = await commonServices.handleDecoded(params.token);
-      console.log("respon.decoded", respon)
-      if (respon && respon.errCode === 0) {
-          console.log("okok");
-          return respon.decoded.infoUser;
+      const response = await commonServices.handleDecoded(params.token);
+      if (response && response.errCode === 0) {
+          return response.decoded.infoUser;
         } else {
           navigate("/not-found")
       }
     }
   }
 
-  const checkAuth = async () => {
-    if (params.token) {
-      console.log("dataUser", dataUser);
-      if (dataUser) {
-        return dataUser.infoUser;
-      } else {
-        navigate("/not-found");
-      }
-
-      return null;
-    } else {
-      // navigate("/not-found");
-    }
-  };
-
   useEffect(() => {
-    // checkAuth();
     decoded();
   }, []);
 
@@ -52,8 +33,8 @@ function ResetPassword() {
       data.set("username", result.username);
       data.set("email", result.email);
 
-      const respon = await authServices.handleResetPassword(data);
-      if (respon && respon.errCode === 0) {
+      const response = await authServices.handleResetPassword(data);
+      if (response && response.errCode === 0) {
         navigate("/login");
       }
     });

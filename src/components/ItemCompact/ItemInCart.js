@@ -100,10 +100,10 @@ function ItemInCart({ size, type, data, onHandleRefreshCart }) {
   };
 
   const onhandleRemoveItem = () => {
-    let responDeleteItemCurrent = dispatch(
+    let responseDeleteItemCurrent = dispatch(
       handleRemoveItemInCartRedux(data.id)
     );
-    if (responDeleteItemCurrent) {
+    if (responseDeleteItemCurrent) {
       onHandleRefreshCart();
       toast.success("Deleted product successfully");
     }

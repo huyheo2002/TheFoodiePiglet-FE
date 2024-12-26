@@ -212,12 +212,12 @@ function Profile() {
   const getPaymentOfUser = async () => {
     if (dataUser) {
       setRoleName(dataUser?.user?.roleName ?? "User");
-      const responOrder = await paymentServices.getAllPaymentOfUser(
+      const responseOrder = await paymentServices.getAllPaymentOfUser(
         dataUser.user.id
       );
 
-      if (responOrder && responOrder.errCode === 0) {
-        setListOrder(responOrder.payments);
+      if (responseOrder && responseOrder.errCode === 0) {
+        setListOrder(responseOrder.payments);
       }
     }
   };
@@ -327,14 +327,14 @@ function Profile() {
     }
 
     try {
-      const respon = await userServices.handleUpdateUser(data);
-      if (respon && respon.errCode === 0) {
-        dataUser.user = respon.user;
+      const response = await userServices.handleUpdateUser(data);
+      if (response && response.errCode === 0) {
+        dataUser.user = response.user;
         handleCloseModalUpdate();
         handleGetAllUsers();
         toast.success("Updated infomation user successfully");
-      } else if (respon.errCode === 1) {
-        toast.error(respon.message);
+      } else if (response.errCode === 1) {
+        toast.error(response.message);
       }
     } catch (error) {
       console.error(error);
@@ -398,14 +398,14 @@ function Profile() {
   // handle delete orders
   const handleDeletePayment = async (paymentId) => {
     try {
-      const respon = await paymentServices.handleDeletePayment(paymentId);
-      if (respon && respon.errCode === 0) {
+      const response = await paymentServices.handleDeletePayment(paymentId);
+      if (response && response.errCode === 0) {
         setOpenModalCancelOrder(false);
         setIdDelete(null);
         setRefreshPayment(!refreshPayment);
         delayCloseModalDeleteOrderSuccess();
         toast.success("Deleted order successfully");
-      } else if (respon.errCode === 1) {
+      } else if (response.errCode === 1) {
         toast.error("Has a fault when deleted order");
       }
     } catch (error) {
@@ -446,8 +446,8 @@ function Profile() {
   const handleSubmitChangeInfoOrder = async (e) => {
     e.preventDefault();
     try {
-      const respon = await paymentServices.handleUpdateOrder(dataOrderDetail);
-      if (respon && respon.errCode === 0) {
+      const response = await paymentServices.handleUpdateOrder(dataOrderDetail);
+      if (response && response.errCode === 0) {
         setOpenModalChangeInfoOrder(false);
         setRefreshPayment(!refreshPayment);
         delayCloseModalChangeInfoOrderSuccess();
@@ -558,13 +558,13 @@ function Profile() {
     data.set("id", dataUser.user.id);
 
     try {
-      const response = await authServices.handleChangePassword(data);
+      const responsese = await authServices.handleChangePassword(data);
 
-      if (response && response.errCode === 0) {
+      if (responsese && responsese.errCode === 0) {
         handleCloseModalChangePassword();
         toast.success("Change password successfully");
-      } else if (response && response.errCode !== 0) {
-        toast.error(response.message);
+      } else if (responsese && responsese.errCode !== 0) {
+        toast.error(responsese.message);
       }
     } catch (error) {
       toast.error(error);
@@ -572,9 +572,9 @@ function Profile() {
   };
 
   const fetchListProductsCompact = async () => {
-    let respon = (await productServices.getAllProductCompact()) ?? null;
-    if (respon) {
-      const dataListProduct = respon.products || [];
+    let response = (await productServices.getAllProductCompact()) ?? null;
+    if (response) {
+      const dataListProduct = response.products || [];
       let splitFields =
         dataListProduct.length > 0 &&
         dataListProduct.map((item) => {

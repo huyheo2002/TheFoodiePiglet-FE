@@ -99,9 +99,9 @@ function Orders() {
 
   const handleGetAllTable = async () => {
     try {
-      let respon = await getAllTables("all");
-      if (respon && respon.errCode === 0) {
-        setDataTable(respon.tables);
+      let response = await getAllTables("all");
+      if (response && response.errCode === 0) {
+        setDataTable(response.tables);
       }
     } catch (error) {
       console.log("err:", error);
@@ -155,15 +155,15 @@ function Orders() {
     data.set("dateEnd", getNewDateEnd);
 
     try {
-      const respon = await tableServices.createReserveTable(data);
-      if (respon && respon.errCode === 0) {
+      const response = await tableServices.createReserveTable(data);
+      if (response && response.errCode === 0) {
         delayCloseModalOrders();
         setValues({});
         setSelectedTimeStart("");
         setSelectedTimeEnd("");
         setSelectedDate("");
         setChooseIdTable(null);
-      } else if (respon && respon.errCode === 1) {
+      } else if (response && response.errCode === 1) {
         setOpenModalOrdersFail(true);
       }
     } catch (error) {
@@ -240,12 +240,12 @@ function Orders() {
 
       const callApi = async () => {
         try {
-          const response = await tableServices.getReserveTableAvailable(getNewDateStart, getNewDateEnd);
+          const responsese = await tableServices.getReserveTableAvailable(getNewDateStart, getNewDateEnd);
 
-          if (response?.errCode === 0 && dataTable?.length > 0) {
+          if (responsese?.errCode === 0 && dataTable?.length > 0) {
             const updatedDataTable = dataTable.map((item) => ({
               ...item,
-              taken: response.tablesAvaialbeByTime.some(
+              taken: responsese.tablesAvaialbeByTime.some(
                 (tableAvailable) => tableAvailable.idTable === item.id
               ),
             }));

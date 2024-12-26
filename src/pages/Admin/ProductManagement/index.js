@@ -146,9 +146,9 @@ function ProductManagement() {
   };
 
   const handleGetAllPermissionInPage = async () => {
-    const respon = await permissionServices.getAllPermissionGroup();
-    if (respon && respon.errCode == 0) {
-      const dataPermissionGroup = respon.permissionGroup || [];
+    const response = await permissionServices.getAllPermissionGroup();
+    if (response && response.errCode == 0) {
+      const dataPermissionGroup = response.permissionGroup || [];
 
       const filterCurrentPermissionGroup =
         dataPermissionGroup.length > 0 &&
@@ -156,9 +156,9 @@ function ProductManagement() {
           (item) => item.keyword === currentPermissionGroup
         );
       if (filterCurrentPermissionGroup.length > 0) {
-        const responPermission = await permissionServices.getAllPermission();
-        if (responPermission && responPermission.errCode == 0) {
-          const dataPermission = responPermission.permission || [];
+        const responsePermission = await permissionServices.getAllPermission();
+        if (responsePermission && responsePermission.errCode == 0) {
+          const dataPermission = responsePermission.permission || [];
 
           const filterCurrentPermission =
             dataPermission.length > 0 &&
@@ -199,16 +199,16 @@ function ProductManagement() {
   });
 
   const fetchListProducts = async () => {
-    let respon = (await productServices.getAllProduct()) ?? null;
-    if (respon) {
-      setListProducts(respon.products);
+    let response = (await productServices.getAllProduct()) ?? null;
+    if (response) {
+      setListProducts(response.products);
     }
   };
 
   const fetchListProductsCompact = async () => {
-    let respon = (await productServices.getAllProductCompact()) ?? null;
-    if (respon) {
-      const dataListProduct = respon.products || [];
+    let response = (await productServices.getAllProductCompact()) ?? null;
+    if (response) {
+      const dataListProduct = response.products || [];
       let splitFields =
         dataListProduct.length > 0 &&
         dataListProduct.map((item) => {
@@ -251,10 +251,10 @@ function ProductManagement() {
   };
 
   const optionsCategory = async () => {
-    let respon =
+    let response =
       (await categoryServices.getAllorOneCategoryOfProduct("all")) ?? null;
-    if (respon) {
-      const options = respon.categories || [];
+    if (response) {
+      const options = response.categories || [];
       let splitFields =
         options.length > 0 &&
         options.map((item) => {
@@ -471,13 +471,13 @@ function ProductManagement() {
     e.preventDefault();
     const data = new FormData(e.target);
     try {
-      const respon = await productServices.handleCreateProduct(data);
-      if (respon && respon.errCode === 0) {
+      const response = await productServices.handleCreateProduct(data);
+      if (response && response.errCode === 0) {
         handleCloseModalCreate();
         fetchListProducts();
         fetchListProductsCompact();
-      } else if (respon.errCode === 1) {
-        alert(respon.message);
+      } else if (response.errCode === 1) {
+        alert(response.message);
       }
     } catch (error) {
       console.error(error);
@@ -493,14 +493,14 @@ function ProductManagement() {
     }
 
     try {
-      const respon = await productServices.handleUpdateProduct(data);
+      const response = await productServices.handleUpdateProduct(data);
 
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         handleCloseModalUpdate();
         fetchListProducts();
         fetchListProductsCompact();
-      } else if (respon.errCode === 1) {
-        alert(respon.message);
+      } else if (response.errCode === 1) {
+        alert(response.message);
       }
     } catch (error) {
       console.error(error);
@@ -510,13 +510,13 @@ function ProductManagement() {
   const onhandleSubmitDeleteProduct = async (e) => {
     e.preventDefault();
     try {
-      const respon = await productServices.handleDeleteProduct(idProductDelete);
-      if (respon && respon.errCode === 0) {
+      const response = await productServices.handleDeleteProduct(idProductDelete);
+      if (response && response.errCode === 0) {
         handleCloseModalDelete();
         fetchListProducts();
         fetchListProductsCompact();
-      } else if (respon.errCode === 1) {
-        alert(respon.message);
+      } else if (response.errCode === 1) {
+        alert(response.message);
       }
     } catch (error) {
       console.error(error);

@@ -12,14 +12,14 @@ export const handleAddToCartRedux = (data) => {
         dispatch({ type: CHECK_LOGIN });
 
         try {
-            const respon = await cartServices.handleAddToCart(data);
-            if (respon && respon.errCode === 0) {
+            const response = await cartServices.handleAddToCart(data);
+            if (response && response.errCode === 0) {
                 dispatch({
                     type: ADD_TO_CART,
                     data: {
-                        product: respon.dataCartItem,
+                        product: response.dataCartItem,
                         auth: true,
-                        message: respon.message,
+                        message: response.message,
                     },
                 })
             } else {
@@ -38,13 +38,13 @@ export const handleRemoveItemInCartRedux = (id) => {
         dispatch({ type: CHECK_LOGIN });
 
         try {
-            const respon = await cartServices.handleDeleteItemInCart(id);
-            if (respon && respon.errCode === 0) {
+            const response = await cartServices.handleDeleteItemInCart(id);
+            if (response && response.errCode === 0) {
                 dispatch({
                     type: REMOVE_ITEM_IN_CART,
                     data: {
                         auth: true,
-                        message: respon.message,
+                        message: response.message,
                     },
                 })
             } else {
@@ -63,13 +63,13 @@ export const handleRefreshCartRedux = (userId) => {
         dispatch({ type: CHECK_LOGIN });
 
         try {
-            const respon = await cartServices.handleRefreshCart(userId);
-            if (respon && respon.errCode === 0) {
+            const response = await cartServices.handleRefreshCart(userId);
+            if (response && response.errCode === 0) {
                 dispatch({
                     type: REFRESH_CART,
                     data: {
                         auth: true,
-                        message: respon.message,
+                        message: response.message,
                     },
                 })
             } else {

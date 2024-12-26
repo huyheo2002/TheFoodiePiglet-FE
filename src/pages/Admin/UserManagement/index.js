@@ -8,8 +8,6 @@ import InputFile from "../../../components/FormControl/inputFile";
 import Button from "../../../components/Button";
 import InputRadio from "../../../components/FormControl/inputRadio";
 import * as roleServices from "../../../services/roleServices";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import * as commonServices from "../../../services/commonServices";
 import * as permissionServices from "../../../services/permissionServices";
 import GlobalContext from "../../../contexts/globalContext";
 import { TBUTTON_VARIANT } from "../../../types/button";
@@ -141,7 +139,6 @@ function UserManagement() {
 
   // handle permission
   const handlePermission = async () => {
-    // handle permissions
     const dataListPermission = dataUser.permissions || [];
     let splitFields =
       dataListPermission.length > 0 &&
@@ -163,15 +160,15 @@ function UserManagement() {
   };
 
   const handleGetAllPermissionInPage = async () => {
-    const respon = await permissionServices.getAllPermissionGroup();
-    if (respon && respon.errCode === 0) {
-      const dataPermissionGroup = respon.permissionGroup || [];
+    const response = await permissionServices.getAllPermissionGroup();
+    if (response && response.errCode === 0) {
+      const dataPermissionGroup = response.permissionGroup || [];
 
       const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
       if (filterCurrentPermissionGroup.length > 0) {
-        const responPermission = await permissionServices.getAllPermission();
-        if (responPermission && responPermission.errCode === 0) {
-          const dataPermission = responPermission.permission || [];
+        const responsePermission = await permissionServices.getAllPermission();
+        if (responsePermission && responsePermission.errCode === 0) {
+          const dataPermission = responsePermission.permission || [];
 
           const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
 
@@ -388,15 +385,15 @@ function UserManagement() {
     }
 
     try {
-      const respon = await userServices.handleCreateUser(data);
-      if (respon && respon.errCode === 0) {
+      const response = await userServices.handleCreateUser(data);
+      if (response && response.errCode === 0) {
         handleCloseModalCreate();
         handleGetAllUsers();
         handleGetAllUsersCompact();
         setReloadNotify(!reloadNotify);
         toast.success("Created user successfully");
-      } else if (respon.errCode === 1) {
-        toast.error(respon.message);
+      } else if (response.errCode === 1) {
+        toast.error(response.message);
       }
     } catch (error) {
       console.error(error);
@@ -416,15 +413,15 @@ function UserManagement() {
     }
 
     try {
-      const respon = await userServices.handleUpdateUser(data);
+      const response = await userServices.handleUpdateUser(data);
 
-      if (respon && respon.errCode === 0) {
+      if (response && response.errCode === 0) {
         handleCloseModalUpdate();
         handleGetAllUsers();
         handleGetAllUsersCompact();
         setReloadNotify(!reloadNotify);
         toast.success("Updated user successfully");
-      } else if (respon.errCode === 1) {
+      } else if (response.errCode === 1) {
         toast.error("Failed when updated user");
       }
     } catch (error) {
@@ -436,14 +433,14 @@ function UserManagement() {
     e.preventDefault();
 
     try {
-      const respon = await userServices.handleDeleteUser(idUserDelete, dataUser ? dataUser.user.id : null);
-      if (respon && respon.errCode === 0) {
+      const response = await userServices.handleDeleteUser(idUserDelete, dataUser ? dataUser.user.id : null);
+      if (response && response.errCode === 0) {
         handleCloseModalDelete();
         handleGetAllUsers();
         handleGetAllUsersCompact();
         setReloadNotify(!reloadNotify);
         toast.success("Deleted user successfully");
-      } else if (respon.errCode === 1) {
+      } else if (response.errCode === 1) {
         toast.error("Failed when deleted user");
       }
     } catch (error) {

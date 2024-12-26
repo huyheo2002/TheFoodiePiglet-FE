@@ -16,9 +16,9 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
   const [nameRoom, setNameRoom] = useState(null);
 
   const handleGetAllRoomParticipant = async (userId) => {
-    const respon = await chatServices.getAllRoomParticipant();
-    if (respon && respon.errCode === 0) {
-      const dataRoom = respon.room;
+    const response = await chatServices.getAllRoomParticipant();
+    if (response && response.errCode === 0) {
+      const dataRoom = response.room;
       let dataRoomParticipant = [];
       if (Array.isArray(dataRoom) === true) {
         dataRoomParticipant =
@@ -87,9 +87,9 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
   };
 
   const handleGetAllMessageInRoom = async () => {
-    const respon = await chatServices.getAllMessage();
-    if (respon && respon.errCode === 0) {
-      let listMessage = respon.messages;
+    const response = await chatServices.getAllMessage();
+    if (response && response.errCode === 0) {
+      let listMessage = response.messages;
       if (listMessage.length > 0) {
         const filterMessageInRoom = listMessage.filter(
           (item) => item.roomId === data.roomId
@@ -110,10 +110,10 @@ function ChatBoxCompact({ idTest, active, onClick, data }) {
 
   const handleGetNameRoom = async (nameGroup) => {
     if (nameGroup === data.ChatRoom.name) {
-      const responFindUser = await userServices.getAllUsers(
+      const responseFindUser = await userServices.getAllUsers(
         data.ChatRoom.roomCreatorId
       );
-      if (responFindUser && responFindUser.errCode === 0) {
+      if (responseFindUser && responseFindUser.errCode === 0) {
         setNameRoom(
           `${responFindUser.users.name} (${responFindUser.users.username})`
         );

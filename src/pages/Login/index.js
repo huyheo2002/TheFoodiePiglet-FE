@@ -23,9 +23,7 @@ import { TBUTTON_VARIANT } from "../../types/button";
 import toast from "react-hot-toast";
 import * as commonServices from "../../services/commonServices";
 import { useAuth } from "../../contexts/authContext";
-
 import intro1 from "../../assets/images/introduce/intro-3.jpg";
-import logo from "../../assets/images/Base/logo-transparent.png";
 
 function Login() {
   const { t } = useTranslation(["auth"]);
@@ -94,9 +92,9 @@ function Login() {
 
   const decodeToken = async (accessToken) => {
     try {
-      const respon = await commonServices.handleDecoded(accessToken);
-      if (respon?.errCode === 0) {
-        return respon.decoded;
+      const response = await commonServices.handleDecoded(accessToken);
+      if (response?.errCode === 0) {
+        return response.decoded;
       }
     } catch (error) {
       console.error("Failed to decode token", error);
@@ -167,8 +165,8 @@ function Login() {
 
     const data = new FormData(e.target);
     try {
-      const respon = await authServices.handleFotgotPassword(data);
-      if (respon && respon.errCode === 0) {
+      const response = await authServices.handleFotgotPassword(data);
+      if (response && response.errCode === 0) {
         handleCloseModalForgotPassword();
         setOpenModalSendRequest(true);
       }
@@ -195,7 +193,6 @@ function Login() {
             className="flex justify-between flex-col w-full min-h-fit max-h-[calc(100vh-64px)] px-4 py-3 rounded-lg bg-white shadow-black-b-0.75 relative"
             onSubmit={handleSubmit}
           >
-            {/* <img src={logo} className="h-20 h-20 absolute z-20 top-0 right-0 hidden xl:block"/> */}
             <div className="w-full h-full">
               <Heading variant={"modal"}>{t("login.heading.login")}</Heading>
               <div className="px-4 py-2">

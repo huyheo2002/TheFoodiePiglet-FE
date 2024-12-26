@@ -20,6 +20,7 @@ import Congrat from "../../components/Congrat";
 import toast from "react-hot-toast";
 import { TBUTTON_VARIANT } from "../../types/button";
 import { useAuth } from "../../contexts/authContext";
+import VoucherComponent from "../../components/Vourcher";
 
 function Cart() {
   const dispatch = useDispatch();
@@ -30,56 +31,63 @@ function Cart() {
     showCongrat,
   } = useContext(GlobalContext);
   const [listItemInCart, setListItemInCart] = useState([]);
+  const [totalPrice, setTotalPrice] = useState();
+  const [usedVoucher, setUsedVoucher] = useState(false);
   const { dataUser } = useAuth();
+
+  const handleUpdateTotal = (newTotal) => {
+    setUsedVoucher(true);
+    setTotalPrice(newTotal);
+  };
 
   const handleProducts = async () => {
     if (dataUser) {
-      const responCart = await cartServices.getAllCartItemOfUser(
+      const responseCart = await cartServices.getAllCartItemOfUser(
         dataUser.user.id
       );
-      const responProducts =
+      const responseProducts =
         (await productServices.getAllProductCompact()) ?? null;
 
-      if (responCart && responProducts) {
-        const dataListItemCart = responCart.listItem ?? [];
-        const dataListItemProduct = responProducts.products ?? [];
+      if (responseCart && responseProducts) {
+        const dataListItemCart = responseCart.listItem ?? [];
+        const dataListItemProduct = responseProducts.products ?? [];
         const handleListProductOfUserInCart =
           Array.isArray(dataListItemCart) && dataListItemCart.length > 0
             ? dataListItemCart.reduce((filtered, product, index) => {
-                let filterListItemInCart = dataListItemCart.filter(
-                  (item) => product.prodId === item.prodId
-                );
-                if (filterListItemInCart.length > 0) {
-                  filterListItemInCart.map((itemProductInCart, index) => {
-                    let filterListProduct = dataListItemProduct.filter(
-                      (item) => item.id === itemProductInCart.prodId
-                    );
+              let filterListItemInCart = dataListItemCart.filter(
+                (item) => product.prodId === item.prodId
+              );
+              if (filterListItemInCart.length > 0) {
+                filterListItemInCart.map((itemProductInCart, index) => {
+                  let filterListProduct = dataListItemProduct.filter(
+                    (item) => item.id === itemProductInCart.prodId
+                  );
 
-                    if (filterListProduct.length > 0) {
-                      itemProductInCart.name = filterListProduct[0].name;
-                      itemProductInCart.image = filterListProduct[0].image;
-                      itemProductInCart.Variants =
-                        filterListProduct[0].Variants;
-                      if (filterListProduct[0].Variants) {
-                        let filterVariants =
-                          filterListProduct[0].Variants.filter(
-                            (variant) => variant.name === product.size
-                          );
-                        if (filterVariants.length > 0) {
-                          itemProductInCart.originalPrice =
-                            filterVariants[0].price;
-                          itemProductInCart.discount =
-                            filterVariants[0].discountVariant;
-                        }
+                  if (filterListProduct.length > 0) {
+                    itemProductInCart.name = filterListProduct[0].name;
+                    itemProductInCart.image = filterListProduct[0].image;
+                    itemProductInCart.Variants =
+                      filterListProduct[0].Variants;
+                    if (filterListProduct[0].Variants) {
+                      let filterVariants =
+                        filterListProduct[0].Variants.filter(
+                          (variant) => variant.name === product.size
+                        );
+                      if (filterVariants.length > 0) {
+                        itemProductInCart.originalPrice =
+                          filterVariants[0].price;
+                        itemProductInCart.discount =
+                          filterVariants[0].discountVariant;
                       }
-
-                      filtered.push(itemProductInCart);
                     }
-                  });
-                }
 
-                return [...new Set(filtered)];
-              }, [])
+                    filtered.push(itemProductInCart);
+                  }
+                });
+              }
+
+              return [...new Set(filtered)];
+            }, [])
             : [];
 
         if (Array.isArray(handleListProductOfUserInCart)) {
@@ -97,7 +105,7 @@ function Cart() {
 
   useEffect(() => {
     handleProducts();
-  }, []);
+  }, [dataUser]);
 
   // orders
   const [openModalOrders, setOpenModalOrders] = useState(false);
@@ -148,52 +156,52 @@ function Cart() {
 
   const fetchListItemInCart = async () => {
     if (dataUser) {
-      const responCart = await cartServices.getAllCartItemOfUser(
+      const responseCart = await cartServices.getAllCartItemOfUser(
         dataUser.user.id
       );
-      const responProducts =
+      const responseProducts =
         (await productServices.getAllProductCompact()) ?? null;
 
-      if (responCart && responProducts) {
-        const dataListItemCart = responCart.listItem ?? [];
-        const dataListItemProduct = responProducts.products ?? [];
+      if (responseCart && responseProducts) {
+        const dataListItemCart = responseCart.listItem ?? [];
+        const dataListItemProduct = responseProducts.products ?? [];
         const handleListProductOfUserInCart =
           Array.isArray(dataListItemCart) && dataListItemCart.length > 0
             ? dataListItemCart.reduce((filtered, product, index) => {
-                let filterListItemInCart = dataListItemCart.filter(
-                  (item) => product.prodId === item.prodId
-                );
-                if (filterListItemInCart.length > 0) {
-                  filterListItemInCart.map((itemProductInCart, index) => {
-                    let filterListProduct = dataListItemProduct.filter(
-                      (item) => item.id === itemProductInCart.prodId
-                    );
-                    if (filterListProduct.length > 0) {
-                      itemProductInCart.name = filterListProduct[0].name;
-                      itemProductInCart.image = filterListProduct[0].image;
-                      itemProductInCart.Variants =
-                        filterListProduct[0].Variants;
-                      if (filterListProduct[0].Variants) {
-                        let filterVariants =
-                          filterListProduct[0].Variants.filter(
-                            (variant) => variant.name === product.size
-                          );
+              let filterListItemInCart = dataListItemCart.filter(
+                (item) => product.prodId === item.prodId
+              );
+              if (filterListItemInCart.length > 0) {
+                filterListItemInCart.map((itemProductInCart, index) => {
+                  let filterListProduct = dataListItemProduct.filter(
+                    (item) => item.id === itemProductInCart.prodId
+                  );
+                  if (filterListProduct.length > 0) {
+                    itemProductInCart.name = filterListProduct[0].name;
+                    itemProductInCart.image = filterListProduct[0].image;
+                    itemProductInCart.Variants =
+                      filterListProduct[0].Variants;
+                    if (filterListProduct[0].Variants) {
+                      let filterVariants =
+                        filterListProduct[0].Variants.filter(
+                          (variant) => variant.name === product.size
+                        );
 
-                        if (filterVariants.length > 0) {
-                          itemProductInCart.originalPrice =
-                            filterVariants[0].price;
-                          itemProductInCart.discount =
-                            filterVariants[0].discountVariant;
-                        }
+                      if (filterVariants.length > 0) {
+                        itemProductInCart.originalPrice =
+                          filterVariants[0].price;
+                        itemProductInCart.discount =
+                          filterVariants[0].discountVariant;
                       }
-
-                      filtered.push(itemProductInCart);
                     }
-                  });
-                }
 
-                return [...new Set(filtered)];
-              }, [])
+                    filtered.push(itemProductInCart);
+                  }
+                });
+              }
+
+              return [...new Set(filtered)];
+            }, [])
             : [];
 
         if (Array.isArray(handleListProductOfUserInCart)) {
@@ -268,10 +276,10 @@ function Cart() {
     const getPurchasedItems =
       listItemInCart.length > 0
         ? listItemInCart.reduce((result, item) => {
-            let getDescItems = `name:${item.name}-size:${item.size}-quantity:${item.quantity}-price:${item.price};`;
+          let getDescItems = `name:${item.name}-size:${item.size}-quantity:${item.quantity}-price:${item.price};`;
 
-            return result + getDescItems;
-          }, "")
+          return result + getDescItems;
+        }, "")
         : "";
 
     data.set("totalPrice", totalPriceNumber);
@@ -279,8 +287,8 @@ function Cart() {
     data.set("purchasedItems", getPurchasedItems);
 
     try {
-      const respon = await paymentServices.handleCreateNewOrder(data);
-      if (respon && respon.errCode === 0) {
+      const response = await paymentServices.handleCreateNewOrder(data);
+      if (response && response.errCode === 0) {
         setValues({
           totalPrice: "",
           deliveryAddress: "",
@@ -294,7 +302,7 @@ function Cart() {
 
         setOpenModalOrdersSuccess(true);
         setReloadCart(false);
-      } else if (respon.errCode === 1) {
+      } else if (response.errCode === 1) {
         toast.error("Please check information again");
       }
     } catch (error) {
@@ -324,6 +332,32 @@ function Cart() {
       handleCloseModalPaymentOnline();
     }
   }, [paymentOnlineSuccess]);
+
+  useEffect(() => {
+    if(listItemInCart.length > 0 && !usedVoucher) {
+      setTotalPrice(
+        listItemInCart.length > 0
+          ? Math.round(
+            listItemInCart.reduce(
+              (total, item) => total + item.price,
+              0
+            ) * 100
+          ) / 100
+          : 0
+      );
+    } else if (!totalPrice) {
+      setTotalPrice(
+        listItemInCart.length > 0
+          ? Math.round(
+            listItemInCart.reduce(
+              (total, item) => total + item.price,
+              0
+            ) * 100
+          ) / 100
+          : 0
+      );
+    }
+  }, [totalPrice, listItemInCart])
 
   return (
     <div className="flex flex-col items-center justify-center container overflow-hidden mx-auto">
@@ -378,15 +412,7 @@ function Cart() {
         <div className="w-full my-8 bg-[#1e1e1e] shadow-black-b-0.75 border-2 rounded-lg border-rgba-white-0.1">
           <div className="flex justify-between items-center px-6 py-6">
             <h2 className="text-xl font-semibold text-white">
-              Total:{" "}
-              {`${
-                Math.round(
-                  listItemInCart.reduce(
-                    (total, item) => total + item.price,
-                    0
-                  ) * 100
-                ) / 100
-              }$`}
+              Total: {`${totalPrice}$`}
             </h2>
             <div className="flex">
               <Button
@@ -400,7 +426,7 @@ function Cart() {
                 to={"/menu"}
                 onClick={() => WindowScrollTop()}
               >
-                Mua tiếp
+                Continue Buy
               </Button>
               <Button
                 variant={TBUTTON_VARIANT.SUCCESS}
@@ -425,15 +451,6 @@ function Cart() {
           <Heading variant={"primary"}>Đặt hàng</Heading>
           <div className="flex flex-wrap justify-between">
             {inputs.map((item, index) => {
-              const getTotalPrice = `${
-                Math.round(
-                  listItemInCart.reduce(
-                    (total, item) => total + item.price,
-                    0
-                  ) * 100
-                ) / 100
-              }$`;
-
               if (item.name === "note") {
                 return (
                   <TextareaField
@@ -441,22 +458,21 @@ function Cart() {
                     className={"!w-full mx-8"}
                     value={values[item.name]}
                     onChange={onChangeInput}
-                    onClick={() => {}}
+                    onClick={() => { }}
                     clear={() => handleClearInput(item.name)}
                     {...item}
                   />
                 );
               }
 
-              // totalPrice
               if (item.name === "totalPrice") {
                 return (
                   <InputField
                     key={index}
                     className={"!w-2/5 mx-8"}
                     onChange={onChangeInput}
-                    value={getTotalPrice}
-                    onClick={() => {}}
+                    value={`${totalPrice}$`}
+                    onClick={() => { }}
                     clear={() => handleClearInput(item.name)}
                     onlyRead={"true"}
                     {...item}
@@ -471,7 +487,7 @@ function Cart() {
                     className={"!w-full mx-8"}
                     value={values[item.name]}
                     onChange={onChangeInput}
-                    onClick={() => {}}
+                    onClick={() => { }}
                     autoFill={handleGetCurrentContact}
                     clear={() => handleClearInput(item.name)}
                     {...item}
@@ -485,7 +501,7 @@ function Cart() {
                   className={"!w-2/5 mx-8"}
                   value={values[item.name]}
                   onChange={onChangeInput}
-                  onClick={() => {}}
+                  onClick={() => { }}
                   clear={() => handleClearInput(item.name)}
                   {...item}
                 />
@@ -519,10 +535,15 @@ function Cart() {
                 </tbody>
               </table>
             </div>
+
+            {/* Ưu đãi */}
+            <div className="">
+              <VoucherComponent totalAmount={totalPrice} onUpdateTotal={handleUpdateTotal} />
+            </div>
           </div>
 
           <div className="flex justify-end mt-3 w-full">
-            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => {}}>
+            <Button variant={TBUTTON_VARIANT.PRIMARY} onClick={() => { }}>
               Submit
             </Button>
             <Button
@@ -605,7 +626,7 @@ function Cart() {
         open={openModalPaymentOnline}
         close={handleCloseModalPaymentOnline}
       >
-        <form autoComplete="off" onSubmit={() => {}}>
+        <form autoComplete="off" onSubmit={() => { }}>
           <Heading variant={"primary"}>Thanh toán online</Heading>
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-8 mb-4"
@@ -618,15 +639,6 @@ function Cart() {
           </div>
           <div className="flex flex-wrap justify-between">
             {inputs.map((item, index) => {
-              const getTotalPrice = `${
-                Math.round(
-                  listItemInCart.reduce(
-                    (total, item) => total + item.price,
-                    0
-                  ) * 100
-                ) / 100
-              }$`;
-
               if (item.name === "note") {
                 return (
                   <TextareaField
@@ -634,21 +646,20 @@ function Cart() {
                     className={"!w-full mx-8"}
                     value={values[item.name]}
                     onChange={onChangeInput}
-                    onClick={() => {}}
+                    onClick={() => { }}
                     {...item}
                   />
                 );
               }
 
-              // totalPrice
               if (item.name === "totalPrice") {
                 return (
                   <InputField
                     key={index}
                     className={"!w-2/5 mx-8"}
                     onChange={onChangeInput}
-                    value={getTotalPrice}
-                    onClick={() => {}}
+                    value={`${totalPrice}$`}
+                    onClick={() => { }}
                     clear={() => handleClearInput(item.name)}
                     onlyRead={"true"}
                     {...item}
@@ -663,7 +674,7 @@ function Cart() {
                     className={"!w-full mx-8"}
                     value={values[item.name]}
                     onChange={onChangeInput}
-                    onClick={() => {}}
+                    onClick={() => { }}
                     autoFill={handleGetCurrentContact}
                     clear={() => handleClearInput(item.name)}
                     {...item}
@@ -677,7 +688,7 @@ function Cart() {
                   className={"!w-2/5 mx-8"}
                   value={values[item.name]}
                   onChange={onChangeInput}
-                  onClick={() => {}}
+                  onClick={() => { }}
                   clear={() => handleClearInput(item.name)}
                   {...item}
                 />
@@ -711,21 +722,15 @@ function Cart() {
                 </tbody>
               </table>
             </div>
+            <div className="">
+              <VoucherComponent totalAmount={totalPrice} onUpdateTotal={handleUpdateTotal} />
+            </div>
           </div>
 
           {values.deliveryAddress !== "" && values.contactInfo !== "" && (
             <div className="mt-7">
               <Paypal
-                totalPrice={
-                  listItemInCart.length > 0
-                    ? Math.round(
-                        listItemInCart.reduce(
-                          (total, item) => total + item.price,
-                          0
-                        ) * 100
-                      ) / 100
-                    : 0
-                }
+                totalPrice={totalPrice}
                 payload={{
                   contactInfo: values?.contactInfo,
                   deliveryAddress: values?.deliveryAddress,
@@ -738,15 +743,7 @@ function Cart() {
                       return result + getDescItems;
                     }, ""),
                   userId: dataUser ? dataUser.user.id : null,
-                  totalPrice:
-                    listItemInCart.length > 0
-                      ? Math.round(
-                          listItemInCart.reduce(
-                            (total, item) => total + item.price,
-                            0
-                          ) * 100
-                        ) / 100
-                      : 0,
+                  totalPrice: totalPrice,
                   paymentDate: new Date(),
                 }}
               />

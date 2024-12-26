@@ -34,7 +34,6 @@ function Menu() {
   const [dataCategory, setDataCategory] = useState(null);
   const [listProducts, setListProducts] = useState([]);
   const [filterCategory, setFilterCategory] = useState([]);
-  console.log("dataCategory", dataCategory);
 
   // add to Cart
   const [openModalAddToCart, setOpenModalAddToCart] = useState(false);
@@ -64,9 +63,9 @@ function Menu() {
   };
 
   const fetchListProductsCompact = async () => {
-    let respon = (await productServices.getAllProductCompact()) ?? null;
-    if (respon) {
-      const dataListProduct = respon.products || [];
+    let response = (await productServices.getAllProductCompact()) ?? null;
+    if (response) {
+      const dataListProduct = response.products || [];
       let splitFields =
         dataListProduct.length > 0 &&
         dataListProduct.map((item) => {
@@ -149,9 +148,9 @@ function Menu() {
 
   // handle add to cart
   const handleOpenModalAddToCart = async (prodId) => {
-    let respon = (await variantServices.findVariantInProduct(prodId)) ?? null;
-    if (respon) {
-      const dataProductSelected = respon.variant ?? [];
+    let response = (await variantServices.findVariantInProduct(prodId)) ?? null;
+    if (response) {
+      const dataProductSelected = response.variant ?? [];
       let filterValue =
         dataProductSelected.length > 0 &&
         dataProductSelected.filter((item) => item.name === size);
@@ -238,9 +237,9 @@ function Menu() {
 
     try {
       if (checkAllowAddToCart) {
-        let responAddToCartSubmit = null;
-        responAddToCartSubmit = dispatch(handleAddToCartRedux(data));
-        if (responAddToCartSubmit) {
+        let responseAddToCartSubmit = null;
+        responseAddToCartSubmit = dispatch(handleAddToCartRedux(data));
+        if (responseAddToCartSubmit) {
           handleCloseModalAddToCart();
           setOpenModalAddToCartSucess(true);
           setReloadCart(true);

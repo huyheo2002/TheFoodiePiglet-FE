@@ -137,15 +137,15 @@ function ReserveTableManagement() {
     };
 
     const handleGetAllPermissionInPage = async () => {
-        const respon = await permissionServices.getAllPermissionGroup();
-        if (respon && respon.errCode == 0) {
-            const dataPermissionGroup = respon.permissionGroup || [];
+        const response = await permissionServices.getAllPermissionGroup();
+        if (response && response.errCode === 0) {
+            const dataPermissionGroup = response.permissionGroup || [];
 
             const filterCurrentPermissionGroup = dataPermissionGroup.length > 0 && dataPermissionGroup.filter((item) => item.keyword === currentPermissionGroup);
             if (filterCurrentPermissionGroup.length > 0) {
-                const responPermission = await permissionServices.getAllPermission();
-                if (responPermission && responPermission.errCode == 0) {
-                    const dataPermission = responPermission.permission || [];
+                const responsePermission = await permissionServices.getAllPermission();
+                if (responsePermission && responsePermission.errCode == 0) {
+                    const dataPermission = responsePermission.permission || [];
 
                     const filterCurrentPermission = dataPermission.length > 0 && dataPermission.filter(item => item.permissionGroupId === filterCurrentPermissionGroup[0].id)
 
@@ -163,9 +163,9 @@ function ReserveTableManagement() {
     }, [])
 
     const handleGetAllReserveTable = async () => {
-        const respon = await tableServices.getAllReserveTable();
-        if (respon && respon.errCode == 0) {
-            const dataReserveTable = respon.reserveTable;
+        const response = await tableServices.getAllReserveTable();
+        if (response && response.errCode === 0) {
+            const dataReserveTable = response.reserveTable;
             let splitFields =
                 dataReserveTable.length > 0 &&
                 dataReserveTable.map((item) => {
@@ -230,16 +230,13 @@ function ReserveTableManagement() {
     }
 
     const handleGetAllTable = async () => {
-        const respon = await tableServices.getAllTables("all");
-        if (respon && respon.errCode === 0) {
-            setListTable(respon.tables);
-        } else if (respon.errCode !== 0) {
-            alert(respon.errMsg);
+        const response = await tableServices.getAllTables("all");
+        if (response && response.errCode === 0) {
+            setListTable(response.tables);
+        } else if (response.errCode !== 0) {
+            alert(response.errMsg);
         }
     }
-
-    console.log("listTable", listTable);
-    console.log("listReserveTable", listReserveTable);
 
     useEffect(() => {
         handleGetAllReserveTable();
@@ -363,12 +360,10 @@ function ReserveTableManagement() {
     };
 
     const handleTimeStartChange = (valueTimeStart) => {
-        // console.log("valueTimeStart", valueTimeStart)
         setSelectedTimeStart(valueTimeStart);
     };
 
     const handleTimeEndChange = (valueTimeEnd) => {
-        // console.log("valueTimeEnd", valueTimeEnd)
         setSelectedTimeEnd(valueTimeEnd);
     };
 
@@ -409,13 +404,13 @@ function ReserveTableManagement() {
         data.set("dateEnd", getNewDateEnd)
 
         try {
-            const respon = await tableServices.createReserveTable(data);
-            if (respon && respon.errCode === 0) {
+            const response = await tableServices.createReserveTable(data);
+            if (response && response.errCode === 0) {
                 handleCloseModalCreate();
                 handleGetAllReserveTable();
                 handleGetAllTable();
-            } else if (respon && respon.errCode === 1) {
-                alert(respon.message);
+            } else if (response && response.errCode === 1) {
+                alert(response.message);
             }
         } catch (error) {
             console.log("err", error)
@@ -441,18 +436,15 @@ function ReserveTableManagement() {
         data.set("dateStart", getNewDateStart)
         data.set("dateEnd", getNewDateEnd)
 
-        console.log("data:", data);
-        console.log("data entry:", Object.fromEntries(data.entries()));
-
         try {
-            const respon = await tableServices.updateReserveTable(data);
+            const response = await tableServices.updateReserveTable(data);
 
-            if (respon && respon.errCode === 0) {
+            if (response && response.errCode === 0) {
                 handleCloseModalUpdate();
                 handleGetAllReserveTable();
                 handleGetAllTable();
-            } else if (respon.errCode !== 0) {
-                alert(respon.message);
+            } else if (response.errCode !== 0) {
+                alert(response.message);
             } else {
                 alert("Cập nhật reserve table thất bại");
             }
@@ -465,13 +457,13 @@ function ReserveTableManagement() {
         e.preventDefault();
 
         try {
-            const respon = await tableServices.deleteReserveTable(idReserveTableDelete);
-            if (respon && respon.errCode === 0) {
+            const response = await tableServices.deleteReserveTable(idReserveTableDelete);
+            if (response && response.errCode === 0) {
                 handleCloseModalDelete();
                 handleGetAllReserveTable();
                 handleGetAllTable();
-            } else if (respon.errCode !== 0) {
-                alert(respon.message);
+            } else if (response.errCode !== 0) {
+                alert(response.message);
             } else {
                 alert("Xóa reserve table thất bại");
             }

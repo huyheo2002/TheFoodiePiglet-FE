@@ -1,18 +1,18 @@
 import axios from "../utils/axios";
 
 export const getAllPayment = () => {
-    const response = axios.get("/api/get-all-payment");
-    return response;
+    const responsese = axios.get("/api/get-all-payment");
+    return responsese;
 }
 
 export const getRevenueData = () => {
-    const response = axios.get("/api/get-revenue-data");
-    return response;
+    const responsese = axios.get("/api/get-revenue-data");
+    return responsese;
 }
 
 export const getAllPaymentCompact = () => {
-    const response = axios.get("/api/get-all-payment-compact");
-    return response;
+    const responsese = axios.get("/api/get-all-payment-compact");
+    return responsese;
 }
 
 export const getAllPaymentOfUser = (userId) => {

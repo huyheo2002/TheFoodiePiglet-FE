@@ -7,14 +7,14 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [accessToken] = useLocalStorage("dataUser", "");
   const [dataUser, setDataUser] = useState(null);
-  const [isDecoded, setIsDecoded] = useState(false);
 
   const decodeToken = async () => {
     try {
-      const respon = await commonServices.handleDecoded(accessToken.token);
-      if (respon?.errCode === 0) {
-        setDataUser(respon.decoded);
-        setIsDecoded(true);
+      if (!accessToken?.token) return;
+
+      const response = await commonServices.handleDecoded(accessToken.token);
+      if (response?.errCode === 0) {
+        setDataUser(response.decoded);
       }
     } catch (error) {
       console.error("Failed to decode token", error);
@@ -22,12 +22,23 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!accessToken || isDecoded || dataUser !== null) return;
-    decodeToken();
-  }, [accessToken, dataUser, isDecoded]);
+    if (!accessToken?.token || dataUser) return;
+
+    const intervalId = setInterval(() => {
+      decodeToken();
+    }, 500);
+
+    if (dataUser) {
+      clearInterval(intervalId);
+    }
+
+    return () => clearInterval(intervalId);
+  }, [accessToken, dataUser]);
 
   return (
-    <AuthContext.Provider value={{ dataUser, setDataUser }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ dataUser, setDataUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
